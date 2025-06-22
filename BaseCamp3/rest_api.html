@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>REST API Presentation</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .presentation-container {
+      width: 90%;
+      max-width: 1000px;
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 20px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+      backdrop-filter: blur(10px);
+      overflow: hidden;
+    }
+
+    .slide {
+      display: none;
+      padding: 60px 50px;
+      min-height: 600px;
+      text-align: center;
+      position: relative;
+    }
+
+    .slide.active {
+      display: block;
+      animation: slideIn 0.5s ease-out;
+    }
+
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateX(30px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    h1 {
+      color: #2c3e50;
+      font-size: 2.5em;
+      margin-bottom: 30px;
+      font-weight: 700;
+    }
+
+    h2 {
+      color: #34495e;
+      font-size: 2em;
+      margin-bottom: 25px;
+      font-weight: 600;
+    }
+
+    h3 {
+      color: #3498db;
+      font-size: 1.5em;
+      margin-bottom: 20px;
+      font-weight: 500;
+    }
+
+    p {
+      color: #555;
+      font-size: 1.1em;
+      line-height: 1.6;
+      margin-bottom: 20px;
+      max-width: 800px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .method-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+      margin: 30px 0;
+    }
+
+    .method-card {
+      background: linear-gradient(135deg, #3498db, #2980b9);
+      color: white;
+      padding: 25px;
+      border-radius: 15px;
+      box-shadow: 0 10px 20px rgba(52, 152, 219, 0.3);
+      transform: translateY(0);
+      transition: transform 0.3s ease;
+    }
+
+    .method-card:hover {
+      transform: translateY(-5px);
+    }
+
+    .method-card h3 {
+      color: white;
+      margin-bottom: 10px;
+    }
+
+    .auth-types {
+      display: flex;
+      justify-content: space-around;
+      flex-wrap: wrap;
+      gap: 20px;
+      margin: 30px 0;
+    }
+
+    .auth-card {
+      background: linear-gradient(135deg, #e74c3c, #c0392b);
+      color: white;
+      padding: 20px;
+      border-radius: 12px;
+      flex: 1;
+      min-width: 200px;
+      box-shadow: 0 8px 16px rgba(231, 76, 60, 0.3);
+    }
+
+    .status-codes {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 15px;
+      margin: 30px 0;
+    }
+
+    .status-card {
+      padding: 20px;
+      border-radius: 10px;
+      color: white;
+      font-weight: bold;
+      text-align: center;
+    }
+
+    .status-2xx {
+      background: linear-gradient(135deg, #27ae60, #229954);
+    }
+
+    .status-3xx {
+      background: linear-gradient(135deg, #f39c12, #e67e22);
+    }
+
+    .status-4xx {
+      background: linear-gradient(135deg, #e74c3c, #c0392b);
+    }
+
+    .status-5xx {
+      background: linear-gradient(135deg, #8e44ad, #732d91);
+    }
+
+    .best-practices {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      margin: 30px 0;
+    }
+
+    .practice-card {
+      background: linear-gradient(135deg, #16a085, #138d75);
+      color: white;
+      padding: 20px;
+      border-radius: 12px;
+      text-align: left;
+    }
+
+    .practice-card h4 {
+      margin-bottom: 10px;
+      font-size: 1.2em;
+    }
+
+    .navigation {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 50px;
+      background: rgba(52, 73, 94, 0.1);
+    }
+
+    .nav-button {
+      background: linear-gradient(135deg, #3498db, #2980b9);
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 25px;
+      cursor: pointer;
+      font-size: 1em;
+      font-weight: 500;
+      transition: all 0.3s ease;
+    }
+
+    .nav-button:hover {
+      background: linear-gradient(135deg, #2980b9, #1f5582);
+      transform: translateY(-2px);
+    }
+
+    .nav-button:disabled {
+      background: #bdc3c7;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .slide-counter {
+      color: #7f8c8d;
+      font-weight: 500;
+    }
+
+    .api-diagram {
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      margin: 30px 0;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+
+    .diagram-box {
+      background: linear-gradient(135deg, #9b59b6, #8e44ad);
+      color: white;
+      padding: 20px;
+      border-radius: 15px;
+      min-width: 120px;
+      position: relative;
+    }
+
+    .arrow {
+      font-size: 2em;
+      color: #3498db;
+      margin: 0 10px;
+    }
+
+    .endpoint-example {
+      background: #2c3e50;
+      color: #ecf0f1;
+      padding: 20px;
+      border-radius: 10px;
+      font-family: 'Courier New', monospace;
+      margin: 20px 0;
+      text-align: left;
+      overflow-x: auto;
+    }
+
+    .highlight {
+      background: linear-gradient(135deg, #f1c40f, #f39c12);
+      color: #2c3e50;
+      padding: 15px;
+      border-radius: 10px;
+      margin: 20px 0;
+      font-weight: 500;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="presentation-container">
+    <!-- Slide 1: Title -->
+    <div class="slide active">
+      <h1>🚀 REST API</h1>
+      <h2>Complete Guide</h2>
+      <p style="font-size: 1.3em; margin-top: 40px;">Understanding RESTful Web Services from Basics to Best Practices
+      </p>
+      <div class="highlight">
+        <p>Representational State Transfer - The Foundation of Modern Web APIs</p>
+      </div>
+    </div>
+
+    <!-- Slide 2: What is an API? -->
+    <div class="slide">
+      <h1>🔌 What is an API?</h1>
+      <p><strong>Application Programming Interface</strong> - A set of rules and protocols that allows different
+        software applications to communicate with each other.</p>
+
+      <div class="api-diagram">
+        <div class="diagram-box">Client App</div>
+        <div class="arrow">→</div>
+        <div class="diagram-box">API</div>
+        <div class="arrow">→</div>
+        <div class="diagram-box">Server/Database</div>
+      </div>
+
+      <div class="highlight">
+        <p><strong>Think of it like a waiter in a restaurant:</strong> You (client) tell the waiter (API) what you want,
+          and they bring it from the kitchen (server).</p>
+      </div>
+    </div>
+
+    <!-- Slide 3: What is REST? -->
+    <div class="slide">
+      <h1>🏗️ What is REST?</h1>
+      <h2>REpresentational State Transfer</h2>
+
+      <div class="best-practices">
+        <div class="practice-card">
+          <h4>📊 Stateless</h4>
+          <p>Each request contains all information needed to process it</p>
+        </div>
+        <div class="practice-card">
+          <h4>🎯 Resource-Based</h4>
+          <p>Everything is treated as a resource with unique URLs</p>
+        </div>
+        <div class="practice-card">
+          <h4>🔄 HTTP Methods</h4>
+          <p>Uses standard HTTP verbs for different operations</p>
+        </div>
+        <div class="practice-card">
+          <h4>📱 Multiple Formats</h4>
+          <p>Supports JSON, XML, HTML, and other formats</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 4: HTTP Methods -->
+    <div class="slide">
+      <h1>🛠️ REST API Methods</h1>
+      <p>The main HTTP verbs used in RESTful services:</p>
+
+      <div class="method-grid">
+        <div class="method-card">
+          <h3>GET</h3>
+          <p>Retrieve data</p>
+          <p><em>Safe & Idempotent</em></p>
+        </div>
+        <div class="method-card">
+          <h3>POST</h3>
+          <p>Create new data</p>
+          <p><em>Not Idempotent</em></p>
+        </div>
+        <div class="method-card">
+          <h3>PUT</h3>
+          <p>Update/Replace data</p>
+          <p><em>Idempotent</em></p>
+        </div>
+        <div class="method-card">
+          <h3>PATCH</h3>
+          <p>Partial update</p>
+          <p><em>Not necessarily Idempotent</em></p>
+        </div>
+        <div class="method-card">
+          <h3>DELETE</h3>
+          <p>Remove data</p>
+          <p><em>Idempotent</em></p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 5: Endpoint Examples -->
+    <div class="slide">
+      <h1>🎯 API Endpoints</h1>
+      <p>RESTful URL patterns for different operations:</p>
+
+      <div class="endpoint-example">
+        GET /api/users # Get all users<br>
+        GET /api/users/123 # Get user with ID 123<br>
+        POST /api/users # Create a new user<br>
+        PUT /api/users/123 # Update user 123 completely<br>
+        PATCH /api/users/123 # Partially update user 123<br>
+        DELETE /api/users/123 # Delete user 123<br><br>
+
+        GET /api/users/123/posts # Get posts by user 123<br>
+        POST /api/users/123/posts # Create post for user 123
+      </div>
+    </div>
+
+    <!-- Slide 6: Authentication -->
+    <div class="slide">
+      <h1>🔐 Authentication Methods</h1>
+      <p>Different ways to secure your REST APIs:</p>
+
+      <div class="auth-types">
+        <div class="auth-card">
+          <h3>🔑 API Keys</h3>
+          <p>Simple token-based authentication</p>
+          <p><em>Header: X-API-Key</em></p>
+        </div>
+        <div class="auth-card">
+          <h3>🎟️ JWT Tokens</h3>
+          <p>JSON Web Tokens for stateless auth</p>
+          <p><em>Header: Authorization: Bearer</em></p>
+        </div>
+        <div class="auth-card">
+          <h3>🔐 OAuth 2.0</h3>
+          <p>Industry standard for authorization</p>
+          <p><em>Secure third-party access</em></p>
+        </div>
+        <div class="auth-card">
+          <h3>👤 Basic Auth</h3>
+          <p>Username:password encoded</p>
+          <p><em>Simple but less secure</em></p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 7: HTTP Status Codes -->
+    <div class="slide">
+      <h1>📊 HTTP Status Codes</h1>
+      <p>Understanding response codes for better API communication:</p>
+
+      <div class="status-codes">
+        <div class="status-card status-2xx">
+          <h3>2xx Success</h3>
+          <p>200 OK<br>201 Created<br>204 No Content</p>
+        </div>
+        <div class="status-card status-3xx">
+          <h3>3xx Redirection</h3>
+          <p>301 Moved<br>302 Found<br>304 Not Modified</p>
+        </div>
+        <div class="status-card status-4xx">
+          <h3>4xx Client Error</h3>
+          <p>400 Bad Request<br>401 Unauthorized<br>404 Not Found</p>
+        </div>
+        <div class="status-card status-5xx">
+          <h3>5xx Server Error</h3>
+          <p>500 Internal Error<br>502 Bad Gateway<br>503 Unavailable</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 8: Request/Response Structure -->
+    <div class="slide">
+      <h1>📨 Request & Response Structure</h1>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin: 30px 0;">
+        <div>
+          <h3>📤 Request Structure</h3>
+          <div class="endpoint-example">
+            POST /api/users
+            Content-Type: application/json
+            Authorization: Bearer xyz123
+
+            {
+            "name": "John Doe",
+            "email": "john@example.com",
+            "age": 30
+            }
+          </div>
+        </div>
+
+        <div>
+          <h3>📥 Response Structure</h3>
+          <div class="endpoint-example">
+            HTTP/1.1 201 Created
+            Content-Type: application/json
+
+            {
+            "id": 123,
+            "name": "John Doe",
+            "email": "john@example.com",
+            "age": 30,
+            "created_at": "2025-06-22T10:00:00Z"
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 9: Best Practices -->
+    <div class="slide">
+      <h1>✨ REST API Best Practices</h1>
+
+      <div class="best-practices">
+        <div class="practice-card">
+          <h4>🎯 Use Nouns, Not Verbs</h4>
+          <p>✅ /users/123<br>❌ /getUserById/123</p>
+        </div>
+        <div class="practice-card">
+          <h4>📊 HTTP Status Codes</h4>
+          <p>Always return appropriate status codes for different scenarios</p>
+        </div>
+        <div class="practice-card">
+          <h4>📝 Consistent Naming</h4>
+          <p>Use kebab-case or snake_case consistently throughout your API</p>
+        </div>
+        <div class="practice-card">
+          <h4>📄 API Versioning</h4>
+          <p>/api/v1/users or /api/v2/users for backward compatibility</p>
+        </div>
+        <div class="practice-card">
+          <h4>🔍 Filtering & Pagination</h4>
+          <p>/users?page=2&limit=10&status=active</p>
+        </div>
+        <div class="practice-card">
+          <h4>📋 Comprehensive Documentation</h4>
+          <p>Use tools like Swagger/OpenAPI for clear documentation</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 10: Error Handling -->
+    <div class="slide">
+      <h1>🚨 Error Handling</h1>
+      <p>Proper error responses help developers integrate with your API:</p>
+
+      <div class="endpoint-example">
+        {
+        "error": {
+        "code": "VALIDATION_ERROR",
+        "message": "Invalid user data provided",
+        "details": [
+        {
+        "field": "email",
+        "message": "Email format is invalid"
+        },
+        {
+        "field": "age",
+        "message": "Age must be between 1 and 120"
+        }
+        ],
+        "timestamp": "2025-06-22T10:00:00Z",
+        "request_id": "req_123456789"
+        }
+        }
+      </div>
+
+      <div class="highlight">
+        <p><strong>Key Elements:</strong> Clear error codes, descriptive messages, field-specific details, timestamps,
+          and request IDs for debugging.</p>
+      </div>
+    </div>
+
+    <!-- Slide 11: Security Considerations -->
+    <div class="slide">
+      <h1>🛡️ Security Best Practices</h1>
+
+      <div class="best-practices">
+        <div class="practice-card">
+          <h4>🔒 HTTPS Only</h4>
+          <p>Always use HTTPS to encrypt data in transit</p>
+        </div>
+        <div class="practice-card">
+          <h4>🚦 Rate Limiting</h4>
+          <p>Prevent abuse with request rate limits per user/IP</p>
+        </div>
+        <div class="practice-card">
+          <h4>✅ Input Validation</h4>
+          <p>Validate and sanitize all input data</p>
+        </div>
+        <div class="practice-card">
+          <h4>🔐 Authentication Required</h4>
+          <p>Secure endpoints with proper authentication</p>
+        </div>
+        <div class="practice-card">
+          <h4>🕰️ Token Expiration</h4>
+          <p>Implement token expiration and refresh mechanisms</p>
+        </div>
+        <div class="practice-card">
+          <h4>📝 Audit Logging</h4>
+          <p>Log API access and modifications for security audits</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 12: Testing & Tools -->
+    <div class="slide">
+      <h1>🧪 Testing & Tools</h1>
+      <p>Essential tools for API development and testing:</p>
+
+      <div class="auth-types">
+        <div class="auth-card" style="background: linear-gradient(135deg, #2ecc71, #27ae60);">
+          <h3>🚀 Postman</h3>
+          <p>Popular API testing platform</p>
+          <p><em>Collections, environments, automation</em></p>
+        </div>
+        <div class="auth-card" style="background: linear-gradient(135deg, #f39c12, #e67e22);">
+          <h3>📋 Swagger/OpenAPI</h3>
+          <p>API documentation and testing</p>
+          <p><em>Interactive documentation</em></p>
+        </div>
+        <div class="auth-card" style="background: linear-gradient(135deg, #9b59b6, #8e44ad);">
+          <h3>⚡ Thunder Client</h3>
+          <p>VS Code extension for API testing</p>
+          <p><em>Lightweight and fast</em></p>
+        </div>
+        <div class="auth-card" style="background: linear-gradient(135deg, #1abc9c, #16a085);">
+          <h3>🔧 cURL</h3>
+          <p>Command-line tool for HTTP requests</p>
+          <p><em>Simple and powerful</em></p>
+        </div>
+      </div>
+
+      <div class="endpoint-example">
+        # Example cURL command
+        curl -X POST https://api.example.com/users \
+        -H "Content-Type: application/json" \
+        -H "Authorization: Bearer your-token" \
+        -d '{"name":"John","email":"john@example.com"}'
+      </div>
+    </div>
+
+    <!-- Slide 13: Summary -->
+    <div class="slide">
+      <h1>🎯 Key Takeaways</h1>
+
+      <div class="highlight">
+        <p><strong>REST APIs are the backbone of modern web applications</strong></p>
+      </div>
+
+      <div style="text-align: left; max-width: 600px; margin: 30px auto;">
+        <p><strong>Remember the fundamentals:</strong></p>
+        <p>• Use appropriate HTTP methods for different operations</p>
+        <p>• Design intuitive, resource-based URLs</p>
+        <p>• Implement proper authentication and security</p>
+        <p>• Return meaningful HTTP status codes</p>
+        <p>• Handle errors gracefully with detailed messages</p>
+        <p>• Document your API thoroughly</p>
+        <p>• Test extensively before deployment</p>
+      </div>
+
+      <div class="highlight" style="margin-top: 40px;">
+        <p><strong>Great APIs make great applications!</strong> 🚀</p>
+      </div>
+    </div>
+
+    <div class="navigation">
+      <button class="nav-button" id="prevBtn" onclick="changeSlide(-1)">← Previous</button>
+      <span class="slide-counter">
+        <span id="currentSlide">1</span> / <span id="totalSlides">13</span>
+      </span>
+      <button class="nav-button" id="nextBtn" onclick="changeSlide(1)">Next →</button>
+    </div>
+  </div>
+
+  <script>
+    let currentSlideIndex = 0;
+    const slides = document.querySelectorAll('.slide');
+    const totalSlides = slides.length;
+
+    document.getElementById('totalSlides').textContent = totalSlides;
+
+    function showSlide(index) {
+      slides.forEach(slide => slide.classList.remove('active'));
+      slides[index].classList.add('active');
+
+      document.getElementById('currentSlide').textContent = index + 1;
+      document.getElementById('prevBtn').disabled = index === 0;
+      document.getElementById('nextBtn').disabled = index === totalSlides - 1;
+    }
+
+    function changeSlide(direction) {
+      const newIndex = currentSlideIndex + direction;
+      if (newIndex >= 0 && newIndex < totalSlides) {
+        currentSlideIndex = newIndex;
+        showSlide(currentSlideIndex);
+      }
+    }
+
+    // Keyboard navigation
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowLeft') changeSlide(-1);
+      if (e.key === 'ArrowRight') changeSlide(1);
+    });
+
+    // Initialize
+    showSlide(0);
+  </script>
+</body>
+
+</html>

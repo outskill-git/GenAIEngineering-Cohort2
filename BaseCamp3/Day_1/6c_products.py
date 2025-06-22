@@ -54,7 +54,7 @@ def read_record_by_path(record_id: int):
                 return row
 
 @app.get("/record")
-def read_record_by_query(id: int):
+def read_record_by_query(record_id: int):
     with open(CSV_FILE, mode='r', newline='') as file:
         reader = csv.DictReader(file)
         for row in reader:

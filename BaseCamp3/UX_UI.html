@@ -1,0 +1,1294 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>UX Design Webinar</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      overflow: hidden;
+    }
+
+    .slideshow-container {
+      position: relative;
+      width: 100%;
+      height: 100vh;
+    }
+
+    .slide {
+      display: none;
+      padding: 60px;
+      text-align: center;
+      height: 100vh;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .slide.active {
+      display: flex;
+    }
+
+    h1 {
+      font-size: 3.5em;
+      margin-bottom: 30px;
+      background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    h2 {
+      font-size: 2.8em;
+      margin-bottom: 25px;
+      color: #fff;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    }
+
+    h3 {
+      font-size: 1.8em;
+      margin-bottom: 15px;
+      color: #4ecdc4;
+    }
+
+    p,
+    li {
+      font-size: 1.3em;
+      line-height: 1.6;
+      margin-bottom: 15px;
+      max-width: 100%;
+    }
+
+    .visual-box {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      padding: 30px;
+      margin: 20px auto;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
+      width: 100%;
+      max-width: 1400px;
+    }
+
+    .process-steps {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+      margin: 30px auto;
+      width: 100%;
+      max-width: 1400px;
+    }
+
+    .step {
+      background: rgba(255, 255, 255, 0.15);
+      padding: 25px;
+      border-radius: 15px;
+      text-align: center;
+      border: 2px solid rgba(255, 255, 255, 0.2);
+      transition: transform 0.3s ease;
+    }
+
+    .step:hover {
+      transform: translateY(-10px);
+    }
+
+    .step-number {
+      width: 50px;
+      height: 50px;
+      background: linear-gradient(135deg, #ff6b6b, #4ecdc4);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 15px;
+      font-weight: bold;
+      font-size: 1.5em;
+    }
+
+    .principles-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 25px;
+      margin: 30px auto;
+      width: 100%;
+      max-width: 1400px;
+    }
+
+    .principle {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 30px;
+      border-radius: 15px;
+      border-left: 5px solid #4ecdc4;
+      transition: transform 0.3s ease;
+    }
+
+    .principle:hover {
+      transform: translateX(10px);
+    }
+
+    .example-showcase {
+      display: flex;
+      justify-content: space-around;
+      align-items: flex-start;
+      margin: 30px auto;
+      width: 100%;
+      max-width: 1400px;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+
+    .example {
+      background: rgba(255, 255, 255, 0.15);
+      padding: 20px;
+      border-radius: 10px;
+      margin: 10px;
+      flex: 1;
+      min-height: 200px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .good-example {
+      border: 3px solid #4ecdc4;
+    }
+
+    .bad-example {
+      border: 3px solid #ff6b6b;
+    }
+
+    .controls {
+      position: fixed;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 15px;
+      z-index: 1000;
+    }
+
+    .nav-button {
+      background: rgba(255, 255, 255, 0.2);
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      color: white;
+      padding: 12px 24px;
+      border-radius: 25px;
+      cursor: pointer;
+      font-size: 1.1em;
+      transition: all 0.3s ease;
+      backdrop-filter: blur(10px);
+    }
+
+    .nav-button:hover {
+      background: rgba(255, 255, 255, 0.3);
+      transform: translateY(-3px);
+    }
+
+    .slide-counter {
+      position: fixed;
+      top: 30px;
+      right: 30px;
+      background: rgba(0, 0, 0, 0.3);
+      padding: 10px 20px;
+      border-radius: 20px;
+      backdrop-filter: blur(10px);
+    }
+
+    .icon {
+      font-size: 4em;
+      margin-bottom: 20px;
+      opacity: 0.8;
+    }
+
+    .quote {
+      font-style: italic;
+      font-size: 1.5em;
+      color: #4ecdc4;
+      margin: 30px 0;
+      padding: 20px;
+      border-left: 4px solid #4ecdc4;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+    }
+
+    .tools-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      margin: 30px auto;
+      width: 100%;
+      max-width: 1200px;
+    }
+
+    .tool {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 25px;
+      border-radius: 15px;
+      text-align: center;
+      transition: transform 0.3s ease;
+    }
+
+    .tool:hover {
+      transform: scale(1.05);
+    }
+
+    ul {
+      text-align: left;
+      max-width: 100%;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    @media (max-width: 768px) {
+      .slide {
+        padding: 20px 15px;
+      }
+
+      h1 {
+        font-size: 2.5em;
+      }
+
+      h2 {
+        font-size: 2em;
+      }
+
+      p,
+      li {
+        font-size: 1.1em;
+      }
+
+      .example-showcase {
+        flex-direction: column;
+      }
+
+      .process-steps {
+        grid-template-columns: 1fr;
+      }
+
+      .principles-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .tools-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="slideshow-container">
+    <div class="slide-counter">
+      <span id="currentSlide">1</span> / <span id="totalSlides">28</span>
+    </div>
+
+    <!-- Slide 1: Title -->
+    <div class="slide active">
+      <div class="icon">🎨</div>
+      <h1>User Experience Design</h1>
+      <h3>A Comprehensive Guide to Creating Exceptional Digital Experiences</h3>
+      <div class="visual-box">
+        <p>Transforming ideas into intuitive, user-centered solutions</p>
+      </div>
+    </div>
+
+    <!-- Slide 2: What is UX? -->
+    <div class="slide">
+      <h2>What is User Experience (UX)?</h2>
+      <div class="visual-box">
+        <div class="icon">👤</div>
+        <p>UX encompasses all aspects of the end-user's interaction with a company, its services, and its products.</p>
+        <div class="quote">
+          "User experience is not just about making things look pretty. It's about making things work beautifully."
+        </div>
+        <p>It's the overall feeling users have when they interact with your product - from their first impression to
+          their long-term relationship with your brand.</p>
+      </div>
+    </div>
+
+    <!-- Slide 3: UX vs UI -->
+    <div class="slide">
+      <h2>UX vs UI: Understanding the Difference</h2>
+      <div class="example-showcase">
+        <div class="example">
+          <h3>UX (User Experience)</h3>
+          <div class="icon">🧠</div>
+          <ul>
+            <li>Research & Strategy</li>
+            <li>User Journey Mapping</li>
+            <li>Information Architecture</li>
+            <li>Wireframing & Prototyping</li>
+            <li>Usability Testing</li>
+          </ul>
+        </div>
+        <div class="example">
+          <h3>UI (User Interface)</h3>
+          <div class="icon">🎨</div>
+          <ul>
+            <li>Visual Design</li>
+            <li>Typography</li>
+            <li>Color Schemes</li>
+            <li>Icons & Imagery</li>
+            <li>Interactive Elements</li>
+          </ul>
+        </div>
+      </div>
+      <p>UX is the foundation, UI is the beautiful house built on top of it.</p>
+    </div>
+
+    <!-- Slide 4: Core UX Principles -->
+    <div class="slide">
+      <h2>Core UX Design Principles</h2>
+      <div class="principles-grid">
+        <div class="principle">
+          <h3>🎯 User-Centered Design</h3>
+          <p>Always prioritize user needs, goals, and pain points in every design decision.</p>
+        </div>
+        <div class="principle">
+          <h3>🔍 Usability</h3>
+          <p>Make interfaces intuitive, efficient, and easy to learn and remember.</p>
+        </div>
+        <div class="principle">
+          <h3>♿ Accessibility</h3>
+          <p>Design inclusive experiences that work for users of all abilities.</p>
+        </div>
+        <div class="principle">
+          <h3>📱 Consistency</h3>
+          <p>Maintain uniform patterns, behaviors, and visual elements throughout.</p>
+        </div>
+        <div class="principle">
+          <h3>💡 Clarity</h3>
+          <p>Communicate clearly and eliminate confusion in all interactions.</p>
+        </div>
+        <div class="principle">
+          <h3>🚀 Efficiency</h3>
+          <p>Help users accomplish their goals quickly and with minimal effort.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 5: UX Process -->
+    <div class="slide">
+      <h2>The UX Design Process</h2>
+      <div class="process-steps">
+        <div class="step">
+          <div class="step-number">1</div>
+          <h3>Research</h3>
+          <p>Understand users, market, and business requirements</p>
+        </div>
+        <div class="step">
+          <div class="step-number">2</div>
+          <h3>Define</h3>
+          <p>Synthesize insights and define problem statements</p>
+        </div>
+        <div class="step">
+          <div class="step-number">3</div>
+          <h3>Ideate</h3>
+          <p>Generate creative solutions and explore possibilities</p>
+        </div>
+        <div class="step">
+          <div class="step-number">4</div>
+          <h3>Prototype</h3>
+          <p>Create testable representations of your ideas</p>
+        </div>
+        <div class="step">
+          <div class="step-number">5</div>
+          <h3>Test</h3>
+          <p>Validate solutions with real users and iterate</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 6: User Research -->
+    <div class="slide">
+      <h2>User Research: The Foundation</h2>
+      <div class="visual-box">
+        <div class="icon">🔬</div>
+        <h3>Research Methods</h3>
+        <div class="example-showcase">
+          <div class="example">
+            <h3>Qualitative</h3>
+            <ul>
+              <li>User Interviews</li>
+              <li>Contextual Inquiry</li>
+              <li>Focus Groups</li>
+              <li>Ethnographic Studies</li>
+            </ul>
+          </div>
+          <div class="example">
+            <h3>Quantitative</h3>
+            <ul>
+              <li>Surveys</li>
+              <li>Analytics</li>
+              <li>A/B Testing</li>
+              <li>Heatmaps</li>
+            </ul>
+          </div>
+        </div>
+        <p><strong>Remember:</strong> Research early, research often. Data-driven decisions lead to better user
+          experiences.</p>
+      </div>
+    </div>
+
+    <!-- Slide 7: Information Architecture -->
+    <div class="slide">
+      <h2>Information Architecture</h2>
+      <div class="visual-box">
+        <div class="icon">🏗️</div>
+        <p>The structural design of shared information environments</p>
+        <div class="example-showcase">
+          <div class="example good-example">
+            <h3>✅ Good IA</h3>
+            <ul>
+              <li>Clear navigation hierarchy</li>
+              <li>Logical content grouping</li>
+              <li>Intuitive labels</li>
+              <li>Easy wayfinding</li>
+            </ul>
+          </div>
+          <div class="example bad-example">
+            <h3>❌ Poor IA</h3>
+            <ul>
+              <li>Confusing navigation</li>
+              <li>Inconsistent categorization</li>
+              <li>Jargon-heavy labels</li>
+              <li>Dead ends</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 8: Wireframing -->
+    <div class="slide">
+      <h2>Wireframing: Blueprint of Design</h2>
+      <div class="visual-box">
+        <div class="icon">📐</div>
+        <h3>Types of Wireframes</h3>
+        <div class="process-steps">
+          <div class="step">
+            <h3>Low-Fidelity</h3>
+            <p>Quick sketches to explore layout and flow</p>
+          </div>
+          <div class="step">
+            <h3>Mid-Fidelity</h3>
+            <p>More detailed structure with basic styling</p>
+          </div>
+          <div class="step">
+            <h3>High-Fidelity</h3>
+            <p>Detailed representation close to final design</p>
+          </div>
+        </div>
+        <p><strong>Key Focus:</strong> Layout, navigation, content hierarchy, and functionality - not visual design.</p>
+      </div>
+    </div>
+
+    <!-- Slide 9: Prototyping -->
+    <div class="slide">
+      <h2>Prototyping: Bringing Ideas to Life</h2>
+      <div class="visual-box">
+        <div class="icon">⚡</div>
+        <h3>Prototype Fidelity Levels</h3>
+        <div class="example-showcase">
+          <div class="example">
+            <h3>Paper Prototypes</h3>
+            <p>Quick, cheap, great for early testing</p>
+          </div>
+          <div class="example">
+            <h3>Digital Prototypes</h3>
+            <p>Interactive, realistic user testing</p>
+          </div>
+          <div class="example">
+            <h3>Code Prototypes</h3>
+            <p>Functional, technical validation</p>
+          </div>
+        </div>
+        <div class="quote">
+          "A prototype is worth a thousand meetings"
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 10: Usability Testing -->
+    <div class="slide">
+      <h2>Usability Testing</h2>
+      <div class="visual-box">
+        <div class="icon">🧪</div>
+        <h3>Testing Methods</h3>
+        <div class="principles-grid">
+          <div class="principle">
+            <h3>🏃‍♀️ Moderated Testing</h3>
+            <p>Direct observation and real-time feedback</p>
+          </div>
+          <div class="principle">
+            <h3>🤖 Unmoderated Testing</h3>
+            <p>Remote, natural environment testing</p>
+          </div>
+          <div class="principle">
+            <h3>🎯 A/B Testing</h3>
+            <p>Compare different versions with real users</p>
+          </div>
+          <div class="principle">
+            <h3>🔍 Guerrilla Testing</h3>
+            <p>Quick, informal testing in public spaces</p>
+          </div>
+        </div>
+        <p><strong>Remember:</strong> Test early, test often, test with real users!</p>
+      </div>
+    </div>
+
+    <!-- Slide 11: Good vs Bad UX Examples -->
+    <div class="slide">
+      <h2>UX in Action: Examples</h2>
+      <div class="example-showcase">
+        <div class="example good-example">
+          <h3>✅ Good UX Example</h3>
+          <div class="icon">😊</div>
+          <p><strong>One-click checkout</strong></p>
+          <ul>
+            <li>Saves user information</li>
+            <li>Minimal steps</li>
+            <li>Clear progress indicator</li>
+            <li>Multiple payment options</li>
+          </ul>
+        </div>
+        <div class="example bad-example">
+          <h3>❌ Poor UX Example</h3>
+          <div class="icon">😫</div>
+          <p><strong>Complex registration form</strong></p>
+          <ul>
+            <li>Too many required fields</li>
+            <li>Unclear error messages</li>
+            <li>No password requirements shown</li>
+            <li>Form resets on error</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 12: Mobile UX -->
+    <div class="slide">
+      <h2>Mobile UX Considerations</h2>
+      <div class="visual-box">
+        <div class="icon">📱</div>
+        <div class="principles-grid">
+          <div class="principle">
+            <h3>👆 Touch-Friendly</h3>
+            <p>44px minimum touch targets, thumb-friendly navigation</p>
+          </div>
+          <div class="principle">
+            <h3>📶 Context-Aware</h3>
+            <p>Consider location, connectivity, and usage scenarios</p>
+          </div>
+          <div class="principle">
+            <h3>⚡ Performance</h3>
+            <p>Fast loading, smooth animations, minimal data usage</p>
+          </div>
+          <div class="principle">
+            <h3>🎯 Focus</h3>
+            <p>Prioritize core features, progressive disclosure</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 13: UX Tools -->
+    <div class="slide">
+      <h2>Essential UX Tools</h2>
+      <div class="tools-grid">
+        <div class="tool">
+          <h3>🎨 Design</h3>
+          <p>Figma, Sketch, Adobe XD</p>
+        </div>
+        <div class="tool">
+          <h3>📊 Research</h3>
+          <p>Miro, UserTesting, Hotjar</p>
+        </div>
+        <div class="tool">
+          <h3>⚡ Prototyping</h3>
+          <p>InVision, Principle, Framer</p>
+        </div>
+        <div class="tool">
+          <h3>📈 Analytics</h3>
+          <p>Google Analytics, Mixpanel, Amplitude</p>
+        </div>
+        <div class="tool">
+          <h3>🗺️ Journey Mapping</h3>
+          <p>Lucidchart, Draw.io, Whimsical</p>
+        </div>
+        <div class="tool">
+          <h3>🧪 Testing</h3>
+          <p>Maze, UsabilityHub, Lookback</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 14: UX Metrics -->
+    <div class="slide">
+      <h2>Measuring UX Success</h2>
+      <div class="visual-box">
+        <div class="icon">📊</div>
+        <div class="principles-grid">
+          <div class="principle">
+            <h3>📈 Quantitative Metrics</h3>
+            <ul>
+              <li>Task completion rate</li>
+              <li>Time on task</li>
+              <li>Error rate</li>
+              <li>Conversion rate</li>
+              <li>Bounce rate</li>
+            </ul>
+          </div>
+          <div class="principle">
+            <h3>🎯 Qualitative Metrics</h3>
+            <ul>
+              <li>User satisfaction (SUS)</li>
+              <li>Net Promoter Score</li>
+              <li>Customer effort score</li>
+              <li>User feedback</li>
+              <li>Usability test insights</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 15: UI Best Practices - Typography -->
+    <div class="slide">
+      <h2>UI Best Practices: Typography</h2>
+      <div class="visual-box">
+        <div class="icon">📝</div>
+        <div class="principles-grid">
+          <div class="principle">
+            <h3>📏 Hierarchy & Scale</h3>
+            <p>Use consistent type scales (1.2x, 1.414x, 1.618x) and clear hierarchy with headings, body text, and
+              captions</p>
+          </div>
+          <div class="principle">
+            <h3>📖 Readability</h3>
+            <p>45-75 characters per line, 1.4-1.6 line height, sufficient contrast (4.5:1 minimum)</p>
+          </div>
+          <div class="principle">
+            <h3>🎯 Font Pairing</h3>
+            <p>Limit to 2-3 fonts max. Pair serif with sans-serif, or use font families with multiple weights</p>
+          </div>
+          <div class="principle">
+            <h3>📱 Responsive Typography</h3>
+            <p>Use relative units (rem, em), fluid typography, and appropriate sizes for different devices</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 16: UI Best Practices - Color & Theme -->
+    <div class="slide">
+      <h2>UI Best Practices: Color & Theme</h2>
+      <div class="visual-box">
+        <div class="icon">🎨</div>
+        <h3>Color System Fundamentals</h3>
+        <div class="principles-grid">
+          <div class="principle">
+            <h3>🎯 Primary Colors</h3>
+            <p>1-2 brand colors for key actions, CTAs, and brand elements. Use sparingly for maximum impact</p>
+          </div>
+          <div class="principle">
+            <h3>🔗 Secondary Colors</h3>
+            <p>Supporting colors for secondary actions, accents, and visual variety. Should complement primary</p>
+          </div>
+          <div class="principle">
+            <h3>⚫ Neutral Colors</h3>
+            <p>Grays and off-whites for text, backgrounds, borders. Create 5-7 shades for flexibility</p>
+          </div>
+          <div class="principle">
+            <h3>🚨 Semantic Colors</h3>
+            <p>Red for errors, green for success, yellow for warnings, blue for information</p>
+          </div>
+        </div>
+        <div class="quote">
+          "Color is a power which directly influences the soul" - Use it purposefully and accessibly
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 17: UI Best Practices - Controls & Components -->
+    <div class="slide">
+      <h2>UI Best Practices: Controls & Components</h2>
+      <div class="visual-box">
+        <div class="icon">🎛️</div>
+        <div class="principles-grid">
+          <div class="principle">
+            <h3>🔘 Buttons</h3>
+            <p>Clear labels, consistent styling, appropriate sizing (44px+ for touch), disabled states, loading states
+            </p>
+          </div>
+          <div class="principle">
+            <h3>📝 Forms</h3>
+            <p>Clear labels, helpful placeholders, inline validation, error states, logical tab order</p>
+          </div>
+          <div class="principle">
+            <h3>🧭 Navigation</h3>
+            <p>Clear hierarchy, breadcrumbs, active states, consistent placement, mobile-friendly</p>
+          </div>
+          <div class="principle">
+            <h3>💬 Feedback</h3>
+            <p>Loading indicators, success messages, error handling, tooltips, confirmation dialogs</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 18: UI Best Practices - Layout & Spacing -->
+    <div class="slide">
+      <h2>UI Best Practices: Layout & Spacing</h2>
+      <div class="visual-box">
+        <div class="icon">📐</div>
+        <h3>The 8-Point Grid System</h3>
+        <div class="principles-grid">
+          <div class="principle">
+            <h3>📏 Consistent Spacing</h3>
+            <p>Use multiples of 8px (8, 16, 24, 32, 40px) for margins, padding, and component spacing</p>
+          </div>
+          <div class="principle">
+            <h3>🎯 Visual Hierarchy</h3>
+            <p>Use whitespace to group related elements and separate different sections</p>
+          </div>
+          <div class="principle">
+            <h3>📱 Responsive Layout</h3>
+            <p>Design for mobile-first, use flexible grids, consider touch targets and thumb zones</p>
+          </div>
+          <div class="principle">
+            <h3>⚖️ Balance & Alignment</h3>
+            <p>Align elements to a grid, maintain visual balance, use consistent alignment patterns</p>
+          </div>
+        </div>
+        <div class="process-steps">
+          <div class="step">
+            <h3>8px</h3>
+            <p>Tight spacing within components</p>
+          </div>
+          <div class="step">
+            <h3>16px</h3>
+            <p>Default spacing between elements</p>
+          </div>
+          <div class="step">
+            <h3>24px</h3>
+            <p>Medium spacing for sections</p>
+          </div>
+          <div class="step">
+            <h3>32px+</h3>
+            <p>Large spacing for major sections</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 19: User Journey Mapping -->
+    <div class="slide">
+      <h2>User Journey Mapping</h2>
+      <div class="visual-box">
+        <div class="icon">🗺️</div>
+        <h3>Mapping the Complete User Experience</h3>
+        <div class="process-steps">
+          <div class="step">
+            <div class="step-number">1</div>
+            <h3>Awareness</h3>
+            <p>User discovers your product</p>
+            <small>Touch points: Ads, search, referrals</small>
+          </div>
+          <div class="step">
+            <div class="step-number">2</div>
+            <h3>Consideration</h3>
+            <p>User evaluates options</p>
+            <small>Touch points: Website, reviews, demos</small>
+          </div>
+          <div class="step">
+            <div class="step-number">3</div>
+            <h3>Purchase</h3>
+            <p>User makes decision</p>
+            <small>Touch points: Checkout, payment, confirmation</small>
+          </div>
+          <div class="step">
+            <div class="step-number">4</div>
+            <h3>Onboarding</h3>
+            <p>User starts using product</p>
+            <small>Touch points: Setup, tutorials, first use</small>
+          </div>
+          <div class="step">
+            <div class="step-number">5</div>
+            <h3>Retention</h3>
+            <p>User continues engagement</p>
+            <small>Touch points: Features, support, updates</small>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 20: Design Systems & Style Guides -->
+    <div class="slide">
+      <h2>Design Systems & Style Guides</h2>
+      <div class="visual-box">
+        <div class="icon">📋</div>
+        <h3>Creating Consistency at Scale</h3>
+        <div class="principles-grid">
+          <div class="principle">
+            <h3>🎨 Visual Elements</h3>
+            <ul>
+              <li>Color palette & usage</li>
+              <li>Typography scale</li>
+              <li>Iconography style</li>
+              <li>Photography guidelines</li>
+            </ul>
+          </div>
+          <div class="principle">
+            <h3>🧩 Components</h3>
+            <ul>
+              <li>Button variations</li>
+              <li>Form elements</li>
+              <li>Navigation patterns</li>
+              <li>Cards & containers</li>
+            </ul>
+          </div>
+          <div class="principle">
+            <h3>📐 Layout Patterns</h3>
+            <ul>
+              <li>Grid systems</li>
+              <li>Spacing rules</li>
+              <li>Responsive breakpoints</li>
+              <li>Page templates</li>
+            </ul>
+          </div>
+          <div class="principle">
+            <h3>📝 Guidelines</h3>
+            <ul>
+              <li>Voice & tone</li>
+              <li>Accessibility standards</li>
+              <li>Usage examples</li>
+              <li>Do's and don'ts</li>
+            </ul>
+          </div>
+        </div>
+        <div class="quote">
+          "A design system is a single source of truth which groups all the elements that will allow the teams to
+          design, realize and develop a product."
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 21: Real-World UX Case Study - AI Financial Planning -->
+    <div class="slide">
+      <h2>Case Study: AI Financial Planning App</h2>
+      <div class="visual-box">
+        <div class="icon">💰</div>
+        <h3>Problem: Complex financial planning is intimidating for average users</h3>
+        <div class="example-showcase">
+          <div class="example">
+            <h3>🔍 UX Research Insights</h3>
+            <ul>
+              <li>Users avoid financial planning due to complexity</li>
+              <li>85% want personalized recommendations</li>
+              <li>Trust is critical for financial apps</li>
+              <li>Mobile-first usage patterns</li>
+            </ul>
+          </div>
+          <div class="example">
+            <h3>🎯 Design Solutions</h3>
+            <ul>
+              <li>Progressive disclosure of complex data</li>
+              <li>AI explains recommendations in simple terms</li>
+              <li>Visual progress tracking</li>
+              <li>Security badges and transparency</li>
+            </ul>
+          </div>
+        </div>
+        <p><strong>Result:</strong> 73% increase in user engagement, 45% improvement in goal completion rates</p>
+      </div>
+    </div>
+
+    <!-- Slide 22: Real-World UX Case Study - AI Document Search -->
+    <div class="slide">
+      <h2>Case Study: AI Document Search Platform</h2>
+      <div class="visual-box">
+        <div class="icon">🔍</div>
+        <h3>Problem: Enterprise users spend 2.5 hours daily searching for documents</h3>
+        <div class="example-showcase">
+          <div class="example bad-example">
+            <h3>❌ Before: Traditional Search</h3>
+            <ul>
+              <li>Keyword-only search</li>
+              <li>20+ results per page</li>
+              <li>No context or preview</li>
+              <li>Manual filtering required</li>
+            </ul>
+          </div>
+          <div class="example good-example">
+            <h3>✅ After: AI-Enhanced UX</h3>
+            <ul>
+              <li>"Find last month's budget proposal"</li>
+              <li>Smart result ranking with relevance scores</li>
+              <li>Instant previews and summaries</li>
+              <li>Related documents suggestions</li>
+            </ul>
+          </div>
+        </div>
+        <p><strong>Results:</strong> 60% reduction in search time, 89% user satisfaction increase</p>
+      </div>
+    </div>
+
+    <!-- Slide 23: Real-World UX Case Study - AI Study Tool -->
+    <div class="slide">
+      <h2>Case Study: AI-Powered Study Tool</h2>
+      <div class="visual-box">
+        <div class="icon">📚</div>
+        <h3>Problem: Students struggle with personalized learning and retention</h3>
+        <div class="principles-grid">
+          <div class="principle">
+            <h3>🧠 Learning Psychology</h3>
+            <p>Spaced repetition algorithms, active recall techniques, personalized difficulty adjustment</p>
+          </div>
+          <div class="principle">
+            <h3>🎮 Gamification</h3>
+            <p>Progress streaks, achievement badges, peer leaderboards, milestone celebrations</p>
+          </div>
+          <div class="principle">
+            <h3>🤖 AI Personalization</h3>
+            <p>Adaptive learning paths, weakness identification, optimal study time recommendations</p>
+          </div>
+          <div class="principle">
+            <h3>📱 Multi-Modal Learning</h3>
+            <p>Visual, auditory, kinesthetic learning styles, voice commands, gesture controls</p>
+          </div>
+        </div>
+        <div class="quote">
+          "The AI feels like a personal tutor who knows exactly what I need to study and when" - Beta User Feedback
+        </div>
+        <p><strong>Impact:</strong> 40% improvement in retention rates, 65% increase in study consistency</p>
+      </div>
+    </div>
+
+    <!-- Slide 24: AI-UX Design Principles -->
+    <div class="slide">
+      <h2>UX Design Principles for AI Applications</h2>
+      <div class="visual-box">
+        <div class="icon">🤖</div>
+        <h3>Designing Human-Centered AI Experiences</h3>
+        <div class="principles-grid">
+          <div class="principle">
+            <h3>🔍 Transparency</h3>
+            <p>Show how AI makes decisions, provide confidence levels, explain recommendations clearly</p>
+          </div>
+          <div class="principle">
+            <h3>🎛️ User Control</h3>
+            <p>Allow users to override AI decisions, provide manual alternatives, adjustable automation levels</p>
+          </div>
+          <div class="principle">
+            <h3>🚫 Graceful Failures</h3>
+            <p>Handle AI uncertainty well, provide fallback options, clear error communication</p>
+          </div>
+          <div class="principle">
+            <h3>📚 Continuous Learning</h3>
+            <p>Learn from user feedback, adapt to preferences, show improvement over time</p>
+          </div>
+          <div class="principle">
+            <h3>🔐 Privacy First</h3>
+            <p>Clear data usage policies, minimal data collection, user consent for all AI features</p>
+          </div>
+          <div class="principle">
+            <h3>🎯 Progressive Disclosure</h3>
+            <p>Start simple, reveal complexity gradually, contextual help when needed</p>
+          </div>
+        </div>
+        <div class="quote">
+          "AI should feel like a helpful assistant, not a mysterious black box"
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 25: AI Financial Planning UI -->
+    <div class="slide">
+      <h2>AI Financial Planning - UI Implementation</h2>
+      <div class="visual-box">
+        <div class="icon">💰</div>
+        <h3>Mobile-First Responsive Design</h3>
+        <div
+          style="display: flex; justify-content: center; gap: 20px; margin: 20px auto; flex-wrap: wrap; max-width: 100%;">
+          <!-- Mobile Phone Mockup -->
+          <div
+            style="width: 240px; height: 450px; background: #1a1a1a; border-radius: 20px; padding: 15px; box-shadow: 0 8px 25px rgba(0,0,0,0.3); flex-shrink: 0;">
+            <div
+              style="background: #000; width: 50px; height: 3px; border-radius: 2px; margin: 0 auto 8px; opacity: 0.3;">
+            </div>
+            <div
+              style="display: flex; justify-content: space-between; align-items: center; padding: 3px 8px; font-size: 10px; color: #888; margin-bottom: 10px;">
+              <span>9:41</span>
+              <span>📶🔋</span>
+            </div>
+            <div
+              style="display: flex; align-items: center; justify-content: space-between; padding: 8px; margin-bottom: 12px;">
+              <h3 style="color: #4ecdc4; margin: 0; font-size: 14px;">💰 FinanceAI</h3>
+              <div
+                style="width: 24px; height: 24px; background: #4ecdc4; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px;">
+                👤</div>
+            </div>
+            <div
+              style="background: linear-gradient(135deg, #4ecdc4, #45b7d1); border-radius: 12px; padding: 15px; margin-bottom: 12px; color: #000;">
+              <div style="display: flex; align-items: center; margin-bottom: 8px;">
+                <span style="font-size: 18px; margin-right: 8px;">🏠</span>
+                <div>
+                  <h4 style="margin: 0; font-size: 12px;">Dream Home Fund</h4>
+                  <p style="margin: 0; font-size: 10px; opacity: 0.8;">$28k of $80k</p>
+                </div>
+              </div>
+              <div style="background: rgba(0,0,0,0.1); height: 6px; border-radius: 3px; margin: 8px 0;">
+                <div style="background: #000; height: 100%; width: 35%; border-radius: 3px;"></div>
+              </div>
+              <p style="margin: 0; font-size: 11px; font-weight: bold;">35% Complete</p>
+            </div>
+          </div>
+
+          <!-- Desktop Layout -->
+          <div
+            style="width: 400px; height: 450px; background: #1a1a1a; border-radius: 12px; padding: 20px; box-shadow: 0 8px 25px rgba(0,0,0,0.3); flex-shrink: 0;">
+            <h2 style="color: #4ecdc4; margin: 0 0 15px 0; font-size: 18px;">💰 Dashboard</h2>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 15px;">
+              <div
+                style="background: linear-gradient(135deg, #4ecdc4, #45b7d1); padding: 15px; border-radius: 10px; color: #000;">
+                <h4 style="margin: 0 0 4px 0; font-size: 11px; opacity: 0.8;">MONTHLY</h4>
+                <p style="margin: 0; font-size: 18px; font-weight: bold;">$1,350</p>
+                <p style="margin: 4px 0 0 0; font-size: 10px;">↗️ $150 ahead</p>
+              </div>
+              <div
+                style="background: linear-gradient(135deg, #ff6b6b, #ee5a52); padding: 15px; border-radius: 10px; color: #000;">
+                <h4 style="margin: 0 0 4px 0; font-size: 11px; opacity: 0.8;">TIME LEFT</h4>
+                <p style="margin: 0; font-size: 18px; font-weight: bold;">3.2 years</p>
+                <p style="margin: 4px 0 0 0; font-size: 10px;">📈 2 months early!</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="principles-grid">
+          <div class="principle">
+            <h3>📱 Mobile-First Design</h3>
+            <p>Touch-friendly targets, thumb navigation, conversational UI, voice input</p>
+          </div>
+          <div class="principle">
+            <h3>🎨 Visual Hierarchy</h3>
+            <p>Color-coded progress, clear data visualization, contextual actions</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 26: AI Document Search UI -->
+    <div class="slide">
+      <h2>AI Document Search - UI Implementation</h2>
+      <div class="visual-box">
+        <div class="icon">🔍</div>
+        <h3>Enterprise Search Interface</h3>
+        <div
+          style="display: flex; justify-content: center; gap: 20px; margin: 20px auto; flex-wrap: wrap; max-width: 100%;">
+          <div
+            style="width: 450px; height: 300px; background: #1a1a1a; border-radius: 10px; padding: 20px; box-shadow: 0 8px 25px rgba(0,0,0,0.3); flex-shrink: 0;">
+            <h3 style="color: #4ecdc4; margin: 0 0 10px 0; font-size: 16px;">🔍 IntelliSearch</h3>
+            <div style="position: relative; margin-bottom: 15px;">
+              <input type="text" placeholder="Find 'Q3 budget proposal from Sarah'"
+                style="width: 100%; padding: 10px 35px 10px 15px; border: 2px solid #4ecdc4; border-radius: 6px; background: #2a2a2a; color: white; font-size: 12px;" />
+              <button
+                style="position: absolute; right: 8px; top: 50%; transform: translateY(-50%); background: #4ecdc4; border: none; padding: 4px; border-radius: 3px; font-size: 12px;">🔍</button>
+            </div>
+            <div style="background: #2a2a2a; padding: 12px; border-radius: 6px; border-left: 3px solid #4ecdc4;">
+              <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 6px;">
+                <h4 style="margin: 0; color: white; font-size: 12px;">📄 Q3_Budget_Proposal.pdf</h4>
+                <span
+                  style="background: #4ecdc4; color: #000; padding: 2px 6px; border-radius: 8px; font-size: 9px; font-weight: bold;">98%</span>
+              </div>
+              <p style="font-size: 9px; color: #888; margin: 3px 0;">👤 Sarah Martinez • 📅 Sept 15</p>
+              <p style="font-size: 10px; color: #ccc; margin: 6px 0;">"Q3 budget allocation shows 15% increase..."</p>
+            </div>
+          </div>
+        </div>
+        <div class="principles-grid">
+          <div class="principle">
+            <h3>🎯 Smart Search UX</h3>
+            <p>Natural language queries, relevance scoring, contextual suggestions</p>
+          </div>
+          <div class="principle">
+            <h3>📱 Responsive Design</h3>
+            <p>Touch-optimized mobile, progressive disclosure, thumb navigation</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 27: AI Study Tool UI -->
+    <div class="slide">
+      <h2>AI Study Tool - UI Implementation</h2>
+      <div class="visual-box">
+        <div class="icon">📚</div>
+        <h3>Adaptive Learning Interface</h3>
+        <div
+          style="display: flex; justify-content: center; gap: 20px; margin: 20px auto; flex-wrap: wrap; max-width: 100%;">
+          <div
+            style="width: 220px; height: 400px; background: #1a1a1a; border-radius: 20px; padding: 15px; box-shadow: 0 8px 25px rgba(0,0,0,0.3); flex-shrink: 0;">
+            <div
+              style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; font-size: 10px; color: #888;">
+              <span>9:41</span>
+              <span>📚 StudyAI</span>
+              <span>🔋 85%</span>
+            </div>
+            <div style="display: flex; gap: 6px; margin-bottom: 15px;">
+              <div
+                style="flex: 1; background: linear-gradient(135deg, #4ecdc4, #45b7d1); padding: 8px; border-radius: 8px; text-align: center; color: #000;">
+                <div style="font-size: 14px; font-weight: bold;">7</div>
+                <div style="font-size: 7px;">Streak</div>
+              </div>
+              <div
+                style="flex: 1; background: linear-gradient(135deg, #ff6b6b, #ee5a52); padding: 8px; border-radius: 8px; text-align: center; color: #000;">
+                <div style="font-size: 14px; font-weight: bold;">2.4k</div>
+                <div style="font-size: 7px;">XP</div>
+              </div>
+              <div
+                style="flex: 1; background: linear-gradient(135deg, #ffc107, #ff9800); padding: 8px; border-radius: 8px; text-align: center; color: #000;">
+                <div style="font-size: 14px; font-weight: bold;">12</div>
+                <div style="font-size: 7px;">Level</div>
+              </div>
+            </div>
+            <div style="background: #2a2a2a; padding: 12px; border-radius: 12px;">
+              <div style="display: flex; align-items: center; margin-bottom: 8px;">
+                <div
+                  style="width: 20px; height: 20px; background: #4ecdc4; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 6px; font-size: 10px;">
+                  🤖</div>
+                <h4 style="margin: 0; color: white; font-size: 10px;">AI Study Buddy</h4>
+              </div>
+              <p style="color: #ccc; font-size: 9px; line-height: 1.3;">"Focus on cardiovascular system today. You learn
+                best with visual aids!"</p>
+            </div>
+          </div>
+        </div>
+        <div class="principles-grid">
+          <div class="principle">
+            <h3>🎯 Personalized UX</h3>
+            <p>AI explains learning insights, adapts to user patterns, provides contextual guidance</p>
+          </div>
+          <div class="principle">
+            <h3>🎮 Motivational UI</h3>
+            <p>Gamification elements, visual progress tracking, achievement system</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 28: Next Steps -->
+    <div class="slide">
+      <h2>Master AI-Powered UX/UI Design</h2>
+      <div class="visual-box">
+        <div class="icon">🚀</div>
+        <h3>From Principles to Pixel-Perfect Implementation</h3>
+        <div class="process-steps">
+          <div class="step">
+            <div class="step-number">1</div>
+            <h3>Study AI Interaction Patterns</h3>
+            <p>Conversational UI, progressive disclosure, confidence indicators</p>
+          </div>
+          <div class="step">
+            <div class="step-number">2</div>
+            <h3>Practice with Real AI Projects</h3>
+            <p>Build chat interfaces, design dashboards, create adaptive components</p>
+          </div>
+          <div class="step">
+            <div class="step-number">3</div>
+            <h3>Master Visual Hierarchy</h3>
+            <p>Information prioritization, relevance scoring, contextual actions</p>
+          </div>
+          <div class="step">
+            <div class="step-number">4</div>
+            <h3>Design for Trust & Transparency</h3>
+            <p>Explain AI decisions, show confidence levels, provide manual overrides</p>
+          </div>
+        </div>
+        <div class="quote">
+          "The best AI interfaces don't feel like AI at all - they feel like magic that just works for humans"
+        </div>
+        <p><strong>Key Takeaway:</strong> AI amplifies good UX design principles - it doesn't replace them. Focus on
+          human needs first, then enhance with intelligent features!</p>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="controls">
+    <button class="nav-button" onclick="slideManager.previousSlide()">← Previous</button>
+    <button class="nav-button" onclick="slideManager.nextSlide()">Next →</button>
+  </div>
+
+  <script>
+    // Slide management object to avoid global variable conflicts
+    const slideManager = {
+      currentIndex: 0,
+      slides: null,
+      totalSlides: 0,
+
+      init: function () {
+        this.slides = document.querySelectorAll('.slide');
+        this.totalSlides = this.slides.length;
+        document.getElementById('totalSlides').textContent = this.totalSlides;
+        this.showSlide(0);
+        this.setupEventListeners();
+      },
+
+      showSlide: function (index) {
+        if (this.slides) {
+          this.slides.forEach(slide => slide.classList.remove('active'));
+          if (this.slides[index]) {
+            this.slides[index].classList.add('active');
+          }
+          document.getElementById('currentSlide').textContent = index + 1;
+          this.currentIndex = index;
+        }
+      },
+
+      nextSlide: function () {
+        const nextIndex = (this.currentIndex + 1) % this.totalSlides;
+        this.showSlide(nextIndex);
+      },
+
+      previousSlide: function () {
+        const prevIndex = (this.currentIndex - 1 + this.totalSlides) % this.totalSlides;
+        this.showSlide(prevIndex);
+      },
+
+      setupEventListeners: function () {
+        document.addEventListener('keydown', (event) => {
+          if (event.key === 'ArrowRight' || event.key === ' ') {
+            event.preventDefault();
+            this.nextSlide();
+          } else if (event.key === 'ArrowLeft') {
+            event.preventDefault();
+            this.previousSlide();
+          }
+        });
+      }
+    };
+
+    // Initialize when DOM is loaded
+    document.addEventListener('DOMContentLoaded', function () {
+      slideManager.init();
+    });
+  </script>
+</body>
+
+</html>
