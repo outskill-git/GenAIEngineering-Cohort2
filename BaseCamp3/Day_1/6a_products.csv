@@ -1,0 +1,10 @@
+product_id,product_name,product_description,product_price,product_in_stock_qty
+2,Smartphone,Latest model with 128GB storage and 5G capability,899.99,25
+3,Headphones,Noise-cancelling wireless headphones,199.99,50
+4,Tablet,10-inch tablet with 64GB storage,349.99,20
+5,Smartwatch,Fitness tracking and heart rate monitoring,249.99,30
+6,Camera,Digital SLR camera with 24MP sensor,599.99,10
+7,Speaker,Wireless Bluetooth speaker with 20-hour battery life,129.99,40
+8,Monitor,27-inch 4K monitor with HDR support,399.99,12
+9,Keyboard,Mechanical gaming keyboard with RGB lighting,89.99,35
+10,Mouse,Wireless ergonomic mouse with programmable buttons,49.99,45

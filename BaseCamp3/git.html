@@ -1,0 +1,890 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Git and GitHub</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+        
+        .title {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 40px;
+            font-size: 2.5em;
+            font-weight: 300;
+        }
+        
+        .slide {
+            margin-bottom: 50px;
+            padding: 30px;
+            border-radius: 15px;
+            transition: transform 0.3s ease;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        
+        .slide:hover {
+            transform: translateY(-5px);
+        }
+        
+        .slide-1 {
+            background: linear-gradient(135deg, #ff9a9e, #fecfef);
+        }
+        
+        .slide-2 {
+            background: linear-gradient(135deg, #a8edea, #fed6e3);
+        }
+        
+        .slide-3 {
+            background: linear-gradient(135deg, #48dbfb, #0abde3);
+        }
+        
+        .slide-4 {
+            background: linear-gradient(135deg, #ffecd2, #fcb69f);
+        }
+        
+        .slide-5 {
+            background: linear-gradient(135deg, #d299c2, #fef9d7);
+        }
+        
+        .slide-6 {
+            background: linear-gradient(135deg, #89f7fe, #66a6ff);
+        }
+        
+        .slide-title {
+            font-size: 2em;
+            margin-bottom: 25px;
+            text-align: center;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        
+        .content-box {
+            background: rgba(255,255,255,0.95);
+            color: #333;
+            padding: 25px;
+            border-radius: 12px;
+            margin: 15px 0;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .content-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4);
+        }
+        
+        .requirements-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .requirement-card {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 5px solid #007bff;
+            text-align: center;
+        }
+        
+        .requirement-icon {
+            font-size: 3em;
+            margin-bottom: 10px;
+            display: block;
+        }
+        
+        .git-flow-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            margin: 30px 0;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        
+        .git-stage {
+            text-align: center;
+            padding: 25px;
+            border-radius: 15px;
+            background: rgba(255,255,255,0.9);
+            border: 4px solid;
+            min-width: 200px;
+            position: relative;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+        }
+        
+        .stage-working {
+            border-color: #ffc107;
+            background: linear-gradient(135deg, rgba(255,193,7,0.1), rgba(255,193,7,0.05));
+        }
+        
+        .stage-staging {
+            border-color: #17a2b8;
+            background: linear-gradient(135deg, rgba(23,162,184,0.1), rgba(23,162,184,0.05));
+        }
+        
+        .stage-local {
+            border-color: #28a745;
+            background: linear-gradient(135deg, rgba(40,167,69,0.1), rgba(40,167,69,0.05));
+        }
+        
+        .stage-title {
+            font-size: 1.3em;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #2c3e50;
+        }
+        
+        .stage-icon {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            display: block;
+        }
+        
+        .flow-arrow {
+            font-size: 2.5em;
+            color: #6c757d;
+            margin: 0 10px;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        
+        .command-box {
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            margin: 10px 0;
+            position: relative;
+            overflow-x: auto;
+            font-size: 0.9em;
+            line-height: 1.4;
+        }
+        
+        .command-box::before {
+            content: '$ ';
+            color: #3498db;
+            font-weight: bold;
+        }
+        
+        .remote-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        .remote-option {
+            background: rgba(255,255,255,0.9);
+            padding: 20px;
+            border-radius: 12px;
+            border: 3px solid;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+        
+        .remote-option:hover {
+            transform: scale(1.05);
+        }
+        
+        .github-option {
+            border-color: #24292e;
+        }
+        
+        .gitlab-option {
+            border-color: #fc6d26;
+        }
+        
+        .bitbucket-option {
+            border-color: #0052cc;
+        }
+        
+        .local-remote-flow {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin: 30px 0;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        
+        .repo-box {
+            flex: 1;
+            min-width: 250px;
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            border: 4px solid;
+        }
+        
+        .local-repo {
+            border-color: #28a745;
+            background: linear-gradient(135deg, rgba(40,167,69,0.1), rgba(40,167,69,0.05));
+        }
+        
+        .remote-repo {
+            border-color: #6f42c1;
+            background: linear-gradient(135deg, rgba(111,66,193,0.1), rgba(111,66,193,0.05));
+        }
+        
+        .sync-arrows {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .arrow-up, .arrow-down {
+            font-size: 1.5em;
+            padding: 8px 15px;
+            border-radius: 20px;
+            color: white;
+            font-weight: bold;
+        }
+        
+        .arrow-up {
+            background: #28a745;
+        }
+        
+        .arrow-down {
+            background: #17a2b8;
+        }
+        
+        .fork-flow {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            margin: 30px 0;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        
+        .fork-step {
+            text-align: center;
+            padding: 20px;
+            border-radius: 12px;
+            background: rgba(255,255,255,0.9);
+            border: 3px solid;
+            min-width: 200px;
+        }
+        
+        .original-repo {
+            border-color: #dc3545;
+        }
+        
+        .forked-repo {
+            border-color: #28a745;
+        }
+        
+        .local-clone {
+            border-color: #17a2b8;
+        }
+        
+        .branch-container {
+            background: rgba(255,255,255,0.9);
+            padding: 25px;
+            border-radius: 12px;
+            margin: 20px 0;
+        }
+        
+        .branch-visual {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .branch-line {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .branch-dot {
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            border: 3px solid;
+        }
+        
+        .main-branch {
+            border-color: #28a745;
+            background: #28a745;
+        }
+        
+        .feature-branch {
+            border-color: #007bff;
+            background: #007bff;
+        }
+        
+        .branch-label {
+            font-weight: bold;
+            padding: 5px 15px;
+            border-radius: 15px;
+            color: white;
+            font-size: 0.9em;
+        }
+        
+        .main-label {
+            background: #28a745;
+        }
+        
+        .feature-label {
+            background: #007bff;
+        }
+        
+        .commit-box {
+            background: #f8f9fa;
+            padding: 8px 12px;
+            border-radius: 8px;
+            border-left: 3px solid #6c757d;
+            font-size: 0.9em;
+            flex: 1;
+        }
+        
+        .use-cases {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        .use-case {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 5px solid;
+            text-align: center;
+        }
+        
+        .feature-case {
+            border-left-color: #007bff;
+        }
+        
+        .experiment-case {
+            border-left-color: #ffc107;
+        }
+        
+        .hotfix-case {
+            border-left-color: #dc3545;
+        }
+        
+        .workflow-steps {
+            background: rgba(255,255,255,0.9);
+            padding: 25px;
+            border-radius: 12px;
+            margin: 20px 0;
+        }
+        
+        .workflow-step {
+            display: flex;
+            align-items: center;
+            margin: 15px 0;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid #007bff;
+        }
+        
+        .step-number {
+            background: #007bff;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 15px;
+        }
+        
+        .step-content {
+            flex: 1;
+        }
+        
+        .step-title {
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+        
+        .step-description {
+            color: #666;
+            font-size: 0.9em;
+        }
+        
+        @media (max-width: 768px) {
+            .git-flow-container,
+            .local-remote-flow,
+            .fork-flow {
+                flex-direction: column;
+            }
+            
+            .flow-arrow {
+                transform: rotate(90deg);
+            }
+            
+            .sync-arrows {
+                flex-direction: row;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="title">🔧 Complete Git & GitHub Guide</h1>
+        
+        <!-- Slide 1: Basic Requirements for Git -->
+        <div class="slide slide-1">
+            <h2 class="slide-title">1️⃣ Basic Requirements for Git</h2>
+            <div class="content-box">
+                <h3>What You Need to Get Started with Git</h3>
+                <div class="requirements-grid">
+                    <div class="requirement-card">
+                        <span class="requirement-icon">💻</span>
+                        <h4>Install Git</h4>
+                        <p><strong>Windows:</strong> Download from git-scm.com<br>
+                        <strong>Mac:</strong> brew install git<br>
+                        <strong>Linux:</strong> sudo apt install git</p>
+                    </div>
+                    <div class="requirement-card">
+                        <span class="requirement-icon">👤</span>
+                        <h4>Configure Identity</h4>
+                        <div class="command-box">git config --global user.name "Your Name"</div>
+                        <div class="command-box">git config --global user.email "email@example.com"</div>
+                    </div>
+                    <div class="requirement-card">
+                        <span class="requirement-icon">📁</span>
+                        <h4>Project Directory</h4>
+                        <p>Any folder with files you want to track. Git will create a hidden <code>.git</code> folder to store version history.</p>
+                    </div>
+                    <div class="requirement-card">
+                        <span class="requirement-icon">🎯</span>
+                        <h4>Basic Understanding</h4>
+                        <p><strong>Repository:</strong> Project folder with version control<br>
+                        <strong>Commit:</strong> Saved snapshot of your changes<br>
+                        <strong>Branch:</strong> Separate line of development</p>
+                    </div>
+                </div>
+                
+                <div style="background: #e8f5e8; padding: 20px; border-radius: 10px; margin-top: 20px; border-left: 5px solid #28a745;">
+                    <h4 style="color: #28a745; margin: 15px 0 10px 0;">PR Workflow:</h4>
+                    <ol style="margin: 0; color: #2c3e50;">
+                        <li>Push your feature branch to GitHub</li>
+                        <li>Create Pull Request on GitHub</li>
+                        <li>Team reviews your code</li>
+                        <li>Make changes if requested</li>
+                        <li>PR gets approved and merged</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Slide 6: Typical Workflow -->
+        <div class="slide slide-6">
+            <h2 class="slide-title">6️⃣ Complete Git Workflow</h2>
+            <div class="content-box">
+                <h3>End-to-End Development Workflow</h3>
+                <div class="workflow-steps">
+                    <div class="workflow-step">
+                        <div class="step-number">1</div>
+                        <div class="step-content">
+                            <div class="step-title">Clone or Pull Latest Changes</div>
+                            <div class="step-description">Start with the most recent version</div>
+                            <div class="command-box">git clone https://github.com/username/repo.git</div>
+                            <div class="command-box">git pull origin main</div>
+                        </div>
+                    </div>
+                    
+                    <div class="workflow-step">
+                        <div class="step-number">2</div>
+                        <div class="step-content">
+                            <div class="step-title">Create Feature Branch</div>
+                            <div class="step-description">Work on your feature in isolation</div>
+                            <div class="command-box">git checkout -b feature/user-authentication</div>
+                        </div>
+                    </div>
+                    
+                    <div class="workflow-step">
+                        <div class="step-number">3</div>
+                        <div class="step-content">
+                            <div class="step-title">Make Changes & Commit Regularly</div>
+                            <div class="step-description">Small, focused commits with clear messages</div>
+                            <div class="command-box">git add .</div>
+                            <div class="command-box">git commit -m "Add login form validation"</div>
+                        </div>
+                    </div>
+                    
+                    <div class="workflow-step">
+                        <div class="step-number">4</div>
+                        <div class="step-content">
+                            <div class="step-title">Push Feature Branch</div>
+                            <div class="step-description">Upload your branch to remote repository</div>
+                            <div class="command-box">git push origin feature/user-authentication</div>
+                        </div>
+                    </div>
+                    
+                    <div class="workflow-step">
+                        <div class="step-number">5</div>
+                        <div class="step-content">
+                            <div class="step-title">Create Pull Request</div>
+                            <div class="step-description">Propose your changes for review</div>
+                            <div style="background: #f8f9fa; padding: 10px; border-radius: 5px; margin-top: 8px; color: #666;">
+                                Go to GitHub → Compare & pull request → Add description → Create pull request
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="workflow-step">
+                        <div class="step-number">6</div>
+                        <div class="step-content">
+                            <div class="step-title">Code Review & Discussion</div>
+                            <div class="step-description">Team reviews, suggests changes, approves</div>
+                            <div style="background: #f8f9fa; padding: 10px; border-radius: 5px; margin-top: 8px; color: #666;">
+                                Address feedback → Push additional commits → Get approval
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="workflow-step">
+                        <div class="step-number">7</div>
+                        <div class="step-content">
+                            <div class="step-title">Merge & Clean Up</div>
+                            <div class="step-description">Merge PR and delete feature branch</div>
+                            <div class="command-box">git checkout main</div>
+                            <div class="command-box">git pull origin main</div>
+                            <div class="command-box">git branch -d feature/user-authentication</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <h3 style="margin-top: 30px;">Team Collaboration Best Practices</h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin: 20px 0;">
+                    <div style="background: #d4edda; padding: 20px; border-radius: 10px; border-left: 5px solid #28a745;">
+                        <h4 style="color: #28a745; margin: 0 0 10px 0;">✅ Do's</h4>
+                        <ul style="margin: 0; color: #2c3e50; font-size: 0.9em;">
+                            <li>Write clear commit messages</li>
+                            <li>Keep commits small and focused</li>
+                            <li>Pull before pushing</li>
+                            <li>Use descriptive branch names</li>
+                            <li>Review others' code thoroughly</li>
+                            <li>Test before creating PR</li>
+                        </ul>
+                    </div>
+                    
+                    <div style="background: #f8d7da; padding: 20px; border-radius: 10px; border-left: 5px solid #dc3545;">
+                        <h4 style="color: #dc3545; margin: 0 0 10px 0;">❌ Don'ts</h4>
+                        <ul style="margin: 0; color: #2c3e50; font-size: 0.9em;">
+                            <li>Don't commit passwords/secrets</li>
+                            <li>Don't push directly to main</li>
+                            <li>Don't make huge commits</li>
+                            <li>Don't ignore merge conflicts</li>
+                            <li>Don't skip code reviews</li>
+                            <li>Don't force push to shared branches</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div style="background: #fff3cd; padding: 20px; border-radius: 10px; margin-top: 20px; border-left: 5px solid #ffc107;">
+                    <h4 style="color: #856404; margin: 0 0 15px 0;">🎯 Quick Reference Commands</h4>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px;">
+                        <div>
+                            <strong>Daily Workflow:</strong>
+                            <div class="command-box" style="font-size: 0.8em;">git status<br>git add .<br>git commit -m "message"<br>git push</div>
+                        </div>
+                        <div>
+                            <strong>Branch Management:</strong>
+                            <div class="command-box" style="font-size: 0.8em;">git branch<br>git checkout -b new-feature<br>git merge feature-branch<br>git branch -d old-branch</div>
+                        </div>
+                        <div>
+                            <strong>Sync with Remote:</strong>
+                            <div class="command-box" style="font-size: 0.8em;">git pull origin main<br>git fetch --all<br>git remote -v<br>git log --oneline</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="background: #e3f2fd; padding: 20px; border-radius: 10px; margin-top: 20px; text-align: center; border-left: 5px solid #2196f3;">
+                    <h4 style="color: #1976d2; margin: 0 0 10px 0;">🏆 You're Now Ready for Professional Git Workflows!</h4>
+                    <p style="margin: 0; color: #2c3e50;">These patterns work for teams of any size, from solo projects to large organizations. Practice these workflows and you'll be collaborating like a pro!</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>="color: #28a745; margin: 0 0 10px 0;">🚀 Quick Start Commands:</h4>
+                    <div class="command-box">cd your-project-folder</div>
+                    <div class="command-box">git init</div>
+                    <div class="command-box">git add .</div>
+                    <div class="command-box">git commit -m "Initial commit"</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Slide 2: Working Directory, Staging Area, Local Repository -->
+        <div class="slide slide-2">
+            <h2 class="slide-title">2️⃣ Git's Three-Stage Architecture</h2>
+            <div class="content-box">
+                <div class="git-flow-container">
+                    <div class="git-stage stage-working">
+                        <span class="stage-icon">📝</span>
+                        <div class="stage-title">Working Directory</div>
+                        <p><strong>What it is:</strong> Your actual project files where you make changes</p>
+                        <p><strong>Status:</strong> Modified files (red in git status)</p>
+                        <div class="command-box">git status</div>
+                        <div class="command-box">git diff</div>
+                    </div>
+                    
+                    <div class="flow-arrow">→</div>
+                    
+                    <div class="git-stage stage-staging">
+                        <span class="stage-icon">📦</span>
+                        <div class="stage-title">Staging Area</div>
+                        <p><strong>What it is:</strong> Temporary area to prepare changes for commit</p>
+                        <p><strong>Status:</strong> Staged files (green in git status)</p>
+                        <div class="command-box">git add filename.py</div>
+                        <div class="command-box">git add .</div>
+                        <div class="command-box">git reset filename.py</div>
+                    </div>
+                    
+                    <div class="flow-arrow">→</div>
+                    
+                    <div class="git-stage stage-local">
+                        <span class="stage-icon">💾</span>
+                        <div class="stage-title">Local Repository</div>
+                        <p><strong>What it is:</strong> Permanent storage of your project history</p>
+                        <p><strong>Status:</strong> Committed files (clean working tree)</p>
+                        <div class="command-box">git commit -m "message"</div>
+                        <div class="command-box">git log</div>
+                        <div class="command-box">git show</div>
+                    </div>
+                </div>
+                
+                <div style="background: #fff3cd; padding: 20px; border-radius: 10px; margin-top: 20px; border-left: 5px solid #ffc107;">
+                    <h4 style="color: #856404; margin: 0 0 15px 0;">🔄 Example Workflow:</h4>
+                    <div style="font-family: monospace; background: #f8f9fa; padding: 15px; border-radius: 8px; color: #2c3e50;">
+                        1. Edit app.py in Working Directory<br>
+                        2. git add app.py → moves to Staging Area<br>
+                        3. git commit -m "Fix login bug" → saves to Local Repository<br>
+                        4. git status → shows "nothing to commit, working tree clean"
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Slide 3: Remote Repository and Push/Pull -->
+        <div class="slide slide-3">
+            <h2 class="slide-title">3️⃣ Remote Repositories & Synchronization</h2>
+            <div class="content-box">
+                <h3>Remote Repository Options</h3>
+                <div class="remote-options">
+                    <div class="remote-option github-option">
+                        <h4>🐙 GitHub</h4>
+                        <p>Most popular platform<br>Free public repos<br>Great for open source</p>
+                    </div>
+                    <div class="remote-option gitlab-option">
+                        <h4>🦊 GitLab</h4>
+                        <p>Free private repos<br>Built-in CI/CD<br>Self-hosted option</p>
+                    </div>
+                    <div class="remote-option bitbucket-option">
+                        <h4>🪣 Bitbucket</h4>
+                        <p>Atlassian ecosystem<br>Free for small teams<br>Jira integration</p>
+                    </div>
+                </div>
+                
+                <h3 style="margin-top: 30px;">Local ↔ Remote Relationship</h3>
+                <div class="local-remote-flow">
+                    <div class="repo-box local-repo">
+                        <h4>💻 Local Repository</h4>
+                        <p>Your computer</p>
+                        <div style="font-size: 2em; margin: 10px 0;">📁</div>
+                        <p>All commits, branches, and history stored locally</p>
+                    </div>
+                    
+                    <div class="sync-arrows">
+                        <div class="arrow-up">PUSH ⬆️</div>
+                        <div style="font-size: 0.8em; color: #666;">Send changes</div>
+                        <div style="font-size: 0.8em; color: #666;">Get updates</div>
+                        <div class="arrow-down">PULL ⬇️</div>
+                    </div>
+                    
+                    <div class="repo-box remote-repo">
+                        <h4>☁️ Remote Repository</h4>
+                        <p>GitHub/GitLab/Bitbucket</p>
+                        <div style="font-size: 2em; margin: 10px 0;">🌐</div>
+                        <p>Shared repository accessible to team members</p>
+                    </div>
+                </div>
+                
+                <h3>Push Delta Changes (Only New Commits)</h3>
+                <div style="background: #f8f9fa; padding: 20px; border-radius: 10px; margin: 20px 0;">
+                    <h4>Setup Remote Connection:</h4>
+                    <div class="command-box">git remote add origin https://github.com/username/repo.git</div>
+                    <div class="command-box">git remote -v  # verify remote</div>
+                    
+                    <h4 style="margin-top: 20px;">Push Changes:</h4>
+                    <div class="command-box">git push origin main  # push to main branch</div>
+                    <div class="command-box">git push -u origin main  # first time (sets upstream)</div>
+                    
+                    <h4 style="margin-top: 20px;">Pull Changes:</h4>
+                    <div class="command-box">git pull origin main  # fetch + merge</div>
+                    <div class="command-box">git fetch origin  # download without merging</div>
+                </div>
+                
+                <div style="background: #d4edda; padding: 15px; border-radius: 8px; border-left: 4px solid #28a745;">
+                    <strong>💡 Delta Changes:</strong> Git only sends the differences (commits) you made locally that don't exist on the remote repository. This makes pushes fast and efficient!
+                </div>
+            </div>
+        </div>
+        
+        <!-- Slide 4: Forking and Syncing -->
+        <div class="slide slide-4">
+            <h2 class="slide-title">4️⃣ Forking & Syncing with Remote Repositories</h2>
+            <div class="content-box">
+                <h3>The Forking Workflow (Open Source Contribution)</h3>
+                <div class="fork-flow">
+                    <div class="fork-step original-repo">
+                        <h4>🏠 Original Repository</h4>
+                        <div style="font-size: 2em; margin: 10px 0;">📚</div>
+                        <p>Someone else's project<br>(e.g., facebook/react)</p>
+                        <p><strong>You can't push directly</strong></p>
+                    </div>
+                    
+                    <div style="font-size: 2em; color: #28a745;">→</div>
+                    
+                    <div class="fork-step forked-repo">
+                        <h4>🍴 Your Fork</h4>
+                        <div style="font-size: 2em; margin: 10px 0;">📑</div>
+                        <p>Your copy on GitHub<br>(e.g., yourname/react)</p>
+                        <p><strong>You have full control</strong></p>
+                    </div>
+                    
+                    <div style="font-size: 2em; color: #17a2b8;">→</div>
+                    
+                    <div class="fork-step local-clone">
+                        <h4>💻 Local Clone</h4>
+                        <div style="font-size: 2em; margin: 10px 0;">📁</div>
+                        <p>Local copy on your machine</p>
+                        <p><strong>Where you make changes</strong></p>
+                    </div>
+                </div>
+                
+                <h3>Forking Process & Commands</h3>
+                <div style="background: #f8f9fa; padding: 20px; border-radius: 10px; margin: 20px 0;">
+                    <h4>1. Fork on GitHub (Click "Fork" button)</h4>
+                    <p style="color: #666; margin: 10px 0;">This creates your own copy of the repository under your account</p>
+                    
+                    <h4>2. Clone Your Fork Locally</h4>
+                    <div class="command-box">git clone https://github.com/yourusername/repo-name.git</div>
+                    <div class="command-box">cd repo-name</div>
+                    
+                    <h4>3. Add Original Repository as Upstream</h4>
+                    <div class="command-box">git remote add upstream https://github.com/original-owner/repo-name.git</div>
+                    <div class="command-box">git remote -v  # verify remotes</div>
+                    
+                    <h4>4. Keep Your Fork Synced</h4>
+                    <div class="command-box">git fetch upstream  # get latest from original</div>
+                    <div class="command-box">git checkout main</div>
+                    <div class="command-box">git merge upstream/main  # merge changes</div>
+                    <div class="command-box">git push origin main  # update your fork</div>
+                </div>
+                
+                <div style="background: #cce5ff; padding: 20px; border-radius: 10px; border-left: 5px solid #007bff;">
+                    <h4 style="color: #0056b3; margin: 0 0 10px 0;">🔄 Why Fork Instead of Clone?</h4>
+                    <p style="margin: 0; color: #2c3e50;"><strong>Clone:</strong> Direct copy, but you can't contribute back without permissions<br>
+                    <strong>Fork:</strong> Your own copy that you can modify and propose changes back via Pull Requests</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Slide 5: Branching and Pull Requests -->
+        <div class="slide slide-5">
+            <h2 class="slide-title">5️⃣ Branching & Pull Requests</h2>
+            <div class="content-box">
+                <h3>What is Branching?</h3>
+                <div class="branch-container">
+                    <p>Branches allow you to work on different features simultaneously without affecting the main codebase.</p>
+                    
+                    <div class="branch-visual">
+                        <div class="branch-line">
+                            <div class="branch-dot main-branch"></div>
+                            <div class="branch-label main-label">main</div>
+                            <div class="commit-box">Initial commit → Add login page → Fix CSS bugs</div>
+                        </div>
+                        <div class="branch-line" style="margin-left: 30px;">
+                            <div class="branch-dot feature-branch"></div>
+                            <div class="branch-label feature-label">feature/payment</div>
+                            <div class="commit-box">Add payment form → Connect to Stripe API → Add validation</div>
+                        </div>
+                        <div class="branch-line" style="margin-left: 30px;">
+                            <div class="branch-dot feature-branch"></div>
+                            <div class="branch-label feature-label">feature/user-profile</div>
+                            <div class="commit-box">Create profile page → Add photo upload → Settings page</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <h3>Branching Commands</h3>
+                <div style="background: #f8f9fa; padding: 20px; border-radius: 10px; margin: 20px 0;">
+                    <div class="command-box">git branch  # list all branches</div>
+                    <div class="command-box">git branch feature/new-feature  # create branch</div>
+                    <div class="command-box">git checkout feature/new-feature  # switch to branch</div>
+                    <div class="command-box">git checkout -b feature/new-feature  # create + switch</div>
+                    <div class="command-box">git merge feature/new-feature  # merge into current branch</div>
+                    <div class="command-box">git branch -d feature/new-feature  # delete branch</div>
+                </div>
+                
+                <h3>Branching Use Cases</h3>
+                <div class="use-cases">
+                    <div class="use-case feature-case">
+                        <span class="requirement-icon">🚀</span>
+                        <h4>New Features</h4>
+                        <p>Develop new functionality without breaking main code</p>
+                    </div>
+                    <div class="use-case experiment-case">
+                        <span class="requirement-icon">🧪</span>
+                        <h4>Experiments</h4>
+                        <p>Try new approaches safely, delete if they don't work</p>
+                    </div>
+                    <div class="use-case hotfix-case">
+                        <span class="requirement-icon">🚨</span>
+                        <h4>Bug Fixes</h4>
+                        <p>Fix critical issues without interfering with ongoing work</p>
+                    </div>
+                </div>
+                
+                <h3>Pull Requests (PRs)</h3>
+                <div style="background: #e8f5e8; padding: 20px; border-radius: 10px; border-left: 5px solid #28a745;">
+                    <h4 style="color: #28a745; margin: 0 0 15px 0;">What is a Pull Request?</h4>
+                    <p style="margin: 0 0 15px 0;">A Pull Request is a way to propose changes to a repository. It allows code review, discussion, and testing before merging.</p>
+                    
+                    <h4 style

@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Text API Interface</title>
+</head>
+
+<body>
+  <h1>Text Processing API Interface</h1>
+
+  <div>
+    <h2>Input</h2>
+    <textarea id="textInput" rows="5" cols="50" placeholder="Enter your text here..."></textarea>
+  </div>
+
+  <div>
+    <h2>Actions</h2>
+    <button onclick="countWords()">Count Words</button>
+    <button onclick="splitText()">Split Text</button>
+  </div>
+
+  <div>
+    <h2>Results</h2>
+    <div id="results"></div>
+  </div>
+
+  <script>
+    // API base URL - change this to match your server address
+    const API_BASE_URL = 'http://0.0.0.0:9321';
+
+
+
+    // Function to count words
+    async function countWords() {
+      const textInput = document.getElementById('textInput').value;
+      if (!textInput.trim()) {
+        alert('Please enter some text first!');
+        return;
+      }
+
+      try {
+        const response = await fetch(`${API_BASE_URL}/count`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ a: textInput })
+        });
+
+        const data = await response.json();
+        displayResults(data);
+      } catch (error) {
+        displayError(error);
+      }
+    }
+
+    // Function to split text
+    async function splitText() {
+      const textInput = document.getElementById('textInput').value;
+      if (!textInput.trim()) {
+        alert('Please enter some text first!');
+        return;
+      }
+
+      try {
+        const response = await fetch(`${API_BASE_URL}/split`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ a: textInput })
+        });
+
+        const data = await response.json();
+        displayResults(data);
+      } catch (error) {
+        displayError(error);
+      }
+    }
+
+    // Function to display results
+    function displayResults(data) {
+      const resultsDiv = document.getElementById('results');
+
+      if (Array.isArray(data)) {
+        // For split text result
+        resultsDiv.innerHTML = '<h3>Words in text:</h3>';
+        const list = document.createElement('ol');
+        data.forEach(word => {
+          const item = document.createElement('li');
+          item.textContent = word;
+          list.appendChild(item);
+        });
+        resultsDiv.appendChild(list);
+      } else {
+        // For word count result
+        resultsDiv.innerHTML = '<h3>Result:</h3>';
+        resultsDiv.innerHTML += `<p>${Object.values(data)[0]}</p>`;
+      }
+    }
+
+    // Function to display errors
+    function displayError(error) {
+      const resultsDiv = document.getElementById('results');
+      resultsDiv.innerHTML = '<h3>Error:</h3>';
+      resultsDiv.innerHTML += `<p>Failed to communicate with the API. Make sure the server is running at ${API_BASE_URL}.</p>`;
+      resultsDiv.innerHTML += `<p>Error details: ${error.message}</p>`;
+    }
+  </script>
+</body>
+
+</html>
