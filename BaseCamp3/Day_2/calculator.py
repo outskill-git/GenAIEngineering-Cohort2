@@ -6,6 +6,10 @@ st.title("Calculator App")
 st.write("This app connects to a FastAPI calculator service.")
 
 # Define the API base URL
+<<<<<<< HEAD
+=======
+# api_url = "http://0.0.0.0:9321"
+>>>>>>> efc449e (added week3 content)
 api_url = "https://genaiengineering-cohort2-uzeu.onrender.com"
 
 # Initialize session state to store the calculator display and current operation

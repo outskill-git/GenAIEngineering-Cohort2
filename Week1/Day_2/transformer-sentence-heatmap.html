@@ -1,0 +1,915 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transformers: Sentence Embeddings & Similarity</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            min-height: 100vh;
+            color: #333;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        header {
+            text-align: center;
+            color: white;
+            margin-bottom: 60px;
+            animation: fadeInDown 1s ease-out;
+        }
+
+        h1 {
+            font-size: 3.5em;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .subtitle {
+            font-size: 1.4em;
+            opacity: 0.9;
+        }
+
+        .section {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 40px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            animation: fadeInUp 1s ease-out;
+        }
+
+        h2 {
+            color: #1a1a2e;
+            font-size: 2.5em;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        h3 {
+            color: #16213e;
+            font-size: 1.8em;
+            margin: 30px 0 20px;
+        }
+
+        /* Sentence Input Section */
+        .sentence-list {
+            display: grid;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .sentence-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .sentence-item:hover {
+            border-color: #4a90e2;
+            transform: translateX(5px);
+        }
+
+        .sentence-number {
+            width: 30px;
+            height: 30px;
+            background: #4a90e2;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        .sentence-text {
+            flex-grow: 1;
+            font-size: 1.1em;
+        }
+
+        /* Transformer Pipeline Visualization */
+        .pipeline {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin: 40px 0;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .pipeline-stage {
+            flex: 1;
+            min-width: 150px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .pipeline-stage:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+        }
+
+        .pipeline-stage::after {
+            content: '→';
+            position: absolute;
+            right: -30px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 2em;
+            color: #667eea;
+        }
+
+        .pipeline-stage:last-child::after {
+            display: none;
+        }
+
+        .stage-icon {
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+
+        /* Heat Map Container */
+        .heatmap-container {
+            margin: 40px 0;
+            display: flex;
+            gap: 40px;
+            align-items: start;
+            flex-wrap: wrap;
+        }
+
+        .heatmap-wrapper {
+            flex: 1;
+            min-width: 400px;
+        }
+
+        .heatmap {
+            position: relative;
+            background: white;
+            border-radius: 15px;
+            padding: 60px 20px 20px 60px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .heatmap-grid {
+            display: grid;
+            gap: 2px;
+            grid-template-columns: repeat(6, 60px);
+            grid-template-rows: repeat(6, 60px);
+        }
+
+        .heatmap-cell {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9em;
+        }
+
+        .heatmap-cell:hover {
+            transform: scale(1.1);
+            z-index: 10;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        /* Heat colors */
+        .heat-0 { background: #f5f5f5; color: #333; }
+        .heat-1 { background: #ffebee; color: #333; }
+        .heat-2 { background: #ffcdd2; color: #333; }
+        .heat-3 { background: #ef9a9a; color: #333; }
+        .heat-4 { background: #e57373; color: white; }
+        .heat-5 { background: #ef5350; color: white; }
+        .heat-6 { background: #f44336; color: white; }
+        .heat-7 { background: #e53935; color: white; }
+        .heat-8 { background: #d32f2f; color: white; }
+        .heat-9 { background: #c62828; color: white; }
+        .heat-10 { background: #b71c1c; color: white; }
+
+        /* Axis labels */
+        .x-labels, .y-labels {
+            position: absolute;
+            display: flex;
+            gap: 2px;
+        }
+
+        .x-labels {
+            top: 20px;
+            left: 60px;
+        }
+
+        .y-labels {
+            flex-direction: column;
+            left: 20px;
+            top: 60px;
+        }
+
+        .label {
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: #4a90e2;
+        }
+
+        /* Legend */
+        .legend {
+            flex: 0 0 200px;
+        }
+
+        .legend-title {
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #1a1a2e;
+        }
+
+        .legend-scale {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .legend-color {
+            width: 30px;
+            height: 20px;
+            border-radius: 3px;
+        }
+
+        /* Attention Visualization */
+        .attention-demo {
+            margin: 40px 0;
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 15px;
+        }
+
+        .token-row {
+            display: flex;
+            gap: 10px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .token {
+            padding: 10px 20px;
+            background: white;
+            border-radius: 8px;
+            border: 2px solid #e0e0e0;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .token.highlighted {
+            border-color: #4a90e2;
+            background: #e3f2fd;
+            transform: scale(1.1);
+        }
+
+        .attention-line {
+            position: absolute;
+            height: 2px;
+            background: #ff6b6b;
+            transform-origin: left center;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        /* Interactive Controls */
+        .controls {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 15px;
+            margin: 30px 0;
+        }
+
+        .input-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .sentence-input {
+            flex: 1;
+            padding: 12px 20px;
+            font-size: 1.1em;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            transition: border-color 0.3s ease;
+        }
+
+        .sentence-input:focus {
+            outline: none;
+            border-color: #4a90e2;
+        }
+
+        .add-button {
+            padding: 12px 30px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .add-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        /* Embedding Space Visualization */
+        .embedding-space {
+            width: 100%;
+            height: 400px;
+            background: #f5f5f5;
+            border-radius: 15px;
+            position: relative;
+            margin: 30px 0;
+            overflow: hidden;
+            border: 2px solid #e0e0e0;
+        }
+
+        .embedding-point {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            background: #4a90e2;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+
+        .embedding-point:hover {
+            transform: scale(1.2);
+            z-index: 10;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+        }
+
+        .embedding-point.highlighted {
+            background: #ff6b6b;
+        }
+
+        /* Info Box */
+        .info-box {
+            background: #e3f2fd;
+            border: 2px solid #4a90e2;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .info-box h4 {
+            color: #1976d2;
+            margin-bottom: 10px;
+        }
+
+        /* Animations */
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .pulse {
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @media (max-width: 768px) {
+            h1 { font-size: 2.5em; }
+            h2 { font-size: 2em; }
+            .pipeline { flex-direction: column; }
+            .pipeline-stage::after { display: none; }
+            .heatmap-container { flex-direction: column; }
+            .heatmap-grid { grid-template-columns: repeat(6, 50px); grid-template-rows: repeat(6, 50px); }
+            .label { width: 50px; height: 50px; font-size: 0.8em; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🤖 Transformers: Sentence Embeddings</h1>
+            <p class="subtitle">Visualizing How Transformers Create Context-Aware Sentence Representations</p>
+        </header>
+
+        <!-- Introduction Section -->
+        <div class="section">
+            <h2>📝 Sample Sentences</h2>
+            <p style="text-align: center; margin-bottom: 30px; font-size: 1.1em;">
+                These sentences will be embedded by a transformer model to create dense vector representations
+            </p>
+            
+            <div class="sentence-list" id="sentenceList">
+                <div class="sentence-item">
+                    <div class="sentence-number">1</div>
+                    <div class="sentence-text">The cat sat on the mat</div>
+                </div>
+                <div class="sentence-item">
+                    <div class="sentence-number">2</div>
+                    <div class="sentence-text">A dog played in the garden</div>
+                </div>
+                <div class="sentence-item">
+                    <div class="sentence-number">3</div>
+                    <div class="sentence-text">The kitten slept on a cushion</div>
+                </div>
+                <div class="sentence-item">
+                    <div class="sentence-number">4</div>
+                    <div class="sentence-text">Machine learning transforms data into insights</div>
+                </div>
+                <div class="sentence-item">
+                    <div class="sentence-number">5</div>
+                    <div class="sentence-text">Artificial intelligence learns from data patterns</div>
+                </div>
+                <div class="sentence-item">
+                    <div class="sentence-number">6</div>
+                    <div class="sentence-text">Neural networks process information efficiently</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Transformer Pipeline -->
+        <div class="section">
+            <h2>🔄 Transformer Processing Pipeline</h2>
+            
+            <div class="pipeline">
+                <div class="pipeline-stage">
+                    <div class="stage-icon">📝</div>
+                    <div>Tokenization</div>
+                    <small>Split into subwords</small>
+                </div>
+                <div class="pipeline-stage">
+                    <div class="stage-icon">🔢</div>
+                    <div>Embedding Layer</div>
+                    <small>Token → Vector</small>
+                </div>
+                <div class="pipeline-stage">
+                    <div class="stage-icon">🎯</div>
+                    <div>Self-Attention</div>
+                    <small>Context awareness</small>
+                </div>
+                <div class="pipeline-stage">
+                    <div class="stage-icon">🧮</div>
+                    <div>Feed Forward</div>
+                    <small>Transform features</small>
+                </div>
+                <div class="pipeline-stage">
+                    <div class="stage-icon">📊</div>
+                    <div>Pooling</div>
+                    <small>Sentence vector</small>
+                </div>
+            </div>
+
+            <div class="info-box">
+                <h4>🔍 How Transformers Create Sentence Embeddings:</h4>
+                <ol style="margin-left: 20px;">
+                    <li><strong>Tokenization:</strong> Breaks sentences into subword tokens (handles unknown words)</li>
+                    <li><strong>Token Embeddings:</strong> Each token gets an initial vector representation</li>
+                    <li><strong>Self-Attention:</strong> Tokens attend to each other, capturing relationships</li>
+                    <li><strong>Layer Processing:</strong> Multiple transformer layers refine representations</li>
+                    <li><strong>Pooling:</strong> Combine all token embeddings into a single sentence vector</li>
+                </ol>
+            </div>
+        </div>
+
+        <!-- Heat Map Section -->
+        <div class="section">
+            <h2>🔥 Sentence Similarity Heat Map</h2>
+            <p style="text-align: center; margin-bottom: 30px; font-size: 1.1em;">
+                Darker red = Higher similarity | Based on cosine similarity of sentence embeddings
+            </p>
+            
+            <div class="heatmap-container">
+                <div class="heatmap-wrapper">
+                    <div class="heatmap">
+                        <div class="x-labels">
+                            <div class="label">S1</div>
+                            <div class="label">S2</div>
+                            <div class="label">S3</div>
+                            <div class="label">S4</div>
+                            <div class="label">S5</div>
+                            <div class="label">S6</div>
+                        </div>
+                        <div class="y-labels">
+                            <div class="label">S1</div>
+                            <div class="label">S2</div>
+                            <div class="label">S3</div>
+                            <div class="label">S4</div>
+                            <div class="label">S5</div>
+                            <div class="label">S6</div>
+                        </div>
+                        <div class="heatmap-grid" id="heatmapGrid">
+                            <!-- Filled by JavaScript -->
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="legend">
+                    <div class="legend-title">Similarity Score</div>
+                    <div class="legend-scale">
+                        <div class="legend-item">
+                            <div class="legend-color heat-10"></div>
+                            <span>1.0 - Perfect match</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color heat-8"></div>
+                            <span>0.8 - Very similar</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color heat-6"></div>
+                            <span>0.6 - Similar</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color heat-4"></div>
+                            <span>0.4 - Somewhat similar</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color heat-2"></div>
+                            <span>0.2 - Different</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color heat-0"></div>
+                            <span>0.0 - Very different</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="info-box">
+                <h4>📊 What the Heat Map Shows:</h4>
+                <ul style="margin-left: 20px;">
+                    <li><strong>Diagonal (S1-S1, S2-S2, etc.):</strong> Always 1.0 (perfect similarity with itself)</li>
+                    <li><strong>Animal sentences (S1-S3):</strong> Show high similarity due to shared semantic concepts</li>
+                    <li><strong>AI/ML sentences (S4-S6):</strong> Cluster together with high similarity scores</li>
+                    <li><strong>Cross-domain (S1-S4):</strong> Low similarity as topics are different</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Attention Mechanism Demo -->
+        <div class="section">
+            <h2>🎯 Self-Attention in Action</h2>
+            <div class="attention-demo">
+                <p style="text-align: center; margin-bottom: 20px;">
+                    Click on any token to see how it attends to other tokens in the sentence
+                </p>
+                
+                <div id="attentionExample">
+                    <div class="token-row" id="tokenRow">
+                        <div class="token" onclick="showAttention(0)">The</div>
+                        <div class="token" onclick="showAttention(1)">cat</div>
+                        <div class="token" onclick="showAttention(2)">sat</div>
+                        <div class="token" onclick="showAttention(3)">on</div>
+                        <div class="token" onclick="showAttention(4)">the</div>
+                        <div class="token" onclick="showAttention(5)">mat</div>
+                    </div>
+                </div>
+                
+                <div id="attentionInfo" style="text-align: center; margin-top: 20px; color: #666;">
+                    <em>Click a token to visualize attention weights</em>
+                </div>
+            </div>
+        </div>
+
+        <!-- 2D Embedding Space -->
+        <div class="section">
+            <h2>📍 2D Embedding Space Visualization</h2>
+            <p style="text-align: center; margin-bottom: 20px; font-size: 1.1em;">
+                Sentence embeddings projected into 2D space - similar sentences cluster together
+            </p>
+            
+            <div class="embedding-space" id="embeddingSpace">
+                <!-- Points added by JavaScript -->
+            </div>
+            
+            <div class="info-box">
+                <h4>🌐 Understanding the Embedding Space:</h4>
+                <p>This is a simplified 2D projection of high-dimensional sentence embeddings (typically 768D for BERT).</p>
+                <ul style="margin-left: 20px; margin-top: 10px;">
+                    <li><strong>Distance = Dissimilarity:</strong> Closer points have more similar meanings</li>
+                    <li><strong>Clusters:</strong> Sentences about similar topics group together</li>
+                    <li><strong>Dimensionality Reduction:</strong> Real embeddings have hundreds of dimensions</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Interactive Demo -->
+        <div class="section">
+            <h2>🔬 Try Your Own Sentences</h2>
+            <div class="controls">
+                <div class="input-group">
+                    <input type="text" class="sentence-input" id="newSentence" placeholder="Enter a new sentence to analyze...">
+                    <button class="add-button" onclick="addSentence()">Add & Analyze</button>
+                </div>
+                
+                <div id="analysisResult" style="display: none; margin-top: 20px;">
+                    <h4>Analysis Results:</h4>
+                    <div id="resultContent"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Simulated similarity matrix (in practice, these would come from actual transformer embeddings)
+        const similarityMatrix = [
+            [1.00, 0.42, 0.78, 0.12, 0.15, 0.18],  // S1: cat sentence
+            [0.42, 1.00, 0.45, 0.08, 0.11, 0.14],  // S2: dog sentence
+            [0.78, 0.45, 1.00, 0.10, 0.13, 0.16],  // S3: kitten sentence
+            [0.12, 0.08, 0.10, 1.00, 0.82, 0.75],  // S4: ML sentence
+            [0.15, 0.11, 0.13, 0.82, 1.00, 0.79],  // S5: AI sentence
+            [0.18, 0.14, 0.16, 0.75, 0.79, 1.00]   // S6: Neural networks
+        ];
+
+        // Initialize heat map
+        function initHeatmap() {
+            const grid = document.getElementById('heatmapGrid');
+            grid.innerHTML = '';
+            
+            for (let i = 0; i < 6; i++) {
+                for (let j = 0; j < 6; j++) {
+                    const cell = document.createElement('div');
+                    cell.className = 'heatmap-cell';
+                    const similarity = similarityMatrix[i][j];
+                    const heatLevel = Math.round(similarity * 10);
+                    cell.classList.add(`heat-${heatLevel}`);
+                    cell.textContent = similarity.toFixed(2);
+                    cell.title = `S${i+1} ↔ S${j+1}: ${similarity.toFixed(3)}`;
+                    
+                    cell.addEventListener('click', () => {
+                        highlightSentences(i, j);
+                    });
+                    
+                    grid.appendChild(cell);
+                }
+            }
+        }
+
+        // Highlight related sentences
+        function highlightSentences(i, j) {
+            const sentences = document.querySelectorAll('.sentence-item');
+            sentences.forEach(s => s.style.background = '#f8f9fa');
+            
+            if (i !== j) {
+                sentences[i].style.background = '#ffebee';
+                sentences[j].style.background = '#ffebee';
+                
+                // Show similarity info
+                const similarity = similarityMatrix[i][j];
+                const interpretation = similarity > 0.7 ? 'Very similar' : 
+                                     similarity > 0.4 ? 'Moderately similar' : 
+                                     'Different topics';
+                
+                alert(`Similarity between S${i+1} and S${j+1}: ${similarity.toFixed(3)}\n${interpretation}`);
+            }
+        }
+
+        // Show attention weights
+        function showAttention(tokenIndex) {
+            const tokens = document.querySelectorAll('.token');
+            const attentionInfo = document.getElementById('attentionInfo');
+            
+            // Reset all tokens
+            tokens.forEach(t => t.classList.remove('highlighted'));
+            
+            // Highlight selected token
+            tokens[tokenIndex].classList.add('highlighted');
+            
+            // Simulated attention weights
+            const attentionWeights = {
+                0: [0.15, 0.35, 0.20, 0.10, 0.10, 0.10],  // "The" attends mostly to "cat"
+                1: [0.20, 0.30, 0.25, 0.05, 0.05, 0.15],  // "cat" self-attention + "sat"
+                2: [0.15, 0.30, 0.25, 0.10, 0.05, 0.15],  // "sat" attends to subject
+                3: [0.05, 0.10, 0.15, 0.20, 0.15, 0.35],  // "on" attends forward
+                4: [0.05, 0.05, 0.10, 0.15, 0.20, 0.45],  // "the" attends to "mat"
+                5: [0.10, 0.15, 0.20, 0.25, 0.15, 0.15]   // "mat" balanced attention
+            };
+            
+            const weights = attentionWeights[tokenIndex];
+            const tokenTexts = ['The', 'cat', 'sat', 'on', 'the', 'mat'];
+            
+            // Update visual attention
+            tokens.forEach((token, idx) => {
+                if (idx !== tokenIndex) {
+                    const weight = weights[idx];
+                    token.style.opacity = 0.3 + (weight * 1.5);
+                    token.style.borderWidth = `${2 + weight * 8}px`;
+                }
+            });
+            
+            // Show attention info
+            const maxAttentionIdx = weights.indexOf(Math.max(...weights));
+            attentionInfo.innerHTML = `
+                <strong>"${tokenTexts[tokenIndex]}"</strong> pays most attention to 
+                <strong>"${tokenTexts[maxAttentionIdx]}"</strong> 
+                (weight: ${weights[maxAttentionIdx].toFixed(2)})
+            `;
+        }
+
+        // Initialize 2D embedding space
+        function initEmbeddingSpace() {
+            const space = document.getElementById('embeddingSpace');
+            space.innerHTML = '';
+            
+            // Simulated 2D positions (in practice, use t-SNE or UMAP on real embeddings)
+            const positions = [
+                {x: 20, y: 30, label: 'S1'},   // Animal cluster
+                {x: 25, y: 50, label: 'S2'},
+                {x: 15, y: 40, label: 'S3'},
+                {x: 70, y: 60, label: 'S4'},   // AI/ML cluster
+                {x: 75, y: 70, label: 'S5'},
+                {x: 65, y: 75, label: 'S6'}
+            ];
+            
+            positions.forEach((pos, idx) => {
+                const point = document.createElement('div');
+                point.className = 'embedding-point';
+                point.style.left = `${pos.x}%`;
+                point.style.top = `${pos.y}%`;
+                point.textContent = pos.label;
+                
+                // Color code by cluster
+                if (idx < 3) {
+                    point.style.background = '#ff6b6b';  // Animal cluster
+                } else {
+                    point.style.background = '#4a90e2';  // AI/ML cluster
+                }
+                
+                point.addEventListener('click', () => {
+                    const sentences = document.querySelectorAll('.sentence-item');
+                    sentences.forEach(s => s.style.background = '#f8f9fa');
+                    sentences[idx].style.background = '#ffebee';
+                    sentences[idx].scrollIntoView({ behavior: 'smooth', block: 'center' });
+                });
+                
+                space.appendChild(point);
+            });
+        }
+
+        // Add new sentence
+        function addSentence() {
+            const input = document.getElementById('newSentence');
+            const sentence = input.value.trim();
+            
+            if (!sentence) return;
+            
+            const resultDiv = document.getElementById('analysisResult');
+            const resultContent = document.getElementById('resultContent');
+            
+            // Simulate embedding and similarity calculation
+            const similarities = [];
+            const sentences = document.querySelectorAll('.sentence-text');
+            
+            sentences.forEach((s, idx) => {
+                // Simple keyword-based similarity (in practice, use real embeddings)
+                const words1 = sentence.toLowerCase().split(' ');
+                const words2 = s.textContent.toLowerCase().split(' ');
+                const common = words1.filter(w => words2.includes(w)).length;
+                const similarity = common / Math.max(words1.length, words2.length);
+                similarities.push({ idx: idx + 1, text: s.textContent, score: similarity });
+            });
+            
+            similarities.sort((a, b) => b.score - a.score);
+            
+            resultContent.innerHTML = `
+                <p><strong>Input:</strong> "${sentence}"</p>
+                <p><strong>Most similar sentences:</strong></p>
+                <ol>
+                    ${similarities.slice(0, 3).map(s => 
+                        `<li>S${s.idx}: "${s.text}" (similarity: ${s.score.toFixed(2)})</li>`
+                    ).join('')}
+                </ol>
+                <p style="margin-top: 15px; color: #666;">
+                    <em>Note: This demo uses keyword overlap. Real transformers use deep semantic understanding.</em>
+                </p>
+            `;
+            
+            resultDiv.style.display = 'block';
+            input.value = '';
+        }
+
+        // Enter key support
+        document.getElementById('newSentence').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') addSentence();
+        });
+
+        // Initialize on load
+        window.addEventListener('load', () => {
+            initHeatmap();
+            initEmbeddingSpace();
+        });
+
+        // Add hover effect to show embeddings
+        document.querySelectorAll('.sentence-item').forEach((item, idx) => {
+            item.addEventListener('mouseenter', () => {
+                // Highlight corresponding row and column in heatmap
+                const cells = document.querySelectorAll('.heatmap-cell');
+                cells.forEach((cell, cellIdx) => {
+                    const row = Math.floor(cellIdx / 6);
+                    const col = cellIdx % 6;
+                    if (row === idx || col === idx) {
+                        cell.style.transform = 'scale(1.1)';
+                        cell.style.zIndex = '5';
+                    }
+                });
+            });
+            
+            item.addEventListener('mouseleave', () => {
+                const cells = document.querySelectorAll('.heatmap-cell');
+                cells.forEach(cell => {
+                    cell.style.transform = '';
+                    cell.style.zIndex = '';
+                });
+            });
+        });
+
+        // Animate pipeline on scroll
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.section').forEach(section => {
+            section.style.opacity = '0';
+            section.style.transform = 'translateY(30px)';
+            section.style.transition = 'all 0.6s ease-out';
+            observer.observe(section);
+        });
+    </script>
+</body>
+</html>

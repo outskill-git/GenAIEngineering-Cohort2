@@ -5,6 +5,9 @@
 *.py[cod]
 *$py.class
 
+**/*_solution
+**/2_tabular_classification.ipynb
+**/3_tabular_regression.ipynb
 # C extensions
 *.so
 

@@ -1,0 +1,1037 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Linear Regression - Temperature & Humidity</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: #1f2937;
+            background-color: #f9fafb;
+        }
+        
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 24px;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 32px;
+            background: white;
+            padding: 24px;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #1f2937;
+            margin-bottom: 16px;
+        }
+        
+        .header p {
+            font-size: 1.25rem;
+            color: #6b7280;
+        }
+        
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 400px;
+            gap: 24px;
+        }
+        
+        .chart-section {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        .controls-section {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            height: fit-content;
+        }
+        
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        
+        .chart-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #1f2937;
+        }
+        
+        .mode-selector {
+            display: flex;
+            background: #f3f4f6;
+            border-radius: 8px;
+            padding: 4px;
+        }
+        
+        .mode-button {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 14px;
+            font-weight: 500;
+        }
+        
+        .mode-button.active {
+            background: #3b82f6;
+            color: white;
+        }
+        
+        .mode-button:not(.active) {
+            background: transparent;
+            color: #6b7280;
+        }
+        
+        .mode-button:not(.active):hover {
+            background: #e5e7eb;
+        }
+        
+        .metrics-section {
+            background: #f8fafc;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 20px;
+        }
+        
+        .metrics-row {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+        }
+        
+        .metric-card {
+            background: white;
+            padding: 12px;
+            border-radius: 6px;
+            border-left: 4px solid #3b82f6;
+            text-align: center;
+        }
+        
+        .metric-card.error {
+            border-left-color: #ef4444;
+        }
+        
+        .metric-label {
+            font-size: 12px;
+            color: #6b7280;
+            margin-bottom: 4px;
+            font-weight: 500;
+        }
+        
+        .metric-value {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1f2937;
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+        }
+        
+        .chart-wrapper {
+            position: relative;
+            height: 500px;
+            margin-bottom: 20px;
+        }
+
+        .below-chart-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 16px;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .prediction-section-inline {
+            background: #fef7ff;
+            border-radius: 8px;
+            padding: 12px;
+            border: 1px solid #e879f9;
+            min-height: 180px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .prediction-section-inline h3 {
+            margin-bottom: 12px;
+            color: #374151;
+            font-weight: 600;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .visual-options-section {
+            background: #f0f9ff;
+            border-radius: 8px;
+            padding: 12px;
+            border: 1px solid #0ea5e9;
+            min-height: 180px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .visual-options-section h3 {
+            margin-bottom: 12px;
+            color: #374151;
+            font-weight: 600;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .equation-display {
+            background: #f1f5f9;
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 20px;
+            text-align: center;
+            border: 2px solid #e2e8f0;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .equation {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1e40af;
+            font-family: 'Georgia', serif;
+            margin-bottom: 8px;
+        }
+        
+        .equation-description {
+            font-size: 14px;
+            color: #6b7280;
+        }
+        
+        .control-group {
+            background: #f9fafb;
+            border-radius: 8px;
+            padding: 16px;
+            border: 1px solid #e5e7eb;
+        }
+        
+        .control-group h3 {
+            margin-bottom: 16px;
+            color: #374151;
+            font-weight: 600;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .parameters-section {
+            background: #f9fafb;
+            border-radius: 8px;
+            padding: 12px;
+            border: 1px solid #e5e7eb;
+            margin-bottom: 20px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .parameters-section h3 {
+            margin-bottom: 10px;
+            color: #374151;
+            font-weight: 600;
+            font-size: 14px;
+        }
+        
+        .parameters-grid-inline {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            align-items: start;
+            max-width: 500px;
+        }
+        
+        .parameters-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+        
+        .parameter-control {
+            min-width: 100px;
+            max-width: 150px;
+        }
+        
+        .parameter-label {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 6px;
+            font-size: 13px;
+        }
+        
+        .parameter-name {
+            font-weight: 500;
+            color: #374151;
+        }
+        
+        .parameter-value {
+            font-weight: 600;
+            color: #1e40af;
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+        }
+        
+        .parameter-input {
+            width: 100%;
+            padding: 6px 8px;
+            border: 2px solid #e5e7eb;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 600;
+            text-align: center;
+            transition: border-color 0.2s;
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+        }
+        
+        .parameter-input:focus {
+            outline: none;
+            border-color: #3b82f6;
+        }
+        
+        .parameter-input:hover {
+            border-color: #9ca3af;
+        }
+        
+        .preset-buttons {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 6px;
+        }
+        
+        .preset-button {
+            padding: 5px 8px;
+            border: 1px solid #d1d5db;
+            background: white;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 10px;
+            font-weight: 500;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+        
+        .preset-button:hover {
+            background: #f3f4f6;
+            border-color: #3b82f6;
+        }
+        
+        .prediction-input {
+            margin-bottom: 10px;
+        }
+        
+        .prediction-input label {
+            display: block;
+            margin-bottom: 4px;
+            font-weight: 500;
+            color: #374151;
+            font-size: 13px;
+        }
+        
+        .prediction-input input {
+            width: 100%;
+            padding: 6px 8px;
+            border: 2px solid #e5e7eb;
+            border-radius: 6px;
+            font-size: 13px;
+            transition: border-color 0.2s;
+        }
+        
+        .prediction-input input:focus {
+            outline: none;
+            border-color: #3b82f6;
+        }
+        
+        .prediction-result {
+            background: white;
+            padding: 10px;
+            border-radius: 6px;
+            border-left: 4px solid #10b981;
+            margin-top: 10px;
+        }
+        
+        .prediction-result-label {
+            font-size: 11px;
+            color: #6b7280;
+            margin-bottom: 3px;
+        }
+        
+        .prediction-result-value {
+            font-size: 16px;
+            font-weight: 600;
+            color: #059669;
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+        }
+        
+        .residuals-info {
+            background: #fef3c7;
+            border-radius: 8px;
+            padding: 12px;
+            margin-top: 16px;
+            border: 1px solid #f59e0b;
+        }
+        
+        .residuals-info h4 {
+            color: #92400e;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+        
+        .residuals-info p {
+            color: #92400e;
+            font-size: 12px;
+            line-height: 1.4;
+        }
+        
+        .toggle-section {
+            margin-top: 12px;
+        }
+        
+        .toggle-label {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+            font-size: 13px;
+            color: #374151;
+        }
+        
+        .toggle-checkbox {
+            width: 14px;
+            height: 14px;
+            accent-color: #3b82f6;
+        }
+        
+        @media (max-width: 1200px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .metrics-row {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 12px;
+            }
+
+            .parameters-grid-inline {
+                grid-template-columns: 1fr;
+                gap: 12px;
+                max-width: 100%;
+            }
+            
+            .parameters-row {
+                grid-template-columns: 1fr 1fr;
+                gap: 12px;
+            }
+
+            .preset-buttons {
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 6px;
+            }
+
+            .below-chart-section {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .chart-header {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .chart-title {
+                text-align: center;
+                margin-bottom: 12px;
+            }
+            
+            .mode-selector {
+                justify-content: center;
+            }
+            
+            .preset-buttons {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .below-chart-section {
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+
+            .prediction-section-inline,
+            .visual-options-section {
+                padding: 12px;
+            }
+
+            .metrics-row {
+                grid-template-columns: 1fr;
+                gap: 8px;
+            }
+
+            .parameters-grid-inline {
+                gap: 10px;
+            }
+            
+            .parameters-row {
+                grid-template-columns: 1fr 1fr;
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>Interactive Linear Regression</h1>
+            <p>Adjust parameters to predict temperature ↔ humidity relationships</p>
+        </div>
+
+        <div class="main-content">
+            <!-- Chart Section -->
+            <div class="chart-section">
+                <div class="chart-header">
+                    <h2 class="chart-title">Temperature vs Humidity</h2>
+                    <div class="mode-selector">
+                        <button class="mode-button active" data-mode="temp-to-humidity">Temp → Humidity</button>
+                        <button class="mode-button" data-mode="humidity-to-temp">Humidity → Temp</button>
+                    </div>
+                </div>
+
+                <!-- Regression Parameters -->
+                <div class="parameters-section">
+                    <h3>Regression Parameters</h3>
+                    
+                    <div class="parameters-grid-inline">
+                        <div class="parameters-row">
+                            <div class="parameter-control">
+                                <div class="parameter-label">
+                                    <span class="parameter-name">Weight (w)</span>
+                                </div>
+                                <input type="number" id="slopeInput" class="parameter-input" 
+                                       min="-5" max="5" step="0.1" value="1.0" placeholder="1.0">
+                            </div>
+                            
+                            <div class="parameter-control">
+                                <div class="parameter-label">
+                                    <span class="parameter-name">Constant (c)</span>
+                                </div>
+                                <input type="number" id="interceptInput" class="parameter-input" 
+                                       min="-100" max="100" step="1" value="0" placeholder="0">
+                            </div>
+                        </div>
+
+                        <div class="preset-buttons">
+                            <button class="preset-button" onclick="setOptimalParams()">Optimal</button>
+                            <button class="preset-button" onclick="resetParams()">Reset</button>
+                            <button class="preset-button" onclick="randomParams()">Random</button>
+                            <button class="preset-button" onclick="setWorstFit()">Worst</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Equation Display -->
+                <div class="equation-display">
+                    <div class="equation" id="equationDisplay">y = wx + c</div>
+                    <div class="equation-description" id="equationDescription">
+                        Adjust the weight (w) and constant (c) to fit the data
+                    </div>
+                </div>
+                
+                <div class="chart-wrapper">
+                    <canvas id="regressionChart"></canvas>
+                </div>
+
+                <!-- Metrics Section -->
+                <div class="metrics-section">
+                    <div class="metrics-row">
+                        <div class="metric-card">
+                            <div class="metric-label">R² (Coefficient of Determination)</div>
+                            <div class="metric-value" id="rSquaredValue">0.000</div>
+                        </div>
+                        <div class="metric-card error">
+                            <div class="metric-label">Mean Squared Error (MSE)</div>
+                            <div class="metric-value" id="mseValue">0.000</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-label">Root Mean Squared Error (RMSE)</div>
+                            <div class="metric-value" id="rmseValue">0.000</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-label">Data Points</div>
+                            <div class="metric-value" id="dataPointsValue">80</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Below Chart Section -->
+                <div class="below-chart-section">
+                    <!-- Prediction Interface -->
+                    <div class="prediction-section-inline">
+                        <h3>Make Predictions</h3>
+                        
+                        <div class="prediction-input">
+                            <label id="predictionInputLabel">Enter Temperature (°F):</label>
+                            <input type="number" id="predictionInput" placeholder="e.g., 70" 
+                                   min="0" max="100" step="0.1">
+                        </div>
+                        
+                        <div class="prediction-result">
+                            <div class="prediction-result-label" id="predictionResultLabel">Predicted Humidity:</div>
+                            <div class="prediction-result-value" id="predictionResultValue">-</div>
+                        </div>
+                    </div>
+
+                    <!-- Visualization Options -->
+                    <div class="visual-options-section">
+                        <h3>Visualization Options</h3>
+                        
+                        <div class="toggle-section">
+                            <label class="toggle-label">
+                                <input type="checkbox" id="showResidualsToggle" class="toggle-checkbox">
+                                Show Residuals (Error Lines)
+                            </label>
+                        </div>
+                        
+                        <div style="margin-top: 10px; padding: 6px; background: #e0f2fe; border-radius: 4px; font-size: 11px; color: #0277bd; flex-grow: 1; display: flex; align-items: center; justify-content: center;">
+                            <span><strong>R² = <span id="r2DisplayText">0.000</span></strong> (Coefficient of Determination)</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="residuals-info">
+                    <h4>Understanding the Visualization</h4>
+                    <p>
+                        <strong>Colored dots:</strong> Actual data points grouped by season | 
+                        <strong>Red line:</strong> Your regression line | 
+                        <strong>Gray lines:</strong> Residuals (prediction errors) when enabled
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Global state
+            var state = {
+                mode: 'temp-to-humidity',
+                slope: 1.0,
+                intercept: 0.0,
+                data: [],
+                chart: null,
+                showResiduals: false
+            };
+
+            var clusterColors = {
+                'winter': '#3b82f6',
+                'spring': '#10b981', 
+                'summer': '#f59e0b',
+                'fall': '#8b5cf6'
+            };
+
+            // Generate weather data (same as clustering example)
+            function generateWeatherData() {
+                var data = [];
+                
+                // Winter cluster: Cold and dry
+                for (var i = 0; i < 25; i++) {
+                    data.push({
+                        temperature: 25 + Math.random() * 15,
+                        humidity: 20 + Math.random() * 25,
+                        cluster: 'winter'
+                    });
+                }
+                
+                // Summer cluster: Hot and humid
+                for (var i = 25; i < 50; i++) {
+                    data.push({
+                        temperature: 75 + Math.random() * 20,
+                        humidity: 65 + Math.random() * 25,
+                        cluster: 'summer'
+                    });
+                }
+                
+                // Fall cluster: Moderate temp, variable humidity
+                for (var i = 50; i < 80; i++) {
+                    data.push({
+                        temperature: 50 + Math.random() * 25,
+                        humidity: 40 + Math.random() * 40,
+                        cluster: 'fall'
+                    });
+                }
+                
+                return data;
+            }
+
+            // Calculate optimal parameters using least squares
+            function calculateOptimalParams(xData, yData) {
+                var n = xData.length;
+                var sumX = xData.reduce(function(sum, x) { return sum + x; }, 0);
+                var sumY = yData.reduce(function(sum, y) { return sum + y; }, 0);
+                var sumXY = xData.reduce(function(sum, x, i) { return sum + x * yData[i]; }, 0);
+                var sumX2 = xData.reduce(function(sum, x) { return sum + x * x; }, 0);
+                
+                var weight = (n * sumXY - sumX * sumY) / (n * sumX2 - sumX * sumX);
+                var constant = (sumY - weight * sumX) / n;
+                
+                return { slope: weight, intercept: constant };
+            }
+
+            // Calculate regression metrics
+            function calculateMetrics(xData, yData, slope, intercept) {
+                var predictions = xData.map(function(x) { return slope * x + intercept; });
+                var residuals = yData.map(function(y, i) { return y - predictions[i]; });
+                
+                // Mean Squared Error
+                var mse = residuals.reduce(function(sum, r) { return sum + r * r; }, 0) / residuals.length;
+                
+                // R-squared
+                var yMean = yData.reduce(function(sum, y) { return sum + y; }, 0) / yData.length;
+                var totalSumSquares = yData.reduce(function(sum, y) { return sum + (y - yMean) * (y - yMean); }, 0);
+                var residualSumSquares = residuals.reduce(function(sum, r) { return sum + r * r; }, 0);
+                var rSquared = 1 - (residualSumSquares / totalSumSquares);
+                
+                // RMSE
+                var rmse = Math.sqrt(mse);
+                
+                return { 
+                    mse: mse, 
+                    rSquared: rSquared, 
+                    rmse: rmse, 
+                    predictions: predictions, 
+                    residuals: residuals 
+                };
+            }
+
+            // Get current X and Y data based on mode
+            function getCurrentData() {
+                if (state.mode === 'temp-to-humidity') {
+                    return {
+                        xData: state.data.map(function(d) { return d.temperature; }),
+                        yData: state.data.map(function(d) { return d.humidity; }),
+                        xLabel: 'Temperature (°F)',
+                        yLabel: 'Humidity (%)'
+                    };
+                } else {
+                    return {
+                        xData: state.data.map(function(d) { return d.humidity; }),
+                        yData: state.data.map(function(d) { return d.temperature; }),
+                        xLabel: 'Humidity (%)',
+                        yLabel: 'Temperature (°F)'
+                    };
+                }
+            }
+
+            // Update chart
+            function updateChart() {
+                if (state.chart) {
+                    state.chart.destroy();
+                }
+
+                const { xData, yData, xLabel, yLabel } = getCurrentData();
+                const ctx = document.getElementById('regressionChart').getContext('2d');
+
+                // Create datasets
+                const datasets = [];
+
+                // Data points (colored by cluster)
+                const clusters = ['winter', 'spring', 'summer', 'fall'];
+                clusters.forEach(cluster => {
+                    const clusterData = state.data
+                        .filter(d => d.cluster === cluster)
+                        .map(d => ({
+                            x: state.mode === 'temp-to-humidity' ? d.temperature : d.humidity,
+                            y: state.mode === 'temp-to-humidity' ? d.humidity : d.temperature
+                        }));
+                    
+                    if (clusterData.length > 0) {
+                        datasets.push({
+                            label: cluster.charAt(0).toUpperCase() + cluster.slice(1),
+                            data: clusterData,
+                            backgroundColor: clusterColors[cluster],
+                            borderColor: clusterColors[cluster],
+                            pointRadius: 5,
+                            pointHoverRadius: 7,
+                            showLine: false
+                        });
+                    }
+                });
+
+                // Regression line
+                const xMin = Math.min(...xData);
+                const xMax = Math.max(...xData);
+                const lineData = [
+                    { x: xMin, y: state.slope * xMin + state.intercept },
+                    { x: xMax, y: state.slope * xMax + state.intercept }
+                ];
+
+                datasets.push({
+                    label: 'Regression Line',
+                    data: lineData,
+                    borderColor: '#ef4444',
+                    backgroundColor: 'transparent',
+                    borderWidth: 3,
+                    pointRadius: 0,
+                    showLine: true,
+                    tension: 0
+                });
+
+                // Residuals (if enabled)
+                if (state.showResiduals) {
+                    const { predictions } = calculateMetrics(xData, yData, state.slope, state.intercept);
+                    const residualLines = [];
+                    
+                    xData.forEach((x, i) => {
+                        residualLines.push(
+                            { x: x, y: yData[i] },
+                            { x: x, y: predictions[i] },
+                            { x: null, y: null } // Break line
+                        );
+                    });
+
+                    datasets.push({
+                        label: 'Residuals',
+                        data: residualLines,
+                        borderColor: '#9ca3af',
+                        backgroundColor: 'transparent',
+                        borderWidth: 1,
+                        pointRadius: 0,
+                        showLine: true,
+                        tension: 0
+                    });
+                }
+
+                state.chart = new Chart(ctx, {
+                    type: 'scatter',
+                    data: { datasets },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            x: {
+                                title: {
+                                    display: true,
+                                    text: xLabel,
+                                    font: { size: 14, weight: 'bold' }
+                                },
+                                grid: { color: '#e5e7eb' }
+                            },
+                            y: {
+                                title: {
+                                    display: true,
+                                    text: yLabel,
+                                    font: { size: 14, weight: 'bold' }
+                                },
+                                grid: { color: '#e5e7eb' },
+                                min: 0,
+                                max: 100
+                            }
+                        },
+                        plugins: {
+                            legend: {
+                                display: true,
+                                position: 'bottom'
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    title: function() { return ''; },
+                                    label: function(context) {
+                                        if (context.datasetIndex < 4) {
+                                            return `${context.dataset.label}: (${context.parsed.x.toFixed(1)}, ${context.parsed.y.toFixed(1)})`;
+                                        }
+                                        return null;
+                                    }
+                                }
+                            }
+                        },
+                        animation: {
+                            duration: 300
+                        }
+                    }
+                });
+            }
+
+            // Update UI elements
+            function updateUI() {
+                var currentData = getCurrentData();
+                var xData = currentData.xData;
+                var yData = currentData.yData;
+                var metrics = calculateMetrics(xData, yData, state.slope, state.intercept);
+
+                // Update parameter displays
+                document.getElementById('slopeInput').value = state.slope.toFixed(2);
+                document.getElementById('interceptInput').value = state.intercept.toFixed(2);
+
+                // Update metrics
+                document.getElementById('rSquaredValue').textContent = metrics.rSquared.toFixed(3);
+                document.getElementById('mseValue').textContent = metrics.mse.toFixed(2);
+                document.getElementById('rmseValue').textContent = metrics.rmse.toFixed(2);
+                document.getElementById('r2DisplayText').textContent = metrics.rSquared.toFixed(3);
+
+                // Update equation
+                var equation = state.mode === 'temp-to-humidity' 
+                    ? 'Humidity = ' + state.slope.toFixed(2) + ' × Temperature + ' + state.intercept.toFixed(2)
+                    : 'Temperature = ' + state.slope.toFixed(2) + ' × Humidity + ' + state.intercept.toFixed(2);
+                document.getElementById('equationDisplay').textContent = equation;
+
+                // Update equation description
+                var description = state.mode === 'temp-to-humidity'
+                    ? 'Predicting humidity from temperature'
+                    : 'Predicting temperature from humidity';
+                document.getElementById('equationDescription').textContent = description;
+
+                // Update prediction interface
+                if (state.mode === 'temp-to-humidity') {
+                    document.getElementById('predictionInputLabel').textContent = 'Enter Temperature (°F):';
+                    document.getElementById('predictionResultLabel').textContent = 'Predicted Humidity:';
+                } else {
+                    document.getElementById('predictionInputLabel').textContent = 'Enter Humidity (%):';
+                    document.getElementById('predictionResultLabel').textContent = 'Predicted Temperature:';
+                }
+
+                // Update prediction if input has value
+                updatePrediction();
+            }
+
+            // Update prediction
+            function updatePrediction() {
+                var input = document.getElementById('predictionInput').value;
+                if (input !== '') {
+                    var inputValue = parseFloat(input);
+                    var prediction = state.slope * inputValue + state.intercept;
+                    var unit = state.mode === 'temp-to-humidity' ? '%' : '°F';
+                    document.getElementById('predictionResultValue').textContent = 
+                        prediction.toFixed(1) + unit;
+                } else {
+                    document.getElementById('predictionResultValue').textContent = '-';
+                }
+            }
+
+            // Set parameters
+            function setParameters(slope, intercept) {
+                state.slope = slope;
+                state.intercept = intercept;
+                
+                document.getElementById('slopeInput').value = slope.toFixed(2);
+                document.getElementById('interceptInput').value = intercept.toFixed(2);
+                
+                updateChart();
+                updateUI();
+            }
+
+            // Preset functions
+            window.setOptimalParams = function() {
+                var currentData = getCurrentData();
+                var xData = currentData.xData;
+                var yData = currentData.yData;
+                var optimal = calculateOptimalParams(xData, yData);
+                setParameters(optimal.slope, optimal.intercept);
+            };
+
+            window.resetParams = function() {
+                setParameters(1.0, 0.0);
+            };
+
+            window.randomParams = function() {
+                var weight = (Math.random() - 0.5) * 6; // -3 to 3
+                var constant = (Math.random() - 0.5) * 100; // -50 to 50
+                setParameters(weight, constant);
+            };
+
+            window.setWorstFit = function() {
+                var currentData = getCurrentData();
+                var xData = currentData.xData;
+                var yData = currentData.yData;
+                var optimal = calculateOptimalParams(xData, yData);
+                // Set parameters opposite to optimal
+                setParameters(-optimal.slope, -optimal.intercept);
+            };
+
+            // Initialize everything
+            state.data = generateWeatherData();
+            updateChart();
+            updateUI();
+
+            // Event listeners
+            // Mode switching
+            document.querySelectorAll('.mode-button').forEach(function(button) {
+                button.addEventListener('click', function() {
+                    document.querySelectorAll('.mode-button').forEach(function(b) {
+                        b.classList.remove('active');
+                    });
+                    button.classList.add('active');
+                    state.mode = button.dataset.mode;
+                    
+                    // Reset parameters when switching modes
+                    resetParams();
+                });
+            });
+
+            // Parameter inputs
+            document.getElementById('slopeInput').addEventListener('input', function(e) {
+                var value = parseFloat(e.target.value);
+                if (!isNaN(value)) {
+                    state.slope = Math.max(-5, Math.min(5, value));
+                    updateChart();
+                    updateUI();
+                }
+            });
+
+            document.getElementById('interceptInput').addEventListener('input', function(e) {
+                var value = parseFloat(e.target.value);
+                if (!isNaN(value)) {
+                    state.intercept = Math.max(-100, Math.min(100, value));
+                    updateChart();
+                    updateUI();
+                }
+            });
+
+            // Prediction input
+            document.getElementById('predictionInput').addEventListener('input', updatePrediction);
+
+            // Toggle options
+            document.getElementById('showResidualsToggle').addEventListener('change', function(e) {
+                state.showResiduals = e.target.checked;
+                updateChart();
+            });
+        });
+    </script>
+</body>
+</html>

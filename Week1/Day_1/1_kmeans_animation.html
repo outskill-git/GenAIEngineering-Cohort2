@@ -1,0 +1,1067 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>K-Means Clustering Animation</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: #1f2937;
+            background-color: #f9fafb;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 24px;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 32px;
+            background: white;
+            padding: 24px;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #1f2937;
+            margin-bottom: 16px;
+        }
+        
+        .header p {
+            font-size: 1.25rem;
+            color: #6b7280;
+        }
+        
+        .main-content {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+        
+        .chart-section {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        .controls-section {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: center;
+            gap: 32px;
+            flex-wrap: wrap;
+        }
+
+        .metrics-section {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            margin-bottom: 24px;
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            margin-bottom: 20px;
+        }
+
+        .metric-panel {
+            background: #f8fafc;
+            border-radius: 8px;
+            padding: 16px;
+            border-left: 4px solid #3b82f6;
+            transition: all 0.3s ease;
+        }
+
+        .metric-panel:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .metric-panel.variance {
+            border-left-color: #10b981;
+        }
+
+        .metric-panel h4 {
+            margin-bottom: 12px;
+            color: #374151;
+            font-weight: 600;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .metric-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 14px;
+            padding: 4px 0;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .metric-row:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+
+        .metric-label {
+            color: #6b7280;
+            font-weight: 500;
+        }
+
+        .metric-value {
+            font-weight: 600;
+            color: #374151;
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+        }
+
+        .metric-value.highlight {
+            color: #059669;
+            font-size: 15px;
+            background: #ecfdf5;
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+
+        .centroids-section {
+            background: #f1f5f9;
+            border-radius: 8px;
+            padding: 16px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .centroids-title {
+            margin-bottom: 12px;
+            color: #374151;
+            font-weight: 600;
+            font-size: 16px;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .centroids-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 12px;
+        }
+
+        .centroid-item {
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .centroid-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .chart-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #1f2937;
+        }
+        
+        .iteration-counter {
+            background: #3b82f6;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 600;
+        }
+        
+        .chart-wrapper {
+            position: relative;
+            height: 500px;
+            margin-bottom: 20px;
+        }
+        
+        .algorithm-status {
+            padding: 16px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+        
+        .status-running {
+            background: #fef3c7;
+            color: #92400e;
+            border-left: 4px solid #f59e0b;
+        }
+        
+        .status-converged {
+            background: #d1fae5;
+            color: #065f46;
+            border-left: 4px solid #10b981;
+        }
+        
+        .k-selector, .animation-controls, .speed-control-section {
+            text-align: center;
+        }
+
+        .k-selector h3, .animation-controls h3, .speed-control-section h3 {
+            margin-bottom: 12px;
+            color: #374151;
+            font-weight: 600;
+            font-size: 16px;
+        }
+
+        .k-buttons {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+        }
+
+        .k-button {
+            padding: 12px 20px;
+            border: 2px solid #e5e7eb;
+            background: white;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s;
+            font-size: 14px;
+        }
+
+        .k-button.active {
+            background: #3b82f6;
+            color: white;
+            border-color: #3b82f6;
+        }
+
+        .k-button:hover:not(.active) {
+            border-color: #3b82f6;
+            background: #eff6ff;
+        }
+
+        .control-buttons {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+        }
+
+        .control-button {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s;
+            font-size: 14px;
+            min-width: 80px;
+        }
+
+        .play-button {
+            background: #10b981;
+            color: white;
+        }
+
+        .play-button:hover:not(:disabled) {
+            background: #059669;
+        }
+
+        .step-button {
+            background: #f59e0b;
+            color: white;
+        }
+
+        .step-button:hover:not(:disabled) {
+            background: #d97706;
+        }
+
+        .reset-button {
+            background: #ef4444;
+            color: white;
+        }
+
+        .reset-button:hover {
+            background: #dc2626;
+        }
+
+        .control-button:disabled {
+            background: #d1d5db;
+            cursor: not-allowed;
+            color: #9ca3af;
+        }
+
+        .speed-control-section {
+            min-width: 200px;
+        }
+
+        .speed-slider {
+            width: 100%;
+            height: 6px;
+            border-radius: 3px;
+            background: #e5e7eb;
+            outline: none;
+            -webkit-appearance: none;
+            margin-top: 8px;
+        }
+
+        .speed-slider::-webkit-slider-thumb {
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #3b82f6;
+            cursor: pointer;
+        }
+
+        .speed-slider::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #3b82f6;
+            cursor: pointer;
+            border: none;
+        }
+        
+        .stats-panel {
+            background: #f8fafc;
+            border-radius: 8px;
+            padding: 16px;
+        }
+        
+        .stats-panel h3 {
+            margin-bottom: 12px;
+            color: #374151;
+            font-weight: 600;
+        }
+        
+        .stat-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+        
+        .stat-label {
+            color: #6b7280;
+        }
+        
+        .stat-value {
+            font-weight: 600;
+            color: #374151;
+        }
+        
+        .centroid-list {
+            margin-top: 12px;
+        }
+        
+        .centroid-item {
+            padding: 8px;
+            margin-bottom: 6px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 500;
+        }
+        
+        @media (max-width: 1024px) {
+            .chart-wrapper {
+                height: 400px;
+            }
+            
+            .metrics-grid {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+            
+            .centroids-grid {
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+                gap: 8px;
+            }
+
+            .controls-section {
+                flex-direction: column;
+                gap: 24px;
+                align-items: center;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .chart-header {
+                flex-direction: column;
+                gap: 12px;
+                text-align: center;
+            }
+            
+            .chart-title {
+                font-size: 1.25rem;
+            }
+            
+            .metrics-section {
+                padding: 16px;
+            }
+            
+            .metric-panel {
+                padding: 12px;
+            }
+            
+            .centroids-section {
+                padding: 12px;
+            }
+
+            .controls-section {
+                padding: 20px;
+                gap: 20px;
+            }
+
+            .k-buttons, .control-buttons {
+                flex-wrap: wrap;
+                gap: 8px;
+            }
+
+            .k-button, .control-button {
+                padding: 10px 16px;
+                font-size: 13px;
+            }
+
+            .speed-control-section {
+                min-width: 250px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>K-Means Clustering Animation</h1>
+            <p>Watch how the algorithm finds clusters step by step</p>
+        </div>
+
+        <div class="main-content">
+            <!-- Chart Section -->
+            <div class="chart-section">
+                <div class="chart-header">
+                    <h2 class="chart-title">Temperature vs Humidity Clustering</h2>
+                    <div class="iteration-counter" id="iterationCounter">Iteration: 0</div>
+                </div>
+                
+                <div class="algorithm-status" id="algorithmStatus">
+                    Ready to start clustering...
+                </div>
+
+                <!-- Metrics Section -->
+                <div class="metrics-section">
+                    <div class="metrics-grid">
+                        <!-- Clustering Statistics -->
+                        <div class="metric-panel">
+                            <h4>📊 Clustering Statistics</h4>
+                            <div class="metric-row">
+                                <span class="metric-label">Data Points:</span>
+                                <span class="metric-value" id="pointCount">80</span>
+                            </div>
+                            <div class="metric-row">
+                                <span class="metric-label">Clusters (k):</span>
+                                <span class="metric-value" id="clusterCount">2</span>
+                            </div>
+                            <div class="metric-row">
+                                <span class="metric-label">Iterations:</span>
+                                <span class="metric-value" id="iterationCount">0</span>
+                            </div>
+                            <div class="metric-row">
+                                <span class="metric-label">Converged:</span>
+                                <span class="metric-value" id="convergedStatus">No</span>
+                            </div>
+                        </div>
+
+                        <!-- Variance Metrics -->
+                        <div class="metric-panel variance">
+                            <h4>📈 Variance Metrics</h4>
+                            <div class="metric-row">
+                                <span class="metric-label">WCSS:</span>
+                                <span class="metric-value" id="wcssValue">-</span>
+                            </div>
+                            <div class="metric-row">
+                                <span class="metric-label">BCSS:</span>
+                                <span class="metric-value" id="bcssValue">-</span>
+                            </div>
+                            <div class="metric-row">
+                                <span class="metric-label">Total Variance:</span>
+                                <span class="metric-value" id="totalVariance">-</span>
+                            </div>
+                            <div class="metric-row">
+                                <span class="metric-label">Explained:</span>
+                                <span class="metric-value highlight" id="explainedVariance">-</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Centroids Section -->
+                    <div class="centroids-section">
+                        <div class="centroids-title">🎯 Cluster Centroids</div>
+                        <div class="centroids-grid" id="centroidsGrid"></div>
+                    </div>
+                </div>
+                
+                <div class="chart-wrapper">
+                    <canvas id="clusterChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Controls Section -->
+            <div class="controls-section">
+                <!-- K Selection -->
+                <div class="k-selector">
+                    <h3>Number of Clusters (k)</h3>
+                    <div class="k-buttons">
+                        <button class="k-button active" data-k="2">k=2</button>
+                        <button class="k-button" data-k="3">k=3</button>
+                        <button class="k-button" data-k="4">k=4</button>
+                    </div>
+                </div>
+
+                <!-- Animation Controls -->
+                <div class="animation-controls">
+                    <h3>Animation Controls</h3>
+                    <div class="control-buttons">
+                        <button class="control-button play-button" id="playButton">▶ Play</button>
+                        <button class="control-button step-button" id="stepButton">Step</button>
+                        <button class="control-button reset-button" id="resetButton">🔄 Reset</button>
+                    </div>
+                </div>
+
+                <!-- Speed Control -->
+                <div class="speed-control-section">
+                    <h3>Animation Speed</h3>
+                    <input type="range" id="speedSlider" class="speed-slider" min="1" max="10" value="5">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Global state
+            let state = {
+                k: 2,
+                data: [],
+                centroids: [],
+                assignments: [],
+                iteration: 0,
+                isRunning: false,
+                isConverged: false,
+                currentStep: 0,
+                chart: null,
+                animationSpeed: 5,
+                intervalId: null
+            };
+
+            const clusterColors = [
+                '#ef4444', '#3b82f6', '#10b981', '#f59e0b', '#8b5cf6', '#06b6d4'
+            ];
+
+            let totalVariance = 0;
+
+            // Variance calculation functions
+            function calculateTotalVariance(data) {
+                if (!data || data.length === 0) return 0;
+                
+                const meanTemp = data.reduce((sum, p) => sum + p.temperature, 0) / data.length;
+                const meanHumidity = data.reduce((sum, p) => sum + p.humidity, 0) / data.length;
+                
+                return data.reduce((sum, p) => {
+                    const tempDiff = p.temperature - meanTemp;
+                    const humidityDiff = p.humidity - meanHumidity;
+                    return sum + (tempDiff * tempDiff + humidityDiff * humidityDiff);
+                }, 0);
+            }
+
+            function calculateWCSS(data, assignments, centroids) {
+                if (!data || !assignments || !centroids || assignments.length === 0 || centroids.length === 0) {
+                    return 0;
+                }
+                
+                let wcss = 0;
+                data.forEach((point, index) => {
+                    const clusterIndex = assignments[index];
+                    if (clusterIndex !== undefined && centroids[clusterIndex]) {
+                        const centroid = centroids[clusterIndex];
+                        const tempDiff = point.temperature - centroid.temperature;
+                        const humidityDiff = point.humidity - centroid.humidity;
+                        wcss += (tempDiff * tempDiff + humidityDiff * humidityDiff);
+                    }
+                });
+                
+                return wcss;
+            }
+
+            function calculateBCSS(data, centroids, assignments) {
+                if (!data || !assignments || !centroids || assignments.length === 0 || centroids.length === 0) {
+                    return 0;
+                }
+                
+                const meanTemp = data.reduce((sum, p) => sum + p.temperature, 0) / data.length;
+                const meanHumidity = data.reduce((sum, p) => sum + p.humidity, 0) / data.length;
+                
+                let bcss = 0;
+                for (let k = 0; k < centroids.length; k++) {
+                    const clusterSize = assignments.filter(a => a === k).length;
+                    if (clusterSize > 0) {
+                        const tempDiff = centroids[k].temperature - meanTemp;
+                        const humidityDiff = centroids[k].humidity - meanHumidity;
+                        bcss += clusterSize * (tempDiff * tempDiff + humidityDiff * humidityDiff);
+                    }
+                }
+                
+                return bcss;
+            }
+
+            // Generate weather data
+            function generateWeatherData() {
+                const data = [];
+                
+                // Winter cluster: Cold and dry
+                for (let i = 0; i < 25; i++) {
+                    data.push({
+                        temperature: 25 + Math.random() * 15,
+                        humidity: 20 + Math.random() * 25,
+                        id: i,
+                        trueCluster: 'winter'
+                    });
+                }
+                
+                // Summer cluster: Hot and humid  
+                for (let i = 25; i < 50; i++) {
+                    data.push({
+                        temperature: 75 + Math.random() * 20,
+                        humidity: 65 + Math.random() * 25,
+                        id: i,
+                        trueCluster: 'summer'
+                    });
+                }
+                
+                // Fall cluster: Moderate temp, variable humidity
+                for (let i = 50; i < 80; i++) {
+                    data.push({
+                        temperature: 50 + Math.random() * 25,
+                        humidity: 40 + Math.random() * 40,
+                        id: i,
+                        trueCluster: 'fall'
+                    });
+                }
+                
+                return data;
+            }
+
+            // Initialize random centroids
+            function initializeCentroids(k, data) {
+                const centroids = [];
+                if (!data || data.length === 0) {
+                    return centroids;
+                }
+                
+                const tempRange = { 
+                    min: Math.min(...data.map(d => d.temperature)),
+                    max: Math.max(...data.map(d => d.temperature))
+                };
+                const humidityRange = {
+                    min: Math.min(...data.map(d => d.humidity)),
+                    max: Math.max(...data.map(d => d.humidity))
+                };
+                
+                for (let i = 0; i < k; i++) {
+                    centroids.push({
+                        temperature: tempRange.min + Math.random() * (tempRange.max - tempRange.min),
+                        humidity: humidityRange.min + Math.random() * (humidityRange.max - humidityRange.min),
+                        id: i
+                    });
+                }
+                
+                return centroids;
+            }
+
+            // Calculate distance between two points
+            function calculateDistance(point1, point2) {
+                const tempDiff = point1.temperature - point2.temperature;
+                const humidityDiff = point1.humidity - point2.humidity;
+                return Math.sqrt(tempDiff * tempDiff + humidityDiff * humidityDiff);
+            }
+
+            // Assign points to nearest centroids
+            function assignPointsToCentroids(data, centroids) {
+                return data.map(point => {
+                    let minDistance = Infinity;
+                    let assignedCluster = 0;
+                    
+                    centroids.forEach((centroid, index) => {
+                        const distance = calculateDistance(point, centroid);
+                        if (distance < minDistance) {
+                            minDistance = distance;
+                            assignedCluster = index;
+                        }
+                    });
+                    
+                    return assignedCluster;
+                });
+            }
+
+            // Update centroids based on assigned points
+            function updateCentroids(data, assignments, k) {
+                const newCentroids = [];
+                
+                for (let cluster = 0; cluster < k; cluster++) {
+                    const clusterPoints = data.filter((point, index) => assignments[index] === cluster);
+                    
+                    if (clusterPoints.length > 0) {
+                        const avgTemp = clusterPoints.reduce((sum, p) => sum + p.temperature, 0) / clusterPoints.length;
+                        const avgHumidity = clusterPoints.reduce((sum, p) => sum + p.humidity, 0) / clusterPoints.length;
+                        
+                        newCentroids.push({
+                            temperature: avgTemp,
+                            humidity: avgHumidity,
+                            id: cluster
+                        });
+                    } else {
+                        // Keep old centroid if no points assigned
+                        newCentroids.push(state.centroids[cluster]);
+                    }
+                }
+                
+                return newCentroids;
+            }
+
+            // Check if centroids have converged
+            function checkConvergence(oldCentroids, newCentroids, threshold = 0.1) {
+                for (let i = 0; i < oldCentroids.length; i++) {
+                    const distance = calculateDistance(oldCentroids[i], newCentroids[i]);
+                    if (distance > threshold) {
+                        return false;
+                    }
+                }
+                return true;
+            }
+
+            // Update chart
+            function updateChart() {
+                if (state.chart) {
+                    state.chart.destroy();
+                }
+                
+                const ctx = document.getElementById('clusterChart').getContext('2d');
+                
+                // Prepare datasets
+                const datasets = [];
+                
+                // Data points grouped by cluster
+                for (let cluster = 0; cluster < state.k; cluster++) {
+                    const clusterPoints = state.data
+                        .filter((point, index) => state.assignments[index] === cluster)
+                        .map(point => ({ x: point.temperature, y: point.humidity }));
+                    
+                    if (clusterPoints.length > 0) {
+                        datasets.push({
+                            label: `Cluster ${cluster + 1}`,
+                            data: clusterPoints,
+                            backgroundColor: clusterColors[cluster],
+                            borderColor: clusterColors[cluster],
+                            pointRadius: 6,
+                            pointHoverRadius: 8,
+                            showLine: false
+                        });
+                    }
+                }
+                
+                // Centroids
+                const centroidData = state.centroids.map(centroid => ({ 
+                    x: centroid.temperature, 
+                    y: centroid.humidity 
+                }));
+                
+                datasets.push({
+                    label: 'Centroids',
+                    data: centroidData,
+                    backgroundColor: '#1f2937',
+                    borderColor: '#ffffff',
+                    borderWidth: 3,
+                    pointRadius: 12,
+                    pointHoverRadius: 14,
+                    showLine: false,
+                    pointStyle: 'rectRot'
+                });
+                
+                state.chart = new Chart(ctx, {
+                    type: 'scatter',
+                    data: { datasets },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            x: {
+                                title: {
+                                    display: true,
+                                    text: 'Temperature (°F)',
+                                    font: { size: 14, weight: 'bold' }
+                                },
+                                grid: { color: '#e5e7eb' }
+                            },
+                            y: {
+                                title: {
+                                    display: true,
+                                    text: 'Humidity (%)',
+                                    font: { size: 14, weight: 'bold' }
+                                },
+                                grid: { color: '#e5e7eb' }
+                            }
+                        },
+                        plugins: {
+                            legend: {
+                                display: true,
+                                position: 'bottom',
+                                labels: {
+                                    usePointStyle: true,
+                                    padding: 20
+                                }
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    title: function() { return ''; },
+                                    label: function(context) {
+                                        if (context.datasetIndex === datasets.length - 1) {
+                                            return `Centroid ${context.dataIndex + 1}: (${context.parsed.x.toFixed(1)}°F, ${context.parsed.y.toFixed(1)}%)`;
+                                        } else {
+                                            return `Cluster ${context.datasetIndex + 1}: (${context.parsed.x.toFixed(1)}°F, ${context.parsed.y.toFixed(1)}%)`;
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        animation: {
+                            duration: 500
+                        }
+                    }
+                });
+            }
+
+            // Update UI elements
+            function updateUI() {
+                // Calculate variance metrics
+                const wcss = calculateWCSS(state.data, state.assignments, state.centroids);
+                const bcss = calculateBCSS(state.data, state.centroids, state.assignments);
+                const explainedPct = totalVariance > 0 ? (bcss / totalVariance * 100) : 0;
+                
+                // Iteration counter
+                document.getElementById('iterationCounter').textContent = `Iteration: ${state.iteration}`;
+                
+                // Algorithm status
+                const statusElement = document.getElementById('algorithmStatus');
+                if (state.isConverged) {
+                    statusElement.textContent = `🎉 Algorithm converged after ${state.iteration} iterations!`;
+                    statusElement.className = 'algorithm-status status-converged';
+                } else if (state.isRunning) {
+                    statusElement.textContent = `⚡ Running k-means with k=${state.k}... WCSS: ${wcss.toFixed(1)}`;
+                    statusElement.className = 'algorithm-status status-running';
+                } else {
+                    statusElement.textContent = `Ready to cluster ${state.data.length} points into ${state.k} clusters`;
+                    statusElement.className = 'algorithm-status';
+                }
+                
+                // Control buttons
+                const playButton = document.getElementById('playButton');
+                const stepButton = document.getElementById('stepButton');
+                
+                if (state.isRunning) {
+                    playButton.textContent = '⏸ Pause';
+                    stepButton.disabled = true;
+                } else {
+                    playButton.textContent = '▶ Play';
+                    stepButton.disabled = state.isConverged;
+                }
+                
+                if (state.isConverged) {
+                    playButton.disabled = true;
+                } else {
+                    playButton.disabled = false;
+                }
+                
+                // Stats panel
+                document.getElementById('pointCount').textContent = state.data.length;
+                document.getElementById('clusterCount').textContent = state.k;
+                document.getElementById('iterationCount').textContent = state.iteration;
+                document.getElementById('convergedStatus').textContent = state.isConverged ? 'Yes' : 'No';
+                
+                // Variance metrics
+                document.getElementById('wcssValue').textContent = wcss.toFixed(1);
+                document.getElementById('bcssValue').textContent = bcss.toFixed(1);
+                document.getElementById('totalVariance').textContent = totalVariance.toFixed(1);
+                document.getElementById('explainedVariance').textContent = `${explainedPct.toFixed(1)}%`;
+                
+                // Centroid list in the new grid layout
+                const centroidsGrid = document.getElementById('centroidsGrid');
+                centroidsGrid.innerHTML = '';
+                
+                if (state.centroids.length > 0) {
+                    state.centroids.forEach((centroid, index) => {
+                        const div = document.createElement('div');
+                        div.className = 'centroid-item';
+                        div.style.backgroundColor = clusterColors[index] + '20';
+                        div.style.borderLeft = `4px solid ${clusterColors[index]}`;
+                        div.style.padding = '12px';
+                        div.style.borderRadius = '6px';
+                        div.style.fontSize = '13px';
+                        div.style.fontWeight = '500';
+                        
+                        // Count points in this cluster
+                        const pointCount = state.assignments.filter(a => a === index).length;
+                        
+                        div.innerHTML = `
+                            <div style="font-weight: 600; margin-bottom: 4px; color: ${clusterColors[index]};">
+                                Cluster ${index + 1}
+                            </div>
+                            <div style="font-size: 12px; color: #6b7280; margin-bottom: 4px;">
+                                ${pointCount} points
+                            </div>
+                            <div style="font-weight: 600; color: #374151;">
+                                ${centroid.temperature.toFixed(1)}°F<br>
+                                ${centroid.humidity.toFixed(1)}% humidity
+                            </div>
+                        `;
+                        centroidsGrid.appendChild(div);
+                    });
+                }
+            }
+
+            // Perform one step of k-means
+            function performKMeansStep() {
+                if (state.isConverged) return;
+                
+                if (state.currentStep === 0) {
+                    // Step 1: Initialize centroids (already done)
+                    state.currentStep = 1;
+                } else if (state.currentStep === 1) {
+                    // Step 2: Assign points to centroids
+                    state.assignments = assignPointsToCentroids(state.data, state.centroids);
+                    state.currentStep = 2;
+                } else if (state.currentStep === 2) {
+                    // Step 3: Update centroids
+                    const oldCentroids = [...state.centroids];
+                    state.centroids = updateCentroids(state.data, state.assignments, state.k);
+                    
+                    // Check convergence
+                    if (checkConvergence(oldCentroids, state.centroids)) {
+                        state.isConverged = true;
+                        state.isRunning = false;
+                        if (state.intervalId) {
+                            clearInterval(state.intervalId);
+                            state.intervalId = null;
+                        }
+                    } else {
+                        state.iteration++;
+                        state.currentStep = 1; // Go back to assignment step
+                    }
+                }
+                
+                updateChart();
+                updateUI();
+            }
+
+            // Reset algorithm
+            function resetAlgorithm() {
+                state.isRunning = false;
+                state.isConverged = false;
+                state.iteration = 0;
+                state.currentStep = 0;
+                state.centroids = initializeCentroids(state.k, state.data);
+                state.assignments = new Array(state.data.length).fill(0);
+                
+                if (state.intervalId) {
+                    clearInterval(state.intervalId);
+                    state.intervalId = null;
+                }
+                
+                updateChart();
+                updateUI();
+            }
+
+            // Start/stop animation
+            function toggleAnimation() {
+                if (state.isRunning) {
+                    state.isRunning = false;
+                    if (state.intervalId) {
+                        clearInterval(state.intervalId);
+                        state.intervalId = null;
+                    }
+                } else {
+                    if (state.isConverged) return;
+                    
+                    state.isRunning = true;
+                    const speed = 2100 - (state.animationSpeed * 200); // Convert to milliseconds
+                    
+                    state.intervalId = setInterval(() => {
+                        performKMeansStep();
+                        if (state.isConverged) {
+                            state.isRunning = false;
+                            clearInterval(state.intervalId);
+                            state.intervalId = null;
+                        }
+                    }, speed);
+                }
+                updateUI();
+            }
+
+            // Initialize everything
+            state.data = generateWeatherData();
+            totalVariance = calculateTotalVariance(state.data);
+            resetAlgorithm();
+            
+            // Event listeners
+            // K selection
+            document.querySelectorAll('.k-button').forEach(button => {
+                button.addEventListener('click', () => {
+                    document.querySelectorAll('.k-button').forEach(b => b.classList.remove('active'));
+                    button.classList.add('active');
+                    state.k = parseInt(button.dataset.k);
+                    resetAlgorithm();
+                });
+            });
+            
+            // Animation controls
+            document.getElementById('playButton').addEventListener('click', toggleAnimation);
+            document.getElementById('stepButton').addEventListener('click', performKMeansStep);
+            document.getElementById('resetButton').addEventListener('click', resetAlgorithm);
+            
+            // Speed control
+            document.getElementById('speedSlider').addEventListener('input', (e) => {
+                state.animationSpeed = parseInt(e.target.value);
+                if (state.isRunning) {
+                    // Restart animation with new speed
+                    toggleAnimation();
+                    toggleAnimation();
+                }
+            });
+        });
+    </script>
+</body>
+</html>
