@@ -58,7 +58,7 @@ def read_record_by_query(record_id: int):
     with open(CSV_FILE, mode='r', newline='') as file:
         reader = csv.DictReader(file)
         for row in reader:
-            if "product_id" in row and row["product_id"].isdigit() and int(row["product_id"]) == record_id:
+            if "product_id" in row and row["product_id"].isdigit() and int(row["product_id"]) == id:
                 return row
 
 @app.get("/")
