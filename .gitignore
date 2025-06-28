@@ -4,10 +4,10 @@
 **/.ipynb_checkpoints
 *.py[cod]
 *$py.class
-
+**/csv_files
+**/*.pkl
 **/*_solution
-**/2_tabular_classification.ipynb
-**/3_tabular_regression.ipynb
+**/github_pat.txt
 # C extensions
 *.so
 
