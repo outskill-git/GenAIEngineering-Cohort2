@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multivariable Regression to Neural Networks</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            min-height: 100vh;
+            color: #333;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        header {
+            text-align: center;
+            color: white;
+            margin-bottom: 60px;
+            animation: fadeInDown 1s ease-out;
+        }
+
+        h1 {
+            font-size: 3.5em;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .subtitle {
+            font-size: 1.4em;
+            opacity: 0.9;
+        }
+
+        .section {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 40px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            animation: fadeInUp 1s ease-out;
+        }
+
+        h2 {
+            color: #2a5298;
+            font-size: 2.5em;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        h3 {
+            color: #1e3c72;
+            font-size: 1.8em;
+            margin: 30px 0 20px;
+        }
+
+        /* Regression Visualization */
+        .regression-visual {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 40px 0;
+            flex-wrap: wrap;
+            gap: 30px;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .input-node {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .node {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            position: relative;
+        }
+
+        .weight-line {
+            width: 100px;
+            height: 4px;
+            background: #ff6b6b;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .weight-label {
+            position: absolute;
+            top: -25px;
+            background: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-weight: bold;
+            color: #ff6b6b;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .output-node {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 1.2em;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        /* Equation Display */
+        .equation-box {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            font-size: 1.3em;
+            margin: 30px 0;
+            border: 2px solid #e9ecef;
+        }
+
+        .equation {
+            font-family: 'Courier New', monospace;
+            color: #2a5298;
+            margin: 10px 0;
+        }
+
+        /* Neural Network Visualization */
+        .neural-network {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            margin: 50px 0;
+            gap: 50px;
+        }
+
+        .layer {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+            align-items: center;
+        }
+
+        .layer-title {
+            font-weight: bold;
+            color: #2a5298;
+            margin-bottom: 10px;
+        }
+
+        .neuron {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            position: relative;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .neuron:hover {
+            transform: scale(1.1);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+        }
+
+        .hidden-neuron {
+            background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+        }
+
+        .output-neuron {
+            background: linear-gradient(135deg, #30cfd0 0%, #330867 100%);
+        }
+
+        /* Connections */
+        .connections {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+        }
+
+        .connection {
+            stroke: #ccc;
+            stroke-width: 2;
+            fill: none;
+            opacity: 0.6;
+            transition: all 0.3s ease;
+        }
+
+        .connection.highlighted {
+            stroke: #ff6b6b;
+            stroke-width: 4;
+            opacity: 1;
+        }
+
+        /* Interactive Controls */
+        .controls {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 15px;
+            margin: 30px 0;
+        }
+
+        .slider-group {
+            margin: 20px 0;
+        }
+
+        .slider-group label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: bold;
+            color: #2a5298;
+        }
+
+        input[type="range"] {
+            width: 100%;
+            height: 8px;
+            background: #e9ecef;
+            border-radius: 5px;
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 20px;
+            height: 20px;
+            background: #2a5298;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        .output-display {
+            text-align: center;
+            font-size: 1.5em;
+            margin-top: 20px;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        /* Comparison Table */
+        .comparison-table {
+            overflow-x: auto;
+            margin: 30px 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        th, td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        th {
+            background: #2a5298;
+            color: white;
+            font-weight: bold;
+        }
+
+        tr:hover {
+            background: #f8f9fa;
+        }
+
+        /* Animations */
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+        }
+
+        .highlight-box {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .activation-demo {
+            text-align: center;
+            margin: 30px 0;
+        }
+
+        .activation-graph {
+            width: 100%;
+            max-width: 500px;
+            height: 300px;
+            margin: 20px auto;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            position: relative;
+        }
+
+        @media (max-width: 768px) {
+            h1 { font-size: 2.5em; }
+            h2 { font-size: 2em; }
+            .neural-network { flex-direction: column; }
+            .regression-visual { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>From Regression to Neural Networks</h1>
+            <p class="subtitle">Understanding Weights in Machine Learning</p>
+        </header>
+
+        <!-- Multivariable Regression Section -->
+        <div class="section">
+            <h2>📊 Multivariable Linear Regression</h2>
+            <p style="font-size: 1.2em; text-align: center; margin-bottom: 30px; color: #666;">
+                Multiple input variables combine through weighted connections to predict a single output
+            </p>
+
+            <div class="regression-visual">
+                <div class="input-group">
+                    <div class="input-node">
+                        <div class="node">X₁<br><small>Size</small></div>
+                        <div class="weight-line">
+                            <span class="weight-label">w₁ = 2.5</span>
+                        </div>
+                    </div>
+                    <div class="input-node">
+                        <div class="node">X₂<br><small>Rooms</small></div>
+                        <div class="weight-line">
+                            <span class="weight-label">w₂ = 1.8</span>
+                        </div>
+                    </div>
+                    <div class="input-node">
+                        <div class="node">X₃<br><small>Location</small></div>
+                        <div class="weight-line">
+                            <span class="weight-label">w₃ = 3.2</span>
+                        </div>
+                    </div>
+                    <div class="input-node">
+                        <div class="node">b<br><small>Bias</small></div>
+                        <div class="weight-line">
+                            <span class="weight-label">b = 0.5</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="output-node">Y<br><small>Price</small></div>
+            </div>
+
+            <div class="equation-box">
+                <p><strong>The Linear Regression Equation:</strong></p>
+                <p class="equation">Y = w₁X₁ + w₂X₂ + w₃X₃ + b</p>
+                <p class="equation">Price = 2.5(Size) + 1.8(Rooms) + 3.2(Location) + 0.5</p>
+            </div>
+
+            <div class="highlight-box">
+                <h3>🎯 Key Insight: Weights as Importance Indicators</h3>
+                <p>Each weight (w) represents how much that feature contributes to the final prediction. Larger weights mean stronger influence!</p>
+                <ul style="list-style: none; padding: 0; margin-top: 15px;">
+                    <li>📏 <strong>w₁ = 2.5:</strong> Each unit of size adds 2.5 units to price</li>
+                    <li>🏠 <strong>w₂ = 1.8:</strong> Each room adds 1.8 units to price</li>
+                    <li>📍 <strong>w₃ = 3.2:</strong> Location score has the strongest impact!</li>
+                </ul>
+            </div>
+
+            <!-- Interactive Weight Demo -->
+            <div class="controls">
+                <h3>🎮 Interactive Weight Adjustment</h3>
+                <p>Adjust the weights to see how they affect the prediction:</p>
+                
+                <div class="slider-group">
+                    <label>Weight 1 (Size): <span id="w1-value">2.5</span></label>
+                    <input type="range" id="w1-slider" min="-5" max="5" step="0.1" value="2.5" oninput="updateRegression()">
+                </div>
+                
+                <div class="slider-group">
+                    <label>Weight 2 (Rooms): <span id="w2-value">1.8</span></label>
+                    <input type="range" id="w2-slider" min="-5" max="5" step="0.1" value="1.8" oninput="updateRegression()">
+                </div>
+                
+                <div class="slider-group">
+                    <label>Weight 3 (Location): <span id="w3-value">3.2</span></label>
+                    <input type="range" id="w3-slider" min="-5" max="5" step="0.1" value="3.2" oninput="updateRegression()">
+                </div>
+                
+                <div class="output-display" id="regression-output">
+                    For a house with Size=100, Rooms=3, Location=8:<br>
+                    <strong>Predicted Price = 506.5</strong>
+                </div>
+            </div>
+        </div>
+
+        <!-- Neural Network Extension -->
+        <div class="section">
+            <h2>🧠 Extending to Neural Networks</h2>
+            <p style="font-size: 1.2em; text-align: center; margin-bottom: 30px; color: #666;">
+                Neural networks are just multiple layers of weighted connections with activation functions!
+            </p>
+
+            <svg class="connections" style="position: absolute; width: 100%; height: 400px; z-index: 1;">
+                <defs>
+                    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                        <polygon points="0 0, 10 3.5, 0 7" fill="#ccc" />
+                    </marker>
+                </defs>
+            </svg>
+
+            <div class="neural-network" id="nn-viz">
+                <div class="layer">
+                    <div class="layer-title">Input Layer</div>
+                    <div class="neuron" data-layer="0" data-index="0">X₁</div>
+                    <div class="neuron" data-layer="0" data-index="1">X₂</div>
+                    <div class="neuron" data-layer="0" data-index="2">X₃</div>
+                </div>
+                
+                <div class="layer">
+                    <div class="layer-title">Hidden Layer 1</div>
+                    <div class="neuron hidden-neuron" data-layer="1" data-index="0">H₁</div>
+                    <div class="neuron hidden-neuron" data-layer="1" data-index="1">H₂</div>
+                    <div class="neuron hidden-neuron" data-layer="1" data-index="2">H₃</div>
+                    <div class="neuron hidden-neuron" data-layer="1" data-index="3">H₄</div>
+                </div>
+                
+                <div class="layer">
+                    <div class="layer-title">Hidden Layer 2</div>
+                    <div class="neuron hidden-neuron" data-layer="2" data-index="0">H₅</div>
+                    <div class="neuron hidden-neuron" data-layer="2" data-index="1">H₆</div>
+                    <div class="neuron hidden-neuron" data-layer="2" data-index="2">H₇</div>
+                </div>
+                
+                <div class="layer">
+                    <div class="layer-title">Output Layer</div>
+                    <div class="neuron output-neuron" data-layer="3" data-index="0">Y</div>
+                </div>
+            </div>
+
+            <div class="highlight-box">
+                <h3>🔗 The Connection: It's All About Weights!</h3>
+                <p><strong>Linear Regression</strong> = Neural Network with 0 hidden layers</p>
+                <p><strong>Neural Network</strong> = Multiple linear regressions stacked together with activation functions</p>
+                
+                <div style="margin-top: 20px;">
+                    <p><strong>Each connection has a weight that:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>🎯 Determines the strength of the signal</li>
+                        <li>📈 Gets adjusted during training (learning)</li>
+                        <li>🧮 Can be positive (excitatory) or negative (inhibitory)</li>
+                        <li>🎨 Combines to create complex patterns</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Activation Functions -->
+            <div class="activation-demo">
+                <h3>⚡ Activation Functions: The Secret Sauce</h3>
+                <p>Neural networks add non-linearity through activation functions applied after the weighted sum:</p>
+                
+                <div class="equation-box" style="margin-top: 20px;">
+                    <p class="equation">Hidden Node = Activation(Σ(wᵢxᵢ) + b)</p>
+                    <p style="margin-top: 15px;">Common activation functions: ReLU, Sigmoid, Tanh</p>
+                </div>
+            </div>
+
+            <!-- Comparison Table -->
+            <div class="comparison-table">
+                <h3>📊 Regression vs Neural Networks</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Aspect</th>
+                            <th>Linear Regression</th>
+                            <th>Neural Networks</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Structure</strong></td>
+                            <td>Single layer of weights</td>
+                            <td>Multiple layers of weights</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Activation</strong></td>
+                            <td>None (linear)</td>
+                            <td>Non-linear functions</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Complexity</strong></td>
+                            <td>Linear relationships only</td>
+                            <td>Can model any function</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Parameters</strong></td>
+                            <td>n weights + 1 bias</td>
+                            <td>Thousands to billions</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Training</strong></td>
+                            <td>Closed-form solution</td>
+                            <td>Gradient descent</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Interpretability</strong></td>
+                            <td>Easy to interpret weights</td>
+                            <td>Black box</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Weight Visualization in NN -->
+            <div class="controls">
+                <h3>🎨 Visualizing Neural Network Weights</h3>
+                <p>Click on any neuron to see its weighted connections!</p>
+                <div class="output-display" id="nn-info">
+                    <em>Click on a neuron to explore its connections</em>
+                </div>
+            </div>
+        </div>
+
+        <!-- Summary Section -->
+        <div class="section">
+            <h2>🎯 Key Takeaways</h2>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-top: 30px;">
+                <div style="background: #e3f2fd; padding: 20px; border-radius: 10px;">
+                    <h4 style="color: #1976d2; margin-bottom: 10px;">1. Weights = Importance</h4>
+                    <p>In both regression and neural networks, weights determine how much each input contributes to the output.</p>
+                </div>
+                <div style="background: #f3e5f5; padding: 20px; border-radius: 10px;">
+                    <h4 style="color: #7b1fa2; margin-bottom: 10px;">2. Learning = Weight Adjustment</h4>
+                    <p>Training finds the optimal weights that minimize prediction error on the training data.</p>
+                </div>
+                <div style="background: #e8f5e9; padding: 20px; border-radius: 10px;">
+                    <h4 style="color: #388e3c; margin-bottom: 10px;">3. Depth = Complexity</h4>
+                    <p>Neural networks stack multiple weighted layers to learn increasingly complex patterns.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Update regression calculation
+        function updateRegression() {
+            const w1 = parseFloat(document.getElementById('w1-slider').value);
+            const w2 = parseFloat(document.getElementById('w2-slider').value);
+            const w3 = parseFloat(document.getElementById('w3-slider').value);
+            
+            document.getElementById('w1-value').textContent = w1.toFixed(1);
+            document.getElementById('w2-value').textContent = w2.toFixed(1);
+            document.getElementById('w3-value').textContent = w3.toFixed(1);
+            
+            // Update weight labels
+            document.querySelectorAll('.weight-label')[0].textContent = `w₁ = ${w1.toFixed(1)}`;
+            document.querySelectorAll('.weight-label')[1].textContent = `w₂ = ${w2.toFixed(1)}`;
+            document.querySelectorAll('.weight-label')[2].textContent = `w₃ = ${w3.toFixed(1)}`;
+            
+            // Calculate prediction for example house
+            const size = 100;
+            const rooms = 3;
+            const location = 8;
+            const bias = 0.5;
+            
+            const prediction = (w1 * size + w2 * rooms + w3 * location + bias).toFixed(1);
+            
+            document.getElementById('regression-output').innerHTML = 
+                `For a house with Size=${size}, Rooms=${rooms}, Location=${location}:<br>
+                <strong>Predicted Price = ${prediction}</strong><br>
+                <small>Y = ${w1}(${size}) + ${w2}(${rooms}) + ${w3}(${location}) + ${bias}</small>`;
+        }
+
+        // Draw neural network connections
+        function drawConnections() {
+            const svg = document.querySelector('.connections');
+            svg.innerHTML = ''; // Clear existing connections
+            
+            const neurons = document.querySelectorAll('.neuron');
+            const neuronPositions = new Map();
+            
+            // Get positions of all neurons
+            neurons.forEach(neuron => {
+                const rect = neuron.getBoundingClientRect();
+                const svgRect = svg.getBoundingClientRect();
+                neuronPositions.set(neuron, {
+                    x: rect.left - svgRect.left + rect.width / 2,
+                    y: rect.top - svgRect.top + rect.height / 2
+                });
+            });
+            
+            // Draw connections between layers
+            const layers = [
+                document.querySelectorAll('[data-layer="0"]'),
+                document.querySelectorAll('[data-layer="1"]'),
+                document.querySelectorAll('[data-layer="2"]'),
+                document.querySelectorAll('[data-layer="3"]')
+            ];
+            
+            for (let i = 0; i < layers.length - 1; i++) {
+                layers[i].forEach(fromNeuron => {
+                    layers[i + 1].forEach(toNeuron => {
+                        const from = neuronPositions.get(fromNeuron);
+                        const to = neuronPositions.get(toNeuron);
+                        
+                        const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+                        line.setAttribute('x1', from.x);
+                        line.setAttribute('y1', from.y);
+                        line.setAttribute('x2', to.x);
+                        line.setAttribute('y2', to.y);
+                        line.setAttribute('class', 'connection');
+                        line.setAttribute('data-from', `${i}-${fromNeuron.dataset.index}`);
+                        line.setAttribute('data-to', `${i+1}-${toNeuron.dataset.index}`);
+                        
+                        svg.appendChild(line);
+                    });
+                });
+            }
+        }
+
+        // Neural network interaction
+        document.querySelectorAll('.neuron').forEach(neuron => {
+            neuron.addEventListener('click', function() {
+                // Reset all connections
+                document.querySelectorAll('.connection').forEach(conn => {
+                    conn.classList.remove('highlighted');
+                });
+                
+                // Highlight this neuron's connections
+                const layer = parseInt(this.dataset.layer);
+                const index = parseInt(this.dataset.index);
+                
+                // Highlight incoming connections
+                document.querySelectorAll(`.connection[data-to="${layer}-${index}"]`).forEach(conn => {
+                    conn.classList.add('highlighted');
+                });
+                
+                // Highlight outgoing connections
+                document.querySelectorAll(`.connection[data-from="${layer}-${index}"]`).forEach(conn => {
+                    conn.classList.add('highlighted');
+                });
+                
+                // Update info display
+                const layerNames = ['Input', 'Hidden 1', 'Hidden 2', 'Output'];
+                const incomingCount = document.querySelectorAll(`.connection[data-to="${layer}-${index}"]`).length;
+                const outgoingCount = document.querySelectorAll(`.connection[data-from="${layer}-${index}"]`).length;
+                
+                document.getElementById('nn-info').innerHTML = 
+                    `<strong>${layerNames[layer]} Layer - ${this.textContent}</strong><br>
+                    Incoming connections: ${incomingCount} weights<br>
+                    Outgoing connections: ${outgoingCount} weights<br>
+                    <small>Total parameters for this neuron: ${incomingCount + 1} (including bias)</small>`;
+            });
+        });
+
+        // Initialize
+        window.addEventListener('load', () => {
+            drawConnections();
+            updateRegression();
+        });
+
+        window.addEventListener('resize', drawConnections);
+
+        // Add animation to sections on scroll
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.section').forEach(section => {
+            section.style.opacity = '0';
+            section.style.transform = 'translateY(30px)';
+            section.style.transition = 'all 0.6s ease-out';
+            observer.observe(section);
+        });
+    </script>
+</body>
+</html>

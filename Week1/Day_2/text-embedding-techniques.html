@@ -1,0 +1,952 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Text Embedding Techniques</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%);
+            min-height: 100vh;
+            color: #333;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        header {
+            text-align: center;
+            color: white;
+            margin-bottom: 60px;
+            animation: fadeInDown 1s ease-out;
+        }
+
+        h1 {
+            font-size: 3.5em;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .subtitle {
+            font-size: 1.4em;
+            opacity: 0.9;
+        }
+
+        .section {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 40px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            animation: fadeInUp 1s ease-out;
+        }
+
+        h2 {
+            color: #0f2027;
+            font-size: 2.5em;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        h3 {
+            color: #203a43;
+            font-size: 1.8em;
+            margin: 30px 0 20px;
+        }
+
+        /* Navigation Tabs */
+        .tabs {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+        }
+
+        .tab {
+            padding: 12px 24px;
+            background: white;
+            border: 2px solid #0f2027;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+            color: #0f2027;
+        }
+
+        .tab:hover {
+            background: #0f2027;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .tab.active {
+            background: #0f2027;
+            color: white;
+        }
+
+        .technique-content {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .technique-content.active {
+            display: block;
+        }
+
+        /* Bag of Words Visualization */
+        .bow-demo {
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            margin: 30px 0;
+            flex-wrap: wrap;
+            gap: 30px;
+        }
+
+        .text-input {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            font-size: 1.2em;
+            border: 2px dashed #0f2027;
+            max-width: 300px;
+        }
+
+        .arrow {
+            font-size: 2em;
+            color: #0f2027;
+            animation: pulse 2s infinite;
+        }
+
+        .vector-display {
+            background: #e3f2fd;
+            padding: 20px;
+            border-radius: 10px;
+            font-family: monospace;
+            font-size: 1.1em;
+        }
+
+        .word-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 10px;
+            margin: 20px 0;
+        }
+
+        .word-cell {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 10px;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .word-cell:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        /* TF-IDF Visualization */
+        .tfidf-matrix {
+            overflow-x: auto;
+            margin: 30px 0;
+        }
+
+        .matrix-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .matrix-table th, .matrix-table td {
+            padding: 12px;
+            text-align: center;
+            border: 1px solid #e0e0e0;
+        }
+
+        .matrix-table th {
+            background: #203a43;
+            color: white;
+            font-weight: bold;
+        }
+
+        .matrix-table td {
+            font-family: monospace;
+        }
+
+        .heat-0 { background: #ffffff; }
+        .heat-1 { background: #e3f2fd; }
+        .heat-2 { background: #90caf9; }
+        .heat-3 { background: #42a5f5; }
+        .heat-4 { background: #1976d2; }
+
+        /* Word2Vec Visualization */
+        .embedding-space {
+            width: 100%;
+            height: 400px;
+            background: #f5f5f5;
+            border-radius: 15px;
+            position: relative;
+            margin: 30px 0;
+            overflow: hidden;
+            border: 2px solid #e0e0e0;
+        }
+
+        .word-point {
+            position: absolute;
+            width: 80px;
+            height: 40px;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 0.9em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+
+        .word-point:hover {
+            transform: scale(1.1);
+            z-index: 10;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+        }
+
+        /* Transformer Visualization */
+        .transformer-arch {
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            margin: 40px 0;
+            flex-wrap: wrap;
+            gap: 30px;
+        }
+
+        .transformer-block {
+            background: linear-gradient(135deg, #30cfd0 0%, #330867 100%);
+            color: white;
+            padding: 30px 20px;
+            border-radius: 15px;
+            text-align: center;
+            font-weight: bold;
+            min-width: 150px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+        }
+
+        .transformer-block:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+        }
+
+        .attention-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 5px;
+            margin: 20px 0;
+            max-width: 300px;
+            margin: 20px auto;
+        }
+
+        .attention-cell {
+            width: 50px;
+            height: 50px;
+            background: #90caf9;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+
+        /* Interactive Demo */
+        .demo-container {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 15px;
+            margin: 30px 0;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 15px;
+            font-size: 1.1em;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .embed-button {
+            background: linear-gradient(135deg, #0f2027 0%, #203a43 100%);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            font-size: 1.1em;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .embed-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+        }
+
+        .result-box {
+            margin-top: 20px;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            display: none;
+        }
+
+        /* Comparison Grid */
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .technique-card {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            border-top: 4px solid #0f2027;
+        }
+
+        .technique-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        }
+
+        .pros-cons {
+            margin-top: 15px;
+        }
+
+        .pros, .cons {
+            margin: 10px 0;
+        }
+
+        .pros li, .cons li {
+            margin: 5px 0;
+            list-style-position: inside;
+        }
+
+        .pros li::marker {
+            content: "✓ ";
+            color: #4caf50;
+        }
+
+        .cons li::marker {
+            content: "✗ ";
+            color: #f44336;
+        }
+
+        /* Animations */
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .highlight-box {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        @media (max-width: 768px) {
+            h1 { font-size: 2.5em; }
+            h2 { font-size: 2em; }
+            .tabs { justify-content: center; }
+            .transformer-arch { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Text Embedding Techniques</h1>
+            <p class="subtitle">From Words to Vectors: A Visual Journey</p>
+        </header>
+
+        <div class="section">
+            <h2>🔤 Choose an Embedding Technique</h2>
+            
+            <div class="tabs">
+                <div class="tab active" onclick="showTechnique('bow')">Bag of Words</div>
+                <div class="tab" onclick="showTechnique('tfidf')">TF-IDF</div>
+                <div class="tab" onclick="showTechnique('word2vec')">Word2Vec</div>
+                <div class="tab" onclick="showTechnique('glove')">GloVe</div>
+                <div class="tab" onclick="showTechnique('transformer')">Transformers</div>
+                <div class="tab" onclick="showTechnique('comparison')">Compare All</div>
+            </div>
+
+            <!-- Bag of Words -->
+            <div id="bow" class="technique-content active">
+                <h3>🎒 Bag of Words (BoW)</h3>
+                <p style="font-size: 1.1em; margin-bottom: 20px;">
+                    The simplest approach: counts how many times each word appears, ignoring order and grammar.
+                </p>
+                
+                <div class="bow-demo">
+                    <div class="text-input">
+                        "The cat sat on the mat"
+                    </div>
+                    <span class="arrow">→</span>
+                    <div class="vector-display">
+                        {<br>
+                        &nbsp;&nbsp;"the": 2,<br>
+                        &nbsp;&nbsp;"cat": 1,<br>
+                        &nbsp;&nbsp;"sat": 1,<br>
+                        &nbsp;&nbsp;"on": 1,<br>
+                        &nbsp;&nbsp;"mat": 1<br>
+                        }
+                    </div>
+                    <span class="arrow">→</span>
+                    <div class="vector-display">
+                        [2, 1, 1, 1, 1]
+                    </div>
+                </div>
+
+                <div class="highlight-box">
+                    <strong>Key Characteristics:</strong>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>✅ Simple and fast</li>
+                        <li>✅ Works well for document classification</li>
+                        <li>❌ Loses word order information</li>
+                        <li>❌ Creates sparse, high-dimensional vectors</li>
+                    </ul>
+                </div>
+
+                <h4>Vocabulary Visualization</h4>
+                <div class="word-grid" id="vocab-grid">
+                    <div class="word-cell">the</div>
+                    <div class="word-cell">cat</div>
+                    <div class="word-cell">sat</div>
+                    <div class="word-cell">on</div>
+                    <div class="word-cell">mat</div>
+                    <div class="word-cell">dog</div>
+                    <div class="word-cell">ran</div>
+                    <div class="word-cell">fast</div>
+                </div>
+            </div>
+
+            <!-- TF-IDF -->
+            <div id="tfidf" class="technique-content">
+                <h3>📊 TF-IDF (Term Frequency-Inverse Document Frequency)</h3>
+                <p style="font-size: 1.1em; margin-bottom: 20px;">
+                    Weighs words by importance: common words get lower scores, rare words get higher scores.
+                </p>
+
+                <div class="tfidf-matrix">
+                    <table class="matrix-table">
+                        <thead>
+                            <tr>
+                                <th>Document</th>
+                                <th>the</th>
+                                <th>cat</th>
+                                <th>sat</th>
+                                <th>dog</th>
+                                <th>ran</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Doc 1</strong></td>
+                                <td class="heat-1">0.12</td>
+                                <td class="heat-3">0.47</td>
+                                <td class="heat-3">0.47</td>
+                                <td class="heat-0">0.00</td>
+                                <td class="heat-0">0.00</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Doc 2</strong></td>
+                                <td class="heat-1">0.12</td>
+                                <td class="heat-0">0.00</td>
+                                <td class="heat-0">0.00</td>
+                                <td class="heat-3">0.47</td>
+                                <td class="heat-3">0.47</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Doc 3</strong></td>
+                                <td class="heat-1">0.24</td>
+                                <td class="heat-2">0.23</td>
+                                <td class="heat-0">0.00</td>
+                                <td class="heat-2">0.23</td>
+                                <td class="heat-0">0.00</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="highlight-box">
+                    <strong>TF-IDF Formula:</strong>
+                    <p style="font-family: monospace; text-align: center; margin: 15px 0; font-size: 1.2em;">
+                        TF-IDF(t,d) = TF(t,d) × log(N/DF(t))
+                    </p>
+                    <ul style="margin-left: 20px;">
+                        <li>TF = Term Frequency in document</li>
+                        <li>N = Total number of documents</li>
+                        <li>DF = Documents containing the term</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Word2Vec -->
+            <div id="word2vec" class="technique-content">
+                <h3>🎯 Word2Vec</h3>
+                <p style="font-size: 1.1em; margin-bottom: 20px;">
+                    Learns dense vectors by predicting context words (Skip-gram) or target words (CBOW).
+                </p>
+
+                <div class="embedding-space" id="word2vec-space">
+                    <div class="word-point" style="left: 20%; top: 30%;">cat</div>
+                    <div class="word-point" style="left: 25%; top: 35%;">dog</div>
+                    <div class="word-point" style="left: 15%; top: 40%;">kitten</div>
+                    <div class="word-point" style="left: 70%; top: 20%;">car</div>
+                    <div class="word-point" style="left: 75%; top: 25%;">truck</div>
+                    <div class="word-point" style="left: 50%; top: 60%;">happy</div>
+                    <div class="word-point" style="left: 55%; top: 65%;">joy</div>
+                    <div class="word-point" style="left: 30%; top: 70%;">run</div>
+                    <div class="word-point" style="left: 35%; top: 75%;">walk</div>
+                </div>
+
+                <div class="demo-container">
+                    <h4>Word Arithmetic Demo</h4>
+                    <p style="text-align: center; font-size: 1.2em; margin: 20px 0;">
+                        <strong>king - man + woman = queen</strong>
+                    </p>
+                    <p style="text-align: center; color: #666;">
+                        Word2Vec captures semantic relationships through vector arithmetic!
+                    </p>
+                </div>
+
+                <div class="highlight-box">
+                    <strong>Training Approaches:</strong>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 15px;">
+                        <div>
+                            <strong>Skip-gram:</strong> Predict context from word
+                            <p style="font-family: monospace; margin-top: 5px;">cat → [the, sat, on, mat]</p>
+                        </div>
+                        <div>
+                            <strong>CBOW:</strong> Predict word from context
+                            <p style="font-family: monospace; margin-top: 5px;">[the, sat, on, mat] → cat</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- GloVe -->
+            <div id="glove" class="technique-content">
+                <h3>🌐 GloVe (Global Vectors)</h3>
+                <p style="font-size: 1.1em; margin-bottom: 20px;">
+                    Combines global matrix factorization with local context windows for word representations.
+                </p>
+
+                <div style="display: flex; justify-content: space-around; align-items: center; margin: 30px 0; flex-wrap: wrap; gap: 30px;">
+                    <div style="text-align: center;">
+                        <h4>Co-occurrence Matrix</h4>
+                        <table class="matrix-table" style="margin: 10px auto;">
+                            <tr>
+                                <th></th>
+                                <th>ice</th>
+                                <th>steam</th>
+                                <th>solid</th>
+                                <th>gas</th>
+                            </tr>
+                            <tr>
+                                <td><strong>ice</strong></td>
+                                <td>0</td>
+                                <td>0.02</td>
+                                <td>8.9</td>
+                                <td>0.01</td>
+                            </tr>
+                            <tr>
+                                <td><strong>steam</strong></td>
+                                <td>0.02</td>
+                                <td>0</td>
+                                <td>0.03</td>
+                                <td>7.8</td>
+                            </tr>
+                        </table>
+                    </div>
+                    <span class="arrow">→</span>
+                    <div style="text-align: center;">
+                        <h4>Learned Vectors</h4>
+                        <div class="vector-display">
+                            ice: [0.42, -0.31, 0.18, ...]<br>
+                            steam: [-0.38, 0.29, 0.45, ...]
+                        </div>
+                    </div>
+                </div>
+
+                <div class="highlight-box">
+                    <strong>GloVe Innovation:</strong>
+                    <p>Captures both local context (like Word2Vec) AND global statistics (like LSA)</p>
+                    <p style="margin-top: 10px;">Optimizes: <span style="font-family: monospace;">f(w_i · w_j) = log P(i|j)</span></p>
+                </div>
+            </div>
+
+            <!-- Transformers -->
+            <div id="transformer" class="technique-content">
+                <h3>🤖 Transformer-based Embeddings (BERT, GPT)</h3>
+                <p style="font-size: 1.1em; margin-bottom: 20px;">
+                    Contextual embeddings that change based on surrounding words using attention mechanisms.
+                </p>
+
+                <div class="transformer-arch">
+                    <div class="transformer-block">
+                        <div>Input Text</div>
+                        <div style="font-size: 0.8em; margin-top: 10px;">"The bank is nice"</div>
+                    </div>
+                    <div class="arrow">→</div>
+                    <div class="transformer-block">
+                        <div>Multi-Head Attention</div>
+                        <div class="attention-grid">
+                            <div class="attention-cell" style="opacity: 0.3;"></div>
+                            <div class="attention-cell" style="opacity: 0.9;"></div>
+                            <div class="attention-cell" style="opacity: 0.5;"></div>
+                            <div class="attention-cell" style="opacity: 0.7;"></div>
+                            <div class="attention-cell" style="opacity: 0.4;"></div>
+                        </div>
+                    </div>
+                    <div class="arrow">→</div>
+                    <div class="transformer-block">
+                        <div>Contextual Embeddings</div>
+                        <div style="font-size: 0.8em; margin-top: 10px;">
+                            bank₁: [0.21, -0.43, ...]<br>
+                            bank₂: [-0.15, 0.38, ...]
+                        </div>
+                    </div>
+                </div>
+
+                <div class="demo-container">
+                    <h4>Context Matters!</h4>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 20px;">
+                        <div>
+                            <p><strong>"I went to the bank to deposit money"</strong></p>
+                            <p style="color: #666; margin-top: 5px;">bank → financial institution 🏦</p>
+                        </div>
+                        <div>
+                            <p><strong>"I sat on the river bank"</strong></p>
+                            <p style="color: #666; margin-top: 5px;">bank → edge of river 🏞️</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="highlight-box">
+                    <strong>Key Features:</strong>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>🎯 Context-aware representations</li>
+                        <li>🔄 Bidirectional understanding (BERT)</li>
+                        <li>📚 Pre-trained on massive text corpora</li>
+                        <li>🎨 Fine-tunable for specific tasks</li>
+                        <li>🧠 State-of-the-art performance</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Comparison -->
+            <div id="comparison" class="technique-content">
+                <h3>⚖️ Comparing All Techniques</h3>
+                
+                <div class="comparison-grid">
+                    <div class="technique-card">
+                        <h4>Bag of Words</h4>
+                        <p><strong>Complexity:</strong> ⭐</p>
+                        <p><strong>Performance:</strong> ⭐⭐</p>
+                        <div class="pros-cons">
+                            <ul class="pros">
+                                <li>Simple to implement</li>
+                                <li>Fast computation</li>
+                            </ul>
+                            <ul class="cons">
+                                <li>No word order</li>
+                                <li>Sparse vectors</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="technique-card">
+                        <h4>TF-IDF</h4>
+                        <p><strong>Complexity:</strong> ⭐⭐</p>
+                        <p><strong>Performance:</strong> ⭐⭐⭐</p>
+                        <div class="pros-cons">
+                            <ul class="pros">
+                                <li>Weighs importance</li>
+                                <li>Good for search</li>
+                            </ul>
+                            <ul class="cons">
+                                <li>Still sparse</li>
+                                <li>No semantics</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="technique-card">
+                        <h4>Word2Vec</h4>
+                        <p><strong>Complexity:</strong> ⭐⭐⭐</p>
+                        <p><strong>Performance:</strong> ⭐⭐⭐⭐</p>
+                        <div class="pros-cons">
+                            <ul class="pros">
+                                <li>Dense vectors</li>
+                                <li>Semantic similarity</li>
+                            </ul>
+                            <ul class="cons">
+                                <li>One vector per word</li>
+                                <li>No context</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="technique-card">
+                        <h4>GloVe</h4>
+                        <p><strong>Complexity:</strong> ⭐⭐⭐</p>
+                        <p><strong>Performance:</strong> ⭐⭐⭐⭐</p>
+                        <div class="pros-cons">
+                            <ul class="pros">
+                                <li>Global + local info</li>
+                                <li>Good coverage</li>
+                            </ul>
+                            <ul class="cons">
+                                <li>Fixed vocabulary</li>
+                                <li>Memory intensive</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="technique-card">
+                        <h4>Transformers</h4>
+                        <p><strong>Complexity:</strong> ⭐⭐⭐⭐⭐</p>
+                        <p><strong>Performance:</strong> ⭐⭐⭐⭐⭐</p>
+                        <div class="pros-cons">
+                            <ul class="pros">
+                                <li>Context-aware</li>
+                                <li>State-of-the-art</li>
+                            </ul>
+                            <ul class="cons">
+                                <li>Computationally expensive</li>
+                                <li>Large models</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="demo-container" style="margin-top: 40px;">
+                    <h4>🎯 Quick Recommendation Guide</h4>
+                    <div style="display: grid; gap: 15px; margin-top: 20px;">
+                        <p><strong>Use BoW/TF-IDF when:</strong> You need simple, fast document classification</p>
+                        <p><strong>Use Word2Vec/GloVe when:</strong> You need semantic similarity without context</p>
+                        <p><strong>Use Transformers when:</strong> You need state-of-the-art performance and have computational resources</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Interactive Demo Section -->
+        <div class="section">
+            <h2>🔬 Try It Yourself!</h2>
+            <div class="demo-container">
+                <input type="text" class="input-field" id="demo-input" placeholder="Enter your text here..." value="The quick brown fox jumps over the lazy dog">
+                <button class="embed-button" onclick="generateEmbeddings()">Generate Embeddings</button>
+                
+                <div id="demo-results" class="result-box">
+                    <h4>Embedding Results:</h4>
+                    <div id="embedding-output"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Tab switching functionality
+        function showTechnique(technique) {
+            // Update tabs
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            // Update content
+            document.querySelectorAll('.technique-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            document.getElementById(technique).classList.add('active');
+        }
+
+        // Generate embeddings demo
+        function generateEmbeddings() {
+            const input = document.getElementById('demo-input').value;
+            const words = input.toLowerCase().split(' ');
+            const uniqueWords = [...new Set(words)];
+            
+            // Simulate different embedding techniques
+            const results = {
+                bow: {},
+                tfidf: [],
+                word2vec: [],
+                transformer: []
+            };
+            
+            // BoW
+            words.forEach(word => {
+                results.bow[word] = (results.bow[word] || 0) + 1;
+            });
+            
+            // Simulated embeddings
+            uniqueWords.forEach(word => {
+                // TF-IDF (simulated)
+                const tf = results.bow[word] / words.length;
+                const idf = Math.log(10 / (1 + Math.random() * 3)); // Simulated IDF
+                results.tfidf.push(`${word}: ${(tf * idf).toFixed(3)}`);
+                
+                // Word2Vec (simulated random vectors)
+                const vec = Array(4).fill(0).map(() => (Math.random() - 0.5).toFixed(2));
+                results.word2vec.push(`${word}: [${vec.join(', ')}]`);
+                
+                // Transformer (simulated contextual)
+                const contextVec = Array(4).fill(0).map(() => (Math.random() - 0.5).toFixed(2));
+                results.transformer.push(`${word} (context-aware): [${contextVec.join(', ')}]`);
+            });
+            
+            // Display results
+            const output = document.getElementById('embedding-output');
+            output.innerHTML = `
+                <div style="margin-bottom: 20px;">
+                    <strong>Bag of Words:</strong>
+                    <pre style="background: #f5f5f5; padding: 10px; border-radius: 5px; margin-top: 5px;">${JSON.stringify(results.bow, null, 2)}</pre>
+                </div>
+                <div style="margin-bottom: 20px;">
+                    <strong>TF-IDF Scores:</strong>
+                    <pre style="background: #f5f5f5; padding: 10px; border-radius: 5px; margin-top: 5px;">${results.tfidf.join('\n')}</pre>
+                </div>
+                <div style="margin-bottom: 20px;">
+                    <strong>Word2Vec Embeddings:</strong>
+                    <pre style="background: #f5f5f5; padding: 10px; border-radius: 5px; margin-top: 5px;">${results.word2vec.join('\n')}</pre>
+                </div>
+                <div>
+                    <strong>Transformer Embeddings:</strong>
+                    <pre style="background: #f5f5f5; padding: 10px; border-radius: 5px; margin-top: 5px;">${results.transformer.join('\n')}</pre>
+                </div>
+            `;
+            
+            document.getElementById('demo-results').style.display = 'block';
+        }
+
+        // Add hover effects to word points in Word2Vec visualization
+        document.querySelectorAll('.word-point').forEach(point => {
+            point.addEventListener('mouseenter', function() {
+                // Find similar words (simulated)
+                const similarWords = {
+                    'cat': ['kitten', 'dog'],
+                    'dog': ['cat', 'kitten'],
+                    'kitten': ['cat', 'dog'],
+                    'car': ['truck'],
+                    'truck': ['car'],
+                    'happy': ['joy'],
+                    'joy': ['happy'],
+                    'run': ['walk'],
+                    'walk': ['run']
+                };
+                
+                const word = this.textContent;
+                const similar = similarWords[word] || [];
+                
+                // Highlight similar words
+                document.querySelectorAll('.word-point').forEach(p => {
+                    if (similar.includes(p.textContent)) {
+                        p.style.background = 'linear-gradient(135deg, #4caf50 0%, #8bc34a 100%)';
+                    }
+                });
+            });
+            
+            point.addEventListener('mouseleave', function() {
+                // Reset colors
+                document.querySelectorAll('.word-point').forEach(p => {
+                    p.style.background = '';
+                });
+            });
+        });
+
+        // Animate attention cells in transformer section
+        setInterval(() => {
+            document.querySelectorAll('.attention-cell').forEach(cell => {
+                cell.style.opacity = 0.2 + Math.random() * 0.8;
+            });
+        }, 2000);
+
+        // Add scroll animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.section').forEach(section => {
+            section.style.opacity = '0';
+            section.style.transform = 'translateY(30px)';
+            section.style.transition = 'all 0.6s ease-out';
+            observer.observe(section);
+        });
+    </script>
+</body>
+</html>

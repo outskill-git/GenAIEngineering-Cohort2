@@ -1,0 +1,884 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Markov Chain Text Generation</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 50%, #7e8ba3 100%);
+            min-height: 100vh;
+            color: #333;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        header {
+            text-align: center;
+            color: white;
+            margin-bottom: 60px;
+            animation: fadeInDown 1s ease-out;
+        }
+
+        h1 {
+            font-size: 3.5em;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .subtitle {
+            font-size: 1.4em;
+            opacity: 0.9;
+        }
+
+        .section {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 40px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            animation: fadeInUp 1s ease-out;
+        }
+
+        h2 {
+            color: #1e3c72;
+            font-size: 2.5em;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        h3 {
+            color: #2a5298;
+            font-size: 1.8em;
+            margin: 30px 0 20px;
+        }
+
+        /* Concept Explanation */
+        .concept-visual {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 40px 0;
+            flex-wrap: wrap;
+            gap: 30px;
+        }
+
+        .state-node {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #4a90e2 0%, #357abd 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 1.2em;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .state-node:hover {
+            transform: scale(1.1);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+        }
+
+        .transition-arrow {
+            position: relative;
+            width: 80px;
+            height: 2px;
+            background: #666;
+        }
+
+        .transition-arrow::after {
+            content: '→';
+            position: absolute;
+            right: -10px;
+            top: -12px;
+            font-size: 1.5em;
+            color: #666;
+        }
+
+        .probability-label {
+            position: absolute;
+            top: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 0.9em;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        /* Source Text */
+        .source-text {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 15px;
+            margin: 30px 0;
+            max-height: 300px;
+            overflow-y: auto;
+            border: 2px solid #e0e0e0;
+        }
+
+        .source-text p {
+            line-height: 1.8;
+            margin-bottom: 15px;
+        }
+
+        /* Transition Matrix */
+        .matrix-container {
+            overflow-x: auto;
+            margin: 30px 0;
+        }
+
+        .transition-matrix {
+            border-collapse: collapse;
+            background: white;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 0 auto;
+        }
+
+        .transition-matrix th,
+        .transition-matrix td {
+            padding: 12px;
+            text-align: center;
+            border: 1px solid #e0e0e0;
+            min-width: 80px;
+        }
+
+        .transition-matrix th {
+            background: #2a5298;
+            color: white;
+            font-weight: bold;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .transition-matrix th:first-child {
+            position: sticky;
+            left: 0;
+            z-index: 11;
+            background: #1e3c72;
+        }
+
+        .transition-matrix td:first-child {
+            background: #f0f0f0;
+            font-weight: bold;
+            position: sticky;
+            left: 0;
+        }
+
+        .prob-cell {
+            font-family: monospace;
+            font-size: 0.9em;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .prob-cell:hover {
+            background: #e3f2fd;
+            transform: scale(1.1);
+        }
+
+        /* Heat map colors for probabilities */
+        .heat-0 { background: #ffffff; }
+        .heat-1 { background: #ffebee; }
+        .heat-2 { background: #ffcdd2; }
+        .heat-3 { background: #ef9a9a; }
+        .heat-4 { background: #e57373; }
+        .heat-5 { background: #ef5350; }
+        .heat-6 { background: #f44336; color: white; }
+        .heat-7 { background: #e53935; color: white; }
+        .heat-8 { background: #d32f2f; color: white; }
+        .heat-9 { background: #c62828; color: white; }
+        .heat-10 { background: #b71c1c; color: white; }
+
+        /* Generation Controls */
+        .generation-controls {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 15px;
+            margin: 30px 0;
+        }
+
+        .control-group {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .control-group label {
+            font-weight: bold;
+            min-width: 150px;
+        }
+
+        .control-group input,
+        .control-group select {
+            flex: 1;
+            padding: 10px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1em;
+        }
+
+        .generate-btn {
+            background: linear-gradient(135deg, #4a90e2 0%, #357abd 100%);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.2em;
+            font-weight: bold;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .generate-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+        }
+
+        /* Generated Text Display */
+        .generated-text {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin: 20px 0;
+            border: 3px solid #4a90e2;
+            min-height: 100px;
+            display: none;
+        }
+
+        .generated-text.show {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .generation-step {
+            display: inline-block;
+            padding: 5px 10px;
+            margin: 2px;
+            background: #e3f2fd;
+            border-radius: 5px;
+            font-weight: bold;
+            opacity: 0;
+            animation: wordAppear 0.3s ease forwards;
+        }
+
+        /* Visualization */
+        .chain-visualization {
+            margin: 30px 0;
+            padding: 30px;
+            background: #f8f9fa;
+            border-radius: 15px;
+            overflow-x: auto;
+        }
+
+        .chain-path {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin: 20px 0;
+            flex-wrap: nowrap;
+        }
+
+        .word-node {
+            padding: 10px 20px;
+            background: linear-gradient(135deg, #66bb6a 0%, #4caf50 100%);
+            color: white;
+            border-radius: 25px;
+            font-weight: bold;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            white-space: nowrap;
+            animation: slideIn 0.5s ease;
+        }
+
+        .path-arrow {
+            color: #666;
+            font-size: 1.5em;
+        }
+
+        /* Info Boxes */
+        .info-box {
+            background: #e3f2fd;
+            border: 2px solid #4a90e2;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .formula-box {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .formula {
+            font-family: 'Courier New', monospace;
+            font-size: 1.3em;
+            margin: 10px 0;
+            color: #1e3c72;
+        }
+
+        /* Statistics */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        }
+
+        .stat-value {
+            font-size: 2em;
+            font-weight: bold;
+            color: #4a90e2;
+        }
+
+        .stat-label {
+            color: #666;
+            margin-top: 5px;
+        }
+
+        /* Animations */
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes wordAppear {
+            from {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @media (max-width: 768px) {
+            h1 { font-size: 2.5em; }
+            h2 { font-size: 2em; }
+            .control-group { flex-direction: column; }
+            .control-group label { min-width: 0; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>⛓️ Markov Chain Text Generation</h1>
+            <p class="subtitle">Understanding Transition Probabilities Through Text</p>
+        </header>
+
+        <!-- Concept Explanation -->
+        <div class="section">
+            <h2>📚 What is a Markov Chain?</h2>
+            
+            <div class="concept-visual">
+                <div class="state-node">State A</div>
+                <div class="transition-arrow">
+                    <div class="probability-label">P(A→B)</div>
+                </div>
+                <div class="state-node">State B</div>
+                <div class="transition-arrow">
+                    <div class="probability-label">P(B→C)</div>
+                </div>
+                <div class="state-node">State C</div>
+            </div>
+
+            <div class="info-box">
+                <h3>🎯 Key Concepts:</h3>
+                <ul style="margin-left: 20px; line-height: 1.8;">
+                    <li><strong>Markov Property:</strong> The future state depends only on the current state, not the past</li>
+                    <li><strong>States:</strong> In text generation, each word is a state</li>
+                    <li><strong>Transition Probability:</strong> The likelihood of moving from one word to another</li>
+                    <li><strong>Stochastic Process:</strong> Random selection based on probabilities</li>
+                </ul>
+            </div>
+
+            <div class="formula-box">
+                <h4>Transition Probability Formula:</h4>
+                <p class="formula">P(next_word | current_word) = count(current_word → next_word) / count(current_word)</p>
+                <p style="margin-top: 10px;">Example: If "the" appears 100 times and is followed by "cat" 15 times:</p>
+                <p class="formula">P(cat | the) = 15/100 = 0.15</p>
+            </div>
+        </div>
+
+        <!-- Source Text -->
+        <div class="section">
+            <h2>📖 Training Text</h2>
+            <p style="text-align: center; margin-bottom: 20px;">This sample text will be analyzed to build our Markov model:</p>
+            
+            <div class="source-text" id="sourceText">
+                <p>The sun rose over the mountains. The birds began to sing their morning songs. In the valley below, the river flowed gently through the meadows. The water sparkled in the early light.</p>
+                
+                <p>A young fox emerged from the forest. The fox was hunting for food. It moved silently through the tall grass. The morning dew glistened on its fur. The fox spotted a rabbit near the river. The rabbit was drinking water. The fox crept closer, but the rabbit heard a sound and fled into the bushes.</p>
+                
+                <p>In the village, people were waking up. The baker opened his shop early. The smell of fresh bread filled the air. Children ran through the streets, laughing and playing. The market square began to fill with vendors. Fresh vegetables and fruits were displayed in colorful arrays.</p>
+                
+                <p>The sun climbed higher in the sky. The day grew warmer. Farmers worked in their fields. The harvest season was approaching. Golden wheat swayed in the breeze. The farmers knew it would be a good year.</p>
+                
+                <p>By the river, an old fisherman cast his line. The water was calm and clear. Fish swam beneath the surface. The fisherman waited patiently. He had learned that patience was the key to success. The river had taught him many lessons over the years.</p>
+
+                <p>As evening approached, the sun began to set. The sky turned orange and pink. Birds returned to their nests. The village grew quiet. Lights appeared in windows. Families gathered for dinner. The day was ending, but tomorrow would bring new adventures.</p>
+            </div>
+
+            <div class="stats-grid" id="textStats">
+                <!-- Stats will be populated by JavaScript -->
+            </div>
+        </div>
+
+        <!-- Transition Matrix -->
+        <div class="section">
+            <h2>🔢 Transition Probability Matrix</h2>
+            <p style="text-align: center; margin-bottom: 20px;">Top word transitions extracted from the text (showing words with highest frequencies):</p>
+            
+            <div class="matrix-container">
+                <table class="transition-matrix" id="transitionMatrix">
+                    <!-- Matrix will be populated by JavaScript -->
+                </table>
+            </div>
+
+            <div class="info-box">
+                <p><strong>How to read the matrix:</strong> Each row shows the probability of transitioning from that word to the words in the columns. Darker colors indicate higher probabilities.</p>
+            </div>
+        </div>
+
+        <!-- Text Generation -->
+        <div class="section">
+            <h2>🎨 Generate Text Using Markov Chain</h2>
+            
+            <div class="generation-controls">
+                <div class="control-group">
+                    <label>Starting Word:</label>
+                    <select id="startWord">
+                        <option value="The">The</option>
+                        <option value="In">In</option>
+                        <option value="A">A</option>
+                        <option value="Birds">Birds</option>
+                        <option value="Water">Water</option>
+                        <option value="[RANDOM]">[Random Start]</option>
+                    </select>
+                </div>
+                
+                <div class="control-group">
+                    <label>Number of Words:</label>
+                    <input type="number" id="wordCount" value="30" min="10" max="100">
+                </div>
+                
+                <div class="control-group">
+                    <label>Order (n-gram):</label>
+                    <select id="ngramOrder">
+                        <option value="1">1 (Single word)</option>
+                        <option value="2" selected>2 (Word pairs)</option>
+                        <option value="3">3 (Word triplets)</option>
+                    </select>
+                </div>
+                
+                <button class="generate-btn" onclick="generateText()">Generate Text</button>
+            </div>
+
+            <div class="generated-text" id="generatedText">
+                <!-- Generated text will appear here -->
+            </div>
+
+            <div class="chain-visualization" id="chainViz" style="display: none;">
+                <h3>🔗 Generation Path:</h3>
+                <div class="chain-path" id="chainPath">
+                    <!-- Chain visualization will appear here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- How It Works -->
+        <div class="section">
+            <h2>⚙️ How Markov Text Generation Works</h2>
+            
+            <div style="display: grid; gap: 20px; margin-top: 30px;">
+                <div class="info-box">
+                    <h3>1️⃣ Build Transition Table</h3>
+                    <p>Analyze the source text and count how often each word follows another word.</p>
+                </div>
+                
+                <div class="info-box">
+                    <h3>2️⃣ Calculate Probabilities</h3>
+                    <p>Convert counts to probabilities: P(B|A) = Count(A→B) / Total Count(A)</p>
+                </div>
+                
+                <div class="info-box">
+                    <h3>3️⃣ Generate New Text</h3>
+                    <p>Starting from a seed word, randomly select the next word based on transition probabilities.</p>
+                </div>
+                
+                <div class="info-box">
+                    <h3>4️⃣ Higher Order Models</h3>
+                    <p>Using n-grams (pairs, triplets) creates more coherent text by considering more context.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Global variables
+        let transitions = {};
+        let wordCounts = {};
+        let bigramTransitions = {};
+        let trigramTransitions = {};
+
+        // Process the source text
+        function processText() {
+            const text = document.getElementById('sourceText').innerText;
+            const words = text.replace(/[.!?]/g, ' <END>').split(/\s+/).filter(word => word.length > 0);
+            
+            // Build unigram transitions
+            for (let i = 0; i < words.length - 1; i++) {
+                const current = words[i];
+                const next = words[i + 1];
+                
+                if (!transitions[current]) transitions[current] = {};
+                if (!transitions[current][next]) transitions[current][next] = 0;
+                transitions[current][next]++;
+                
+                if (!wordCounts[current]) wordCounts[current] = 0;
+                wordCounts[current]++;
+            }
+            
+            // Build bigram transitions
+            for (let i = 0; i < words.length - 2; i++) {
+                const bigram = words[i] + ' ' + words[i + 1];
+                const next = words[i + 2];
+                
+                if (!bigramTransitions[bigram]) bigramTransitions[bigram] = {};
+                if (!bigramTransitions[bigram][next]) bigramTransitions[bigram][next] = 0;
+                bigramTransitions[bigram][next]++;
+            }
+            
+            // Build trigram transitions
+            for (let i = 0; i < words.length - 3; i++) {
+                const trigram = words[i] + ' ' + words[i + 1] + ' ' + words[i + 2];
+                const next = words[i + 3];
+                
+                if (!trigramTransitions[trigram]) trigramTransitions[trigram] = {};
+                if (!trigramTransitions[trigram][next]) trigramTransitions[trigram][next] = 0;
+                trigramTransitions[trigram][next]++;
+            }
+            
+            // Display statistics
+            displayStats(words);
+            
+            // Build transition matrix
+            buildTransitionMatrix();
+        }
+
+        // Display text statistics
+        function displayStats(words) {
+            const uniqueWords = new Set(words);
+            const totalWords = words.length;
+            const avgWordLength = words.reduce((sum, word) => sum + word.length, 0) / totalWords;
+            
+            const statsHtml = `
+                <div class="stat-card">
+                    <div class="stat-value">${totalWords}</div>
+                    <div class="stat-label">Total Words</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">${uniqueWords.size}</div>
+                    <div class="stat-label">Unique Words</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">${Object.keys(transitions).length}</div>
+                    <div class="stat-label">State Nodes</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">${avgWordLength.toFixed(1)}</div>
+                    <div class="stat-label">Avg Word Length</div>
+                </div>
+            `;
+            
+            document.getElementById('textStats').innerHTML = statsHtml;
+        }
+
+        // Build and display transition matrix
+        function buildTransitionMatrix() {
+            // Get top 10 most frequent words
+            const topWords = Object.entries(wordCounts)
+                .sort((a, b) => b[1] - a[1])
+                .slice(0, 10)
+                .map(entry => entry[0]);
+            
+            let matrixHtml = '<tr><th></th>';
+            topWords.forEach(word => {
+                matrixHtml += `<th>${word}</th>`;
+            });
+            matrixHtml += '</tr>';
+            
+            topWords.forEach(fromWord => {
+                matrixHtml += `<tr><td>${fromWord}</td>`;
+                topWords.forEach(toWord => {
+                    const count = (transitions[fromWord] && transitions[fromWord][toWord]) || 0;
+                    const total = wordCounts[fromWord] || 1;
+                    const prob = count / total;
+                    const heatLevel = Math.min(10, Math.round(prob * 20));
+                    
+                    matrixHtml += `<td class="prob-cell heat-${heatLevel}" 
+                                    title="${fromWord} → ${toWord}: ${count} times">
+                                    ${prob > 0 ? prob.toFixed(2) : '-'}
+                                 </td>`;
+                });
+                matrixHtml += '</tr>';
+            });
+            
+            document.getElementById('transitionMatrix').innerHTML = matrixHtml;
+        }
+
+        // Generate text using Markov chain
+        function generateText() {
+            const startWordSelect = document.getElementById('startWord').value;
+            const wordCount = parseInt(document.getElementById('wordCount').value);
+            const order = parseInt(document.getElementById('ngramOrder').value);
+            
+            let generated = [];
+            let path = [];
+            
+            // Choose starting point
+            let current;
+            if (startWordSelect === '[RANDOM]') {
+                const words = Object.keys(transitions);
+                current = words[Math.floor(Math.random() * words.length)];
+            } else {
+                current = startWordSelect;
+            }
+            
+            if (order === 1) {
+                // Unigram model
+                generated.push(current);
+                path.push(current);
+                
+                for (let i = 1; i < wordCount; i++) {
+                    if (!transitions[current] || current === '<END>') {
+                        // Restart if we hit a dead end
+                        const words = Object.keys(transitions);
+                        current = words[Math.floor(Math.random() * words.length)];
+                    }
+                    
+                    const next = selectNextWord(transitions[current]);
+                    if (next === '<END>') {
+                        generated.push('.');
+                        const words = Object.keys(transitions);
+                        current = words[Math.floor(Math.random() * words.length)];
+                    } else {
+                        generated.push(next);
+                        path.push(next);
+                        current = next;
+                    }
+                }
+            } else if (order === 2) {
+                // Bigram model
+                const words = current.split(' ');
+                generated.push(...words);
+                
+                // Find a valid bigram starting point
+                let bigram = Object.keys(bigramTransitions).find(b => b.startsWith(current));
+                if (!bigram) {
+                    bigram = Object.keys(bigramTransitions)[0];
+                    generated.push(...bigram.split(' '));
+                }
+                
+                for (let i = 2; i < wordCount; i++) {
+                    if (!bigramTransitions[bigram]) {
+                        bigram = Object.keys(bigramTransitions)[Math.floor(Math.random() * Object.keys(bigramTransitions).length)];
+                    }
+                    
+                    const next = selectNextWord(bigramTransitions[bigram]);
+                    if (next === '<END>') {
+                        generated.push('.');
+                        bigram = Object.keys(bigramTransitions)[Math.floor(Math.random() * Object.keys(bigramTransitions).length)];
+                    } else {
+                        generated.push(next);
+                        const bigramWords = bigram.split(' ');
+                        bigram = bigramWords[1] + ' ' + next;
+                    }
+                }
+            }
+            
+            // Display generated text with animation
+            const generatedDiv = document.getElementById('generatedText');
+            generatedDiv.innerHTML = '<h3>Generated Text:</h3><p id="genTextContent"></p>';
+            generatedDiv.classList.add('show');
+            
+            const textContent = document.getElementById('genTextContent');
+            textContent.innerHTML = '';
+            
+            generated.forEach((word, index) => {
+                setTimeout(() => {
+                    const span = document.createElement('span');
+                    span.className = 'generation-step';
+                    span.textContent = word + ' ';
+                    span.style.animationDelay = '0ms';
+                    textContent.appendChild(span);
+                }, index * 100);
+            });
+            
+            // Show generation path for first few words
+            if (order === 1 && path.length > 0) {
+                const chainViz = document.getElementById('chainViz');
+                const chainPath = document.getElementById('chainPath');
+                chainViz.style.display = 'block';
+                chainPath.innerHTML = '';
+                
+                const pathToShow = path.slice(0, 10);
+                pathToShow.forEach((word, index) => {
+                    setTimeout(() => {
+                        const node = document.createElement('div');
+                        node.className = 'word-node';
+                        node.textContent = word;
+                        chainPath.appendChild(node);
+                        
+                        if (index < pathToShow.length - 1) {
+                            const arrow = document.createElement('div');
+                            arrow.className = 'path-arrow';
+                            arrow.textContent = '→';
+                            chainPath.appendChild(arrow);
+                        }
+                    }, (generated.length + index) * 100);
+                });
+            }
+        }
+
+        // Select next word based on probabilities
+        function selectNextWord(possibleWords) {
+            if (!possibleWords) return null;
+            
+            const words = Object.keys(possibleWords);
+            const weights = Object.values(possibleWords);
+            const totalWeight = weights.reduce((sum, weight) => sum + weight, 0);
+            
+            let random = Math.random() * totalWeight;
+            
+            for (let i = 0; i < words.length; i++) {
+                random -= weights[i];
+                if (random <= 0) {
+                    return words[i];
+                }
+            }
+            
+            return words[words.length - 1];
+        }
+
+        // Initialize on load
+        window.addEventListener('load', () => {
+            processText();
+            
+            // Add start word options from the text
+            const startWordSelect = document.getElementById('startWord');
+            const commonStarters = ['The', 'In', 'A', 'Birds', 'Water', 'People', 'Children'];
+            
+            commonStarters.forEach(word => {
+                if (transitions[word]) {
+                    const option = startWordSelect.querySelector(`option[value="${word}"]`);
+                    if (!option) {
+                        const newOption = document.createElement('option');
+                        newOption.value = word;
+                        newOption.textContent = word;
+                        startWordSelect.appendChild(newOption);
+                    }
+                }
+            });
+        });
+
+        // Animate sections on scroll
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.section').forEach(section => {
+            section.style.opacity = '0';
+            section.style.transform = 'translateY(30px)';
+            section.style.transition = 'all 0.6s ease-out';
+            observer.observe(section);
+        });
+    </script>
+</body>
+</html>

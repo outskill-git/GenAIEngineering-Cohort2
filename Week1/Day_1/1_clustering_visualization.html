@@ -1,0 +1,986 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Complete Guide to Clustering: 1D and 2D Examples</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: #1f2937;
+            background-color: #f9fafb;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 24px;
+            background-color: white;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+        
+        .header h1 {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #1f2937;
+            margin-bottom: 16px;
+        }
+        
+        .header p {
+            font-size: 1.125rem;
+            color: #6b7280;
+        }
+        
+        .controls {
+            margin-bottom: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            align-items: center;
+        }
+        
+        .button-group {
+            display: flex;
+            background-color: #f3f4f6;
+            border-radius: 8px;
+            padding: 4px;
+        }
+        
+        .button-group button {
+            padding: 8px 24px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 14px;
+        }
+        
+        .button-group button.active {
+            background-color: #7c3aed;
+            color: white;
+        }
+        
+        .button-group button:not(.active) {
+            background-color: transparent;
+            color: #6b7280;
+        }
+        
+        .button-group button:not(.active):hover {
+            background-color: #e5e7eb;
+        }
+        
+        .button-group.scenario .active {
+            background-color: #2563eb;
+        }
+        
+        .scenario-description {
+            margin-bottom: 24px;
+            padding: 16px;
+            border-radius: 8px;
+            background-color: #f9fafb;
+        }
+        
+        .scenario-description h2 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        
+        .scenario-description.single h2 {
+            color: #047857;
+        }
+        
+        .scenario-description.multiple h2 {
+            color: #b91c1c;
+        }
+        
+        .scenario-description.clustering h2 {
+            color: #1d4ed8;
+        }
+        
+        .highlight-box {
+            padding: 12px;
+            border-radius: 6px;
+            border-left: 4px solid;
+            margin-top: 12px;
+        }
+        
+        .highlight-box.green {
+            background-color: #ecfdf5;
+            border-color: #10b981;
+            color: #065f46;
+        }
+        
+        .highlight-box.red {
+            background-color: #fef2f2;
+            border-color: #ef4444;
+            color: #991b1b;
+        }
+        
+        .highlight-box.blue {
+            background-color: #eff6ff;
+            border-color: #3b82f6;
+            color: #1e40af;
+        }
+        
+        .highlight-box.yellow {
+            background-color: #fffbeb;
+            border-color: #f59e0b;
+            color: #92400e;
+        }
+        
+        .chart-container {
+            margin-bottom: 24px;
+            padding: 16px;
+            background-color: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+        }
+        
+        .chart-container h3 {
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+        
+        .chart-wrapper {
+            position: relative;
+            height: 400px;
+        }
+        
+        .legend {
+            margin-bottom: 24px;
+            padding: 16px;
+            background-color: #f9fafb;
+            border-radius: 8px;
+        }
+        
+        .legend h4 {
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 8px;
+        }
+        
+        .legend-items {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+        }
+        
+        .legend-color {
+            width: 16px;
+            height: 16px;
+            border-radius: 2px;
+            margin-right: 8px;
+        }
+        
+        .legend-text {
+            font-size: 14px;
+            font-weight: 500;
+            text-transform: capitalize;
+        }
+        
+        .analysis-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+        
+        .analysis-card {
+            padding: 16px;
+            border-radius: 8px;
+        }
+        
+        .analysis-card.blue {
+            background-color: #eff6ff;
+        }
+        
+        .analysis-card.purple {
+            background-color: #f5f3ff;
+        }
+        
+        .analysis-card.yellow {
+            background-color: #fffbeb;
+        }
+        
+        .analysis-card h3 {
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+        
+        .analysis-card.blue h3 {
+            color: #1e3a8a;
+        }
+        
+        .analysis-card.purple h3 {
+            color: #581c87;
+        }
+        
+        .analysis-card.yellow h3 {
+            color: #92400e;
+        }
+        
+        .stat-item {
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+        
+        .cluster-stat {
+            margin-left: 12px;
+        }
+        
+        .bottom-lesson {
+            margin-top: 32px;
+            padding: 24px;
+            background-color: #1f2937;
+            color: white;
+            border-radius: 8px;
+        }
+        
+        .bottom-lesson h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+        
+        .lesson-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 24px;
+            margin-bottom: 16px;
+        }
+        
+        .lesson-item h4 {
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        
+        .lesson-item.green h4 {
+            color: #10b981;
+        }
+        
+        .lesson-item.red h4 {
+            color: #f87171;
+        }
+        
+        .lesson-item.blue h4 {
+            color: #60a5fa;
+        }
+        
+        .lesson-item p {
+            font-size: 14px;
+        }
+        
+        .takeaway {
+            padding: 16px;
+            background-color: #374151;
+            border-radius: 6px;
+        }
+        
+        .takeaway-text {
+            color: #fde047;
+            font-weight: 500;
+        }
+        
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>Complete Guide to Clustering: 1D and 2D Examples</h1>
+            <p>Understanding when mean works, when it fails, and how clustering helps</p>
+        </div>
+
+        <!-- Controls -->
+        <div class="controls">
+            <div class="button-group" id="dimensionButtons">
+                <button class="active" data-dimension="1D">1D (Temperature Only)</button>
+                <button data-dimension="2D">2D (Temperature + Humidity)</button>
+            </div>
+            
+            <div class="button-group scenario" id="scenarioButtons">
+                <button class="active" data-scenario="single">Single Peak</button>
+                <button data-scenario="multiple">Multiple Peaks</button>
+                <button data-scenario="clustering">Clustering Solution</button>
+            </div>
+        </div>
+
+        <!-- Scenario Description -->
+        <div id="scenarioDescription" class="scenario-description single"></div>
+
+        <!-- Chart -->
+        <div class="chart-container">
+            <h3 id="chartTitle">Temperature Distribution</h3>
+            <div class="chart-wrapper">
+                <canvas id="mainChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Legend -->
+        <div id="legend" class="legend hidden">
+            <h4>Cluster Legend</h4>
+            <div class="legend-items" id="legendItems"></div>
+        </div>
+
+        <!-- Analysis Grid -->
+        <div class="analysis-grid">
+            <div class="analysis-card blue">
+                <h3>The Numbers</h3>
+                <div id="numbersContent"></div>
+            </div>
+            
+            <div class="analysis-card purple">
+                <h3 id="dimensionTitle">Why 1D Matters</h3>
+                <div id="dimensionContent"></div>
+            </div>
+            
+            <div class="analysis-card yellow">
+                <h3>Key Insight</h3>
+                <div id="insightContent"></div>
+            </div>
+        </div>
+
+        <!-- Bottom Lesson -->
+        <div class="bottom-lesson">
+            <h3>The Complete Lesson</h3>
+            <div class="lesson-grid">
+                <div class="lesson-item green">
+                    <h4>Single Peak/Cluster ✓</h4>
+                    <p>Mean represents the typical value well. Use it with confidence in both 1D and 2D.</p>
+                </div>
+                <div class="lesson-item red">
+                    <h4>Multiple Peaks/Clusters ✗</h4>
+                    <p>Mean can be misleading. It often falls where your data is actually sparse, especially problematic in 2D.</p>
+                </div>
+                <div class="lesson-item blue">
+                    <h4>Clustering ⚡</h4>
+                    <p>Multiple means/centers work better, but only with meaningful clusters. Color coding helps see the groups!</p>
+                </div>
+            </div>
+            <div class="takeaway">
+                <p class="takeaway-text">
+                    <strong>Critical Takeaway:</strong> As you move from 1D to 2D to higher dimensions, clustering becomes increasingly important 
+                    but also more complex to validate. Always ensure your clusters make domain sense - not just statistical sense!
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // State management
+        let state = {
+            currentDimension: '1D',
+            currentScenario: 'single',
+            chart: null
+        };
+
+        // Data generation
+        const data = {
+            '1D': {
+                single: [
+                    { temp: 65, count: 2, cluster: 'spring' },
+                    { temp: 67, count: 5, cluster: 'spring' },
+                    { temp: 69, count: 12, cluster: 'spring' },
+                    { temp: 71, count: 18, cluster: 'spring' },
+                    { temp: 73, count: 25, cluster: 'spring' },
+                    { temp: 75, count: 28, cluster: 'spring' },
+                    { temp: 77, count: 25, cluster: 'spring' },
+                    { temp: 79, count: 18, cluster: 'spring' },
+                    { temp: 81, count: 12, cluster: 'spring' },
+                    { temp: 83, count: 5, cluster: 'spring' },
+                    { temp: 85, count: 2, cluster: 'spring' }
+                ],
+                multiple: [
+                    { temp: 25, count: 15, cluster: 'winter' },
+                    { temp: 27, count: 20, cluster: 'winter' },
+                    { temp: 29, count: 25, cluster: 'winter' },
+                    { temp: 31, count: 20, cluster: 'winter' },
+                    { temp: 33, count: 15, cluster: 'winter' },
+                    { temp: 35, count: 8, cluster: 'winter' },
+                    { temp: 37, count: 5, cluster: 'spring' },
+                    { temp: 39, count: 3, cluster: 'spring' },
+                    { temp: 41, count: 2, cluster: 'spring' },
+                    { temp: 43, count: 2, cluster: 'spring' },
+                    { temp: 45, count: 1, cluster: 'spring' },
+                    { temp: 47, count: 1, cluster: 'spring' },
+                    { temp: 49, count: 1, cluster: 'spring' },
+                    { temp: 51, count: 1, cluster: 'spring' },
+                    { temp: 53, count: 1, cluster: 'spring' },
+                    { temp: 55, count: 2, cluster: 'spring' },
+                    { temp: 57, count: 2, cluster: 'summer' },
+                    { temp: 59, count: 3, cluster: 'summer' },
+                    { temp: 61, count: 5, cluster: 'summer' },
+                    { temp: 63, count: 8, cluster: 'summer' },
+                    { temp: 65, count: 15, cluster: 'summer' },
+                    { temp: 67, count: 20, cluster: 'summer' },
+                    { temp: 69, count: 25, cluster: 'summer' },
+                    { temp: 71, count: 20, cluster: 'summer' },
+                    { temp: 73, count: 15, cluster: 'summer' }
+                ]
+            },
+            '2D': {
+                single: generateSingle2D(),
+                multiple: generateMultiple2D()
+            }
+        };
+
+        // Set clustering data same as multiple
+        data['1D'].clustering = data['1D'].multiple;
+        data['2D'].clustering = data['2D'].multiple;
+
+        function generateSingle2D() {
+            const result = [];
+            for (let i = 0; i < 80; i++) {
+                const temp = 65 + Math.random() * 20 + Math.sin(i * 0.3) * 5;
+                const humidity = 45 + Math.random() * 20 + Math.cos(i * 0.25) * 8;
+                result.push({
+                    temperature: temp,
+                    humidity: humidity,
+                    cluster: 'spring',
+                    id: i
+                });
+            }
+            return result;
+        }
+
+        function generateMultiple2D() {
+            const result = [];
+            
+            // Winter cluster
+            for (let i = 0; i < 30; i++) {
+                const temp = 25 + Math.random() * 15;
+                const humidity = 20 + Math.random() * 25;
+                result.push({
+                    temperature: temp,
+                    humidity: humidity,
+                    cluster: 'winter',
+                    id: i
+                });
+            }
+            
+            // Summer cluster
+            for (let i = 30; i < 60; i++) {
+                const temp = 75 + Math.random() * 20;
+                const humidity = 65 + Math.random() * 25;
+                result.push({
+                    temperature: temp,
+                    humidity: humidity,
+                    cluster: 'summer',
+                    id: i
+                });
+            }
+            
+            // Fall cluster
+            for (let i = 60; i < 80; i++) {
+                const temp = 50 + Math.random() * 25;
+                const humidity = 40 + Math.random() * 40;
+                result.push({
+                    temperature: temp,
+                    humidity: humidity,
+                    cluster: 'fall',
+                    id: i
+                });
+            }
+            
+            return result;
+        }
+
+        // Utility functions
+        const clusterColors = {
+            'winter': '#3b82f6',
+            'spring': '#10b981',
+            'summer': '#f59e0b',
+            'fall': '#8b5cf6'
+        };
+
+        function getCurrentData() {
+            return data[state.currentDimension][state.currentScenario];
+        }
+
+        function calculateStats() {
+            const currentData = getCurrentData();
+            
+            if (state.currentDimension === '1D') {
+                let totalTemp = 0;
+                let totalCount = 0;
+                
+                currentData.forEach(d => {
+                    totalTemp += d.temp * d.count;
+                    totalCount += d.count;
+                });
+                
+                const overallMean = totalTemp / totalCount;
+                
+                // Cluster means
+                const clusters = {};
+                currentData.forEach(d => {
+                    if (!clusters[d.cluster]) {
+                        clusters[d.cluster] = { totalTemp: 0, totalCount: 0 };
+                    }
+                    clusters[d.cluster].totalTemp += d.temp * d.count;
+                    clusters[d.cluster].totalCount += d.count;
+                });
+                
+                const clusterMeans = {};
+                Object.keys(clusters).forEach(cluster => {
+                    clusterMeans[cluster] = clusters[cluster].totalTemp / clusters[cluster].totalCount;
+                });
+                
+                return { overallMean, clusterMeans, totalCount };
+            } else {
+                const totalTemp = currentData.reduce((sum, d) => sum + d.temperature, 0);
+                const totalHumidity = currentData.reduce((sum, d) => sum + d.humidity, 0);
+                const overallCentroid = {
+                    temperature: totalTemp / currentData.length,
+                    humidity: totalHumidity / currentData.length
+                };
+                
+                // Cluster centroids
+                const clusters = {};
+                currentData.forEach(d => {
+                    if (!clusters[d.cluster]) {
+                        clusters[d.cluster] = { temperatures: [], humidities: [] };
+                    }
+                    clusters[d.cluster].temperatures.push(d.temperature);
+                    clusters[d.cluster].humidities.push(d.humidity);
+                });
+                
+                const clusterCentroids = {};
+                Object.keys(clusters).forEach(cluster => {
+                    const temps = clusters[cluster].temperatures;
+                    const humids = clusters[cluster].humidities;
+                    clusterCentroids[cluster] = {
+                        temperature: temps.reduce((sum, t) => sum + t, 0) / temps.length,
+                        humidity: humids.reduce((sum, h) => sum + h, 0) / humids.length,
+                        count: temps.length
+                    };
+                });
+                
+                // Points near centroid
+                const pointsNearCentroid = currentData.filter(d => {
+                    const tempDiff = Math.abs(d.temperature - overallCentroid.temperature);
+                    const humidityDiff = Math.abs(d.humidity - overallCentroid.humidity);
+                    return tempDiff <= 5 && humidityDiff <= 10;
+                }).length;
+                
+                return { overallCentroid, clusterCentroids, pointsNearCentroid, totalCount: currentData.length };
+            }
+        }
+
+        function updateChart() {
+            const currentData = getCurrentData();
+            const stats = calculateStats();
+            
+            if (state.chart) {
+                state.chart.destroy();
+            }
+            
+            const ctx = document.getElementById('mainChart').getContext('2d');
+            
+            if (state.currentDimension === '1D') {
+                // Bar chart for 1D
+                const chartData = {
+                    labels: currentData.map(d => d.temp + '°F'),
+                    datasets: [{
+                        label: 'Number of Days',
+                        data: currentData.map(d => d.count),
+                        backgroundColor: currentData.map(d => {
+                            if (state.currentScenario === 'clustering') {
+                                return clusterColors[d.cluster];
+                            }
+                            return state.currentScenario === 'single' ? '#22c55e' : '#ef4444';
+                        }),
+                        borderColor: currentData.map(d => {
+                            if (state.currentScenario === 'clustering') {
+                                return clusterColors[d.cluster];
+                            }
+                            return state.currentScenario === 'single' ? '#16a34a' : '#dc2626';
+                        }),
+                        borderWidth: 1
+                    }]
+                };
+                
+                state.chart = new Chart(ctx, {
+                    type: 'bar',
+                    data: chartData,
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            x: {
+                                title: {
+                                    display: true,
+                                    text: 'Temperature (°F)'
+                                }
+                            },
+                            y: {
+                                title: {
+                                    display: true,
+                                    text: 'Number of Days'
+                                }
+                            }
+                        },
+                        plugins: {
+                            legend: {
+                                display: false
+                            }
+                        }
+                    }
+                });
+            } else {
+                // Scatter plot for 2D
+                const datasets = [];
+                
+                if (state.currentScenario === 'clustering') {
+                    // Separate datasets for each cluster
+                    const clusters = [...new Set(currentData.map(d => d.cluster))];
+                    clusters.forEach(cluster => {
+                        const clusterData = currentData.filter(d => d.cluster === cluster);
+                        datasets.push({
+                            label: cluster + ' season',
+                            data: clusterData.map(d => ({ x: d.temperature, y: d.humidity })),
+                            backgroundColor: clusterColors[cluster],
+                            borderColor: clusterColors[cluster],
+                            pointRadius: 4
+                        });
+                    });
+                } else {
+                    datasets.push({
+                        label: 'Weather days',
+                        data: currentData.map(d => ({ x: d.temperature, y: d.humidity })),
+                        backgroundColor: state.currentScenario === 'single' ? '#22c55e' : '#ef4444',
+                        borderColor: state.currentScenario === 'single' ? '#16a34a' : '#dc2626',
+                        pointRadius: 4
+                    });
+                }
+                
+                state.chart = new Chart(ctx, {
+                    type: 'scatter',
+                    data: { datasets },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            x: {
+                                title: {
+                                    display: true,
+                                    text: 'Temperature (°F)'
+                                }
+                            },
+                            y: {
+                                title: {
+                                    display: true,
+                                    text: 'Humidity (%)'
+                                }
+                            }
+                        },
+                        plugins: {
+                            legend: {
+                                display: state.currentScenario === 'clustering'
+                            }
+                        }
+                    }
+                });
+            }
+        }
+
+        function updateScenarioButtons() {
+            const scenarioButtons = document.getElementById('scenarioButtons');
+            const buttons = scenarioButtons.querySelectorAll('button');
+            
+            buttons[0].textContent = state.currentDimension === '1D' ? 'Single Peak' : 'Single Cluster';
+            buttons[1].textContent = state.currentDimension === '1D' ? 'Multiple Peaks' : 'Multiple Clusters';
+        }
+
+        function updateContent() {
+            const stats = calculateStats();
+            
+            // Update chart title
+            document.getElementById('chartTitle').textContent = 
+                state.currentDimension === '1D' ? 'Temperature Distribution' : 'Temperature vs Humidity Distribution';
+            
+            // Update dimension content
+            document.getElementById('dimensionTitle').textContent = `Why ${state.currentDimension} Matters`;
+            
+            const dimensionContent = document.getElementById('dimensionContent');
+            if (state.currentDimension === '1D') {
+                dimensionContent.innerHTML = `
+                    <p style="font-weight: 600; margin-bottom: 8px;">Simple but powerful:</p>
+                    <ul style="list-style: disc; margin-left: 20px; font-size: 14px; color: #581c87;">
+                        <li>Easy to visualize and understand</li>
+                        <li>Clear when mean works vs fails</li>
+                        <li>Natural clusters are obvious</li>
+                        <li>Foundation for higher dimensions</li>
+                    </ul>
+                `;
+            } else {
+                dimensionContent.innerHTML = `
+                    <p style="font-weight: 600; margin-bottom: 8px;">More complex patterns:</p>
+                    <ul style="list-style: disc; margin-left: 20px; font-size: 14px; color: #581c87;">
+                        <li>Variables can co-vary (cold + dry)</li>
+                        <li>Mean can land in empty space</li>
+                        <li>Relationships become visible</li>
+                        <li>Clusters reveal natural groupings</li>
+                    </ul>
+                `;
+            }
+            
+            // Update numbers content
+            const numbersContent = document.getElementById('numbersContent');
+            if (state.currentDimension === '1D') {
+                let html = `<div class="stat-item"><strong>Overall Mean:</strong> ${stats.overallMean.toFixed(1)}°F</div>`;
+                
+                if (state.currentScenario === 'clustering') {
+                    html += `<div style="margin-top: 12px;"><p style="font-weight: 500;">Cluster Means:</p>`;
+                    Object.entries(stats.clusterMeans).forEach(([cluster, mean]) => {
+                        html += `<div class="cluster-stat" style="color: ${clusterColors[cluster]};">• ${cluster}: ${mean.toFixed(1)}°F</div>`;
+                    });
+                    html += `</div>`;
+                }
+                
+                html += `<div class="stat-item" style="padding-top: 8px;"><strong>Total Days:</strong> ${stats.totalCount}</div>`;
+                numbersContent.innerHTML = html;
+            } else {
+                let html = `
+                    <div class="stat-item"><strong>Overall Center:</strong></div>
+                    <div class="stat-item">• ${stats.overallCentroid.temperature.toFixed(1)}°F, ${stats.overallCentroid.humidity.toFixed(1)}%</div>
+                `;
+                
+                if (state.currentScenario === 'clustering') {
+                    html += `<div style="margin-top: 12px;"><p style="font-weight: 500;">Cluster Centers:</p>`;
+                    Object.entries(stats.clusterCentroids).forEach(([cluster, centroid]) => {
+                        html += `<div class="cluster-stat" style="color: ${clusterColors[cluster]};">• ${cluster}: ${centroid.temperature.toFixed(1)}°F, ${centroid.humidity.toFixed(1)}%</div>`;
+                    });
+                    html += `</div>`;
+                }
+                
+                html += `<div style="padding-top: 8px;">
+                    <div class="stat-item"><strong>Total Days:</strong> ${stats.totalCount}</div>`;
+                
+                if (state.currentScenario === 'multiple') {
+                    html += `<div class="stat-item" style="color: #b91c1c; font-weight: 500;">
+                        <strong>Near overall center:</strong> ${stats.pointsNearCentroid} days (${(stats.pointsNearCentroid/stats.totalCount*100).toFixed(1)}%)
+                    </div>`;
+                }
+                
+                html += `</div>`;
+                numbersContent.innerHTML = html;
+            }
+            
+            // Update scenario description
+            updateScenarioDescription(stats);
+            
+            // Update legend
+            updateLegend();
+            
+            // Update insight content
+            updateInsightContent();
+        }
+
+        function updateScenarioDescription(stats) {
+            const descElement = document.getElementById('scenarioDescription');
+            descElement.className = `scenario-description ${state.currentScenario}`;
+            
+            if (state.currentScenario === 'single') {
+                descElement.innerHTML = `
+                    <h2>✓ ${state.currentDimension === '1D' ? 'Single Peak' : 'Single Cluster'}: Mean Works Well</h2>
+                    <p style="color: #374151; margin-bottom: 12px;">
+                        <strong>Scenario:</strong> ${state.currentDimension === '1D' ? 
+                            'Spring temperatures in a mild climate city.' : 
+                            'Consistent spring weather - temperature and humidity vary together around typical values.'}
+                    </p>
+                    <div class="highlight-box green">
+                        <p>
+                            ${state.currentDimension === '1D' ? (
+                                `<strong>Claim:</strong> "The average temperature is ${stats.overallMean.toFixed(1)}°F"<br/>
+                                <strong>Basis:</strong> Most temperatures cluster around this value, so it represents typical experience.`
+                            ) : (
+                                `<strong>Claim:</strong> "Typical weather is ${stats.overallCentroid.temperature.toFixed(1)}°F and ${stats.overallCentroid.humidity.toFixed(1)}% humidity"<br/>
+                                <strong>Basis:</strong> Most days cluster around this combination, so it represents normal conditions.`
+                            )}
+                        </p>
+                    </div>
+                `;
+            } else if (state.currentScenario === 'multiple') {
+                descElement.innerHTML = `
+                    <h2>✗ ${state.currentDimension === '1D' ? 'Multiple Peaks' : 'Multiple Clusters'}: Mean Misleads</h2>
+                    <p style="color: #374151; margin-bottom: 12px;">
+                        <strong>Scenario:</strong> ${state.currentDimension === '1D' ? 
+                            'Full year with distinct winter and summer seasons.' : 
+                            'Full year with distinct weather patterns - dry winters, humid summers, variable fall.'}
+                    </p>
+                    <div class="highlight-box red">
+                        <p>
+                            ${state.currentDimension === '1D' ? (
+                                `<strong>Problem:</strong> "The average temperature is ${stats.overallMean.toFixed(1)}°F"<br/>
+                                <strong>Reality:</strong> Very few days are actually near ${stats.overallMean.toFixed(1)}°F! The mean falls in the gap between seasons.`
+                            ) : (
+                                `<strong>Problem:</strong> "Typical weather is ${stats.overallCentroid.temperature.toFixed(1)}°F and ${stats.overallCentroid.humidity.toFixed(1)}% humidity"<br/>
+                                <strong>Reality:</strong> Only ${stats.pointsNearCentroid} out of ${stats.totalCount} days are actually near this combination! The "average" weather rarely occurs.`
+                            )}
+                        </p>
+                    </div>
+                `;
+            } else {
+                let clusterText = '';
+                if (state.currentDimension === '1D') {
+                    Object.entries(stats.clusterMeans).forEach(([season, mean]) => {
+                        clusterText += `${season} averages ${mean.toFixed(1)}°F, `;
+                    });
+                    clusterText = clusterText.slice(0, -2); // Remove last comma
+                } else {
+                    Object.entries(stats.clusterCentroids).forEach(([season, centroid]) => {
+                        clusterText += `<span style="color: ${clusterColors[season]};">• ${season}: ${centroid.temperature.toFixed(1)}°F, ${centroid.humidity.toFixed(1)}% humidity<br/></span>`;
+                    });
+                }
+                
+                descElement.innerHTML = `
+                    <h2>⚡ Clustering Solution: ${state.currentDimension === '1D' ? 'Multiple Means' : 'Multiple Centers'}</h2>
+                    <p style="color: #374151; margin-bottom: 12px;">
+                        <strong>Approach:</strong> ${state.currentDimension === '1D' ? 
+                            'Identify natural groups (clusters) and calculate separate means.' : 
+                            'Identify distinct weather patterns and describe each separately.'}
+                    </p>
+                    <div class="highlight-box blue">
+                        <p>
+                            ${state.currentDimension === '1D' ? (
+                                `<strong>Claim:</strong> "${clusterText}"<br/>
+                                <strong>Basis:</strong> Each cluster mean represents its group well.`
+                            ) : (
+                                `<strong>Claim:</strong> "Weather has distinct patterns:"<br/>
+                                ${clusterText}
+                                <strong>Basis:</strong> Each weather pattern is internally consistent and meaningful.`
+                            )}
+                        </p>
+                    </div>
+                    <div class="highlight-box yellow" style="margin-top: 12px;">
+                        <p>
+                            <strong>Caveat:</strong> ${state.currentDimension === '1D' ? 
+                                'This only works if you can meaningfully identify the clusters. You need domain knowledge (seasons) or clear statistical separation.' :
+                                'In 2D, clustering is more complex. You need to ensure clusters are statistically valid and make domain sense. Don\'t just group by visual appearance!'}
+                        </p>
+                    </div>
+                `;
+            }
+        }
+
+        function updateLegend() {
+            const legend = document.getElementById('legend');
+            const legendItems = document.getElementById('legendItems');
+            
+            if (state.currentScenario === 'clustering') {
+                legend.classList.remove('hidden');
+                const stats = calculateStats();
+                const clusters = state.currentDimension === '1D' ? 
+                    Object.keys(stats.clusterMeans) : 
+                    Object.keys(stats.clusterCentroids);
+                
+                legendItems.innerHTML = clusters.map(cluster => `
+                    <div class="legend-item">
+                        <div class="legend-color" style="background-color: ${clusterColors[cluster]};"></div>
+                        <span class="legend-text">${cluster}</span>
+                    </div>
+                `).join('');
+            } else {
+                legend.classList.add('hidden');
+            }
+        }
+
+        function updateInsightContent() {
+            const insightContent = document.getElementById('insightContent');
+            
+            if (state.currentScenario === 'single') {
+                insightContent.innerHTML = `
+                    <p style="margin-bottom: 8px; font-weight: 600; color: #92400e;">Mean works well here</p>
+                    <p style="font-size: 14px; color: #92400e;">
+                        ${state.currentDimension === '1D' ? 
+                            'Single peak means most values cluster around the mean.' :
+                            'Single cluster means the mean point represents typical conditions.'}
+                    </p>
+                `;
+            } else if (state.currentScenario === 'multiple') {
+                insightContent.innerHTML = `
+                    <p style="margin-bottom: 8px; font-weight: 600; color: #92400e;">Mean becomes misleading</p>
+                    <p style="font-size: 14px; color: #92400e;">
+                        ${state.currentDimension === '1D' ? 
+                            'Multiple peaks mean the mean often falls where data is sparse.' :
+                            'Multiple clusters mean the mean point often falls in "no man\'s land".'}
+                    </p>
+                `;
+            } else {
+                insightContent.innerHTML = `
+                    <p style="margin-bottom: 8px; font-weight: 600; color: #92400e;">Clustering reveals truth</p>
+                    <p style="font-size: 14px; color: #92400e;">
+                        ${state.currentDimension === '1D' ? 
+                            'Each season gets its own meaningful average.' :
+                            'Each weather pattern gets its own meaningful center, showing relationships between variables.'}
+                    </p>
+                `;
+            }
+        }
+
+        // Event listeners
+        document.getElementById('dimensionButtons').addEventListener('click', (e) => {
+            if (e.target.tagName === 'BUTTON') {
+                // Update active button
+                document.querySelectorAll('#dimensionButtons button').forEach(btn => btn.classList.remove('active'));
+                e.target.classList.add('active');
+                
+                // Update state
+                state.currentDimension = e.target.dataset.dimension;
+                
+                // Update scenario buttons text
+                updateScenarioButtons();
+                
+                // Update everything
+                updateChart();
+                updateContent();
+            }
+        });
+
+        document.getElementById('scenarioButtons').addEventListener('click', (e) => {
+            if (e.target.tagName === 'BUTTON') {
+                // Update active button
+                document.querySelectorAll('#scenarioButtons button').forEach(btn => btn.classList.remove('active'));
+                e.target.classList.add('active');
+                
+                // Update state
+                state.currentScenario = e.target.dataset.scenario;
+                
+                // Update everything
+                updateChart();
+                updateContent();
+            }
+        });
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            updateScenarioButtons();
+            updateChart();
+            updateContent();
+        });
+    </script>
+</body>
+</html>

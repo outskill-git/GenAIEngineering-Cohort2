@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Understanding Train-Test Split in Machine Learning</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: #1f2937;
+            background-color: #f9fafb;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            background: white;
+            padding: 24px;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        .header h1 {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #1f2937;
+            margin-bottom: 12px;
+        }
+        
+        .header p {
+            font-size: 1.1rem;
+            color: #6b7280;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .concept-section {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        .concept-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 24px;
+        }
+        
+        .concept-card {
+            background: #f3f4f6;
+            border-radius: 8px;
+            padding: 16px;
+            text-align: center;
+        }
+        
+        .concept-card h3 {
+            font-size: 1.1rem;
+            color: #1f2937;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .concept-card p {
+            font-size: 0.9rem;
+            color: #6b7280;
+        }
+        
+        .icon {
+            font-size: 1.5rem;
+        }
+        
+        .demo-section {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        .controls {
+            background: #f9fafb;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .control-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .control-group label {
+            font-weight: 500;
+            color: #374151;
+            font-size: 0.9rem;
+        }
+        
+        .slider {
+            width: 150px;
+            height: 6px;
+            -webkit-appearance: none;
+            appearance: none;
+            background: #e5e7eb;
+            border-radius: 3px;
+            outline: none;
+        }
+        
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            background: #3b82f6;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+        
+        .slider::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            background: #3b82f6;
+            border-radius: 50%;
+            cursor: pointer;
+            border: none;
+        }
+        
+        .value-display {
+            font-weight: 600;
+            color: #1e40af;
+            min-width: 40px;
+            text-align: center;
+        }
+        
+        .button {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 6px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.9rem;
+        }
+        
+        .button-primary {
+            background: #3b82f6;
+            color: white;
+        }
+        
+        .button-primary:hover {
+            background: #2563eb;
+        }
+        
+        .button-secondary {
+            background: #e5e7eb;
+            color: #374151;
+        }
+        
+        .button-secondary:hover {
+            background: #d1d5db;
+        }
+        
+        .visualization-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .chart-container {
+            background: #f9fafb;
+            border-radius: 8px;
+            padding: 16px;
+            position: relative;
+        }
+        
+        .chart-container h3 {
+            font-size: 1rem;
+            color: #1f2937;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+        
+        .chart-wrapper {
+            position: relative;
+            height: 300px;
+        }
+        
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+        }
+        
+        .metric-card {
+            background: #f9fafb;
+            padding: 12px;
+            border-radius: 6px;
+            text-align: center;
+            border: 1px solid #e5e7eb;
+        }
+        
+        .metric-label {
+            font-size: 0.75rem;
+            color: #6b7280;
+            margin-bottom: 4px;
+        }
+        
+        .metric-value {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #1f2937;
+        }
+        
+        .warning-box {
+            background: #fef3c7;
+            border: 1px solid #f59e0b;
+            border-radius: 8px;
+            padding: 16px;
+            margin-top: 20px;
+        }
+        
+        .warning-box h4 {
+            color: #92400e;
+            font-size: 1rem;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .warning-box p {
+            color: #92400e;
+            font-size: 0.9rem;
+        }
+        
+        .success-box {
+            background: #d1fae5;
+            border: 1px solid #10b981;
+            border-radius: 8px;
+            padding: 16px;
+            margin-top: 20px;
+        }
+        
+        .success-box h4 {
+            color: #065f46;
+            font-size: 1rem;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .success-box p {
+            color: #065f46;
+            font-size: 0.9rem;
+        }
+        
+        .legend {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.85rem;
+            color: #6b7280;
+        }
+        
+        .legend-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+        
+        @media (max-width: 768px) {
+            .concept-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .visualization-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .metrics-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .control-group {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>Understanding Train-Test Split</h1>
+            <p>Learn why dividing your data into training and testing sets is crucial for building reliable machine learning models</p>
+        </div>
+
+        <!-- Concept Explanation -->
+        <div class="concept-section">
+            <h2 style="margin-bottom: 20px; color: #1f2937;">Why Split Data?</h2>
+            
+            <div class="concept-grid">
+                <div class="concept-card">
+                    <h3><span class="icon">📊</span> Training Data</h3>
+                    <p>Used to teach the model patterns and relationships. The model learns from this data.</p>
+                </div>
+                
+                <div class="concept-card">
+                    <h3><span class="icon">🧪</span> Test Data</h3>
+                    <p>Never seen during training. Used to evaluate how well the model generalizes to new data.</p>
+                </div>
+                
+                <div class="concept-card">
+                    <h3><span class="icon">⚖️</span> Fair Evaluation</h3>
+                    <p>Testing on unseen data gives an honest assessment of model performance.</p>
+                </div>
+            </div>
+
+            <div style="background: #eff6ff; border-radius: 8px; padding: 16px; border-left: 4px solid #3b82f6;">
+                <h3 style="color: #1e40af; margin-bottom: 8px; font-size: 1rem;">The Problem: Overfitting</h3>
+                <p style="color: #1e40af; font-size: 0.9rem;">
+                    If we train and test on the same data, the model might memorize specific data points rather than learning general patterns. 
+                    This leads to excellent performance on training data but poor performance on new, unseen data.
+                </p>
+            </div>
+        </div>
+
+        <!-- Interactive Demo -->
+        <div class="demo-section">
+            <h2 style="margin-bottom: 20px; color: #1f2937;">Interactive Demonstration</h2>
+            
+            <div class="controls">
+                <div class="control-group">
+                    <label>Train-Test Split:</label>
+                    <input type="range" id="splitSlider" class="slider" min="50" max="90" value="80" step="5">
+                    <span class="value-display" id="splitValue">80%</span>
+                </div>
+                
+                <div class="control-group">
+                    <label>Model Complexity:</label>
+                    <select id="complexitySelect" style="padding: 6px 12px; border-radius: 6px; border: 1px solid #d1d5db;">
+                        <option value="simple">Simple (Linear)</option>
+                        <option value="complex">Complex (Polynomial)</option>
+                    </select>
+                </div>
+                
+                <button class="button button-primary" onclick="reshuffleData()">🔀 Reshuffle Data</button>
+                <button class="button button-secondary" onclick="resetDemo()">🔄 Reset</button>
+            </div>
+
+            <div class="visualization-grid">
+                <div class="chart-container">
+                    <h3>Training Data & Model Fit</h3>
+                    <div class="chart-wrapper">
+                        <canvas id="trainChart"></canvas>
+                    </div>
+                </div>
+                
+                <div class="chart-container">
+                    <h3>Test Data & Model Performance</h3>
+                    <div class="chart-wrapper">
+                        <canvas id="testChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <div class="legend">
+                <div class="legend-item">
+                    <div class="legend-dot" style="background: #3b82f6;"></div>
+                    <span>Training Data</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-dot" style="background: #ef4444;"></div>
+                    <span>Test Data</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-dot" style="background: #10b981;"></div>
+                    <span>Model Prediction</span>
+                </div>
+            </div>
+
+            <div class="metrics-grid" style="margin-top: 20px;">
+                <div class="metric-card">
+                    <div class="metric-label">Training R²</div>
+                    <div class="metric-value" id="trainR2">0.00</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">Test R²</div>
+                    <div class="metric-value" id="testR2">0.00</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">Training RMSE</div>
+                    <div class="metric-value" id="trainRMSE">0.0</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">Test RMSE</div>
+                    <div class="metric-value" id="testRMSE">0.0</div>
+                </div>
+            </div>
+
+            <div id="messageBox"></div>
+        </div>
+    </div>
+
+    <script>
+        // Global variables
+        let state = {
+            allData: [],
+            trainData: [],
+            testData: [],
+            splitRatio: 0.8,
+            modelType: 'simple',
+            trainChart: null,
+            testChart: null,
+            modelParams: null
+        };
+
+        // Generate weather data
+        function generateWeatherData() {
+            const data = [];
+            
+            // Generate clustered data similar to the linear regression example
+            // Winter cluster
+            for (let i = 0; i < 20; i++) {
+                data.push({
+                    temperature: 25 + Math.random() * 15,
+                    humidity: 20 + Math.random() * 25
+                });
+            }
+            
+            // Summer cluster
+            for (let i = 0; i < 20; i++) {
+                data.push({
+                    temperature: 75 + Math.random() * 20,
+                    humidity: 65 + Math.random() * 25
+                });
+            }
+            
+            // Fall/Spring cluster
+            for (let i = 0; i < 40; i++) {
+                data.push({
+                    temperature: 50 + Math.random() * 25,
+                    humidity: 40 + Math.random() * 40
+                });
+            }
+            
+            return data;
+        }
+
+        // Shuffle array
+        function shuffleArray(array) {
+            const newArray = [...array];
+            for (let i = newArray.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
+            }
+            return newArray;
+        }
+
+        // Split data into train and test
+        function splitData() {
+            const shuffled = shuffleArray(state.allData);
+            const splitIndex = Math.floor(shuffled.length * state.splitRatio);
+            state.trainData = shuffled.slice(0, splitIndex);
+            state.testData = shuffled.slice(splitIndex);
+        }
+
+        // Calculate linear regression parameters
+        function calculateLinearRegression(data) {
+            const n = data.length;
+            let sumX = 0, sumY = 0, sumXY = 0, sumX2 = 0;
+            
+            data.forEach(point => {
+                sumX += point.temperature;
+                sumY += point.humidity;
+                sumXY += point.temperature * point.humidity;
+                sumX2 += point.temperature * point.temperature;
+            });
+            
+            const slope = (n * sumXY - sumX * sumY) / (n * sumX2 - sumX * sumX);
+            const intercept = (sumY - slope * sumX) / n;
+            
+            return { slope, intercept, degree: 1 };
+        }
+
+        // Calculate polynomial regression
+        function calculatePolynomialRegression(data, degree = 3) {
+            // Simplified polynomial fitting for demonstration
+            // In reality, you'd use proper polynomial regression
+            const linear = calculateLinearRegression(data);
+            
+            // Add some curvature based on data distribution
+            const midTemp = data.reduce((sum, d) => sum + d.temperature, 0) / data.length;
+            const curveStrength = 0.01;
+            
+            return {
+                ...linear,
+                degree: degree,
+                curveStrength: curveStrength,
+                midTemp: midTemp
+            };
+        }
+
+        // Predict value
+        function predict(temp, params) {
+            if (params.degree === 1) {
+                return params.slope * temp + params.intercept;
+            } else {
+                // Polynomial prediction with curvature
+                const linear = params.slope * temp + params.intercept;
+                const curve = params.curveStrength * Math.pow(temp - params.midTemp, 2);
+                return linear + curve;
+            }
+        }
+
+        // Calculate metrics
+        function calculateMetrics(data, params) {
+            let sumSquaredError = 0;
+            let totalSumSquares = 0;
+            const meanY = data.reduce((sum, d) => sum + d.humidity, 0) / data.length;
+            
+            data.forEach(point => {
+                const predicted = predict(point.temperature, params);
+                const error = point.humidity - predicted;
+                sumSquaredError += error * error;
+                totalSumSquares += Math.pow(point.humidity - meanY, 2);
+            });
+            
+            const mse = sumSquaredError / data.length;
+            const rmse = Math.sqrt(mse);
+            const r2 = 1 - (sumSquaredError / totalSumSquares);
+            
+            return { mse, rmse, r2 };
+        }
+
+        // Create chart
+        function createChart(canvasId, data, params, title, isTestData = false) {
+            const ctx = document.getElementById(canvasId).getContext('2d');
+            
+            // Prepare scatter data
+            const scatterData = data.map(d => ({
+                x: d.temperature,
+                y: d.humidity
+            }));
+            
+            // Generate regression line
+            const minTemp = 20;
+            const maxTemp = 100;
+            const linePoints = [];
+            
+            for (let temp = minTemp; temp <= maxTemp; temp += 5) {
+                linePoints.push({
+                    x: temp,
+                    y: predict(temp, params)
+                });
+            }
+            
+            const datasets = [
+                {
+                    label: isTestData ? 'Test Data' : 'Training Data',
+                    data: scatterData,
+                    backgroundColor: isTestData ? '#ef4444' : '#3b82f6',
+                    borderColor: isTestData ? '#ef4444' : '#3b82f6',
+                    pointRadius: 4,
+                    showLine: false
+                },
+                {
+                    label: 'Model Prediction',
+                    data: linePoints,
+                    borderColor: '#10b981',
+                    backgroundColor: 'transparent',
+                    borderWidth: 2,
+                    pointRadius: 0,
+                    showLine: true,
+                    tension: params.degree > 1 ? 0.4 : 0
+                }
+            ];
+            
+            return new Chart(ctx, {
+                type: 'scatter',
+                data: { datasets },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false }
+                    },
+                    scales: {
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Temperature (°F)',
+                                font: { size: 12 }
+                            },
+                            min: 15,
+                            max: 105
+                        },
+                        y: {
+                            title: {
+                                display: true,
+                                text: 'Humidity (%)',
+                                font: { size: 12 }
+                            },
+                            min: 0,
+                            max: 100
+                        }
+                    }
+                }
+            });
+        }
+
+        // Update visualization
+        function updateVisualization() {
+            // Fit model on training data
+            if (state.modelType === 'simple') {
+                state.modelParams = calculateLinearRegression(state.trainData);
+            } else {
+                state.modelParams = calculatePolynomialRegression(state.trainData);
+            }
+            
+            // Calculate metrics
+            const trainMetrics = calculateMetrics(state.trainData, state.modelParams);
+            const testMetrics = calculateMetrics(state.testData, state.modelParams);
+            
+            // Update metric displays
+            document.getElementById('trainR2').textContent = trainMetrics.r2.toFixed(3);
+            document.getElementById('testR2').textContent = testMetrics.r2.toFixed(3);
+            document.getElementById('trainRMSE').textContent = trainMetrics.rmse.toFixed(1);
+            document.getElementById('testRMSE').textContent = testMetrics.rmse.toFixed(1);
+            
+            // Destroy existing charts
+            if (state.trainChart) state.trainChart.destroy();
+            if (state.testChart) state.testChart.destroy();
+            
+            // Create new charts
+            state.trainChart = createChart('trainChart', state.trainData, state.modelParams, 'Training Data', false);
+            state.testChart = createChart('testChart', state.testData, state.modelParams, 'Test Data', true);
+            
+            // Update message
+            updateMessage(trainMetrics, testMetrics);
+        }
+
+        // Update message box
+        function updateMessage(trainMetrics, testMetrics) {
+            const messageBox = document.getElementById('messageBox');
+            const r2Diff = Math.abs(trainMetrics.r2 - testMetrics.r2);
+            
+            if (state.modelType === 'complex' && r2Diff > 0.1) {
+                messageBox.innerHTML = `
+                    <div class="warning-box">
+                        <h4>⚠️ Potential Overfitting Detected!</h4>
+                        <p>The complex model performs much better on training data (R² = ${trainMetrics.r2.toFixed(3)}) 
+                        than on test data (R² = ${testMetrics.r2.toFixed(3)}). This suggests the model is memorizing 
+                        the training data rather than learning general patterns.</p>
+                    </div>
+                `;
+            } else if (r2Diff < 0.05) {
+                messageBox.innerHTML = `
+                    <div class="success-box">
+                        <h4>✅ Good Generalization!</h4>
+                        <p>The model performs similarly on both training (R² = ${trainMetrics.r2.toFixed(3)}) 
+                        and test data (R² = ${testMetrics.r2.toFixed(3)}). This indicates the model has learned 
+                        general patterns that work well on unseen data.</p>
+                    </div>
+                `;
+            } else {
+                messageBox.innerHTML = '';
+            }
+        }
+
+        // Event handlers
+        function reshuffleData() {
+            splitData();
+            updateVisualization();
+        }
+
+        function resetDemo() {
+            document.getElementById('splitSlider').value = 80;
+            document.getElementById('splitValue').textContent = '80%';
+            document.getElementById('complexitySelect').value = 'simple';
+            state.splitRatio = 0.8;
+            state.modelType = 'simple';
+            splitData();
+            updateVisualization();
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            // Generate initial data
+            state.allData = generateWeatherData();
+            
+            // Event listeners
+            document.getElementById('splitSlider').addEventListener('input', function(e) {
+                state.splitRatio = e.target.value / 100;
+                document.getElementById('splitValue').textContent = e.target.value + '%';
+                splitData();
+                updateVisualization();
+            });
+            
+            document.getElementById('complexitySelect').addEventListener('change', function(e) {
+                state.modelType = e.target.value;
+                updateVisualization();
+            });
+            
+            // Initial split and visualization
+            splitData();
+            updateVisualization();
+        });
+    </script>
+</body>
+</html>
