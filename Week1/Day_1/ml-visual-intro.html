@@ -1,0 +1,994 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Machine Learning Types, Use Cases & Techniques</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0a0a0a;
+            color: #fff;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        /* Animated background */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 20% 80%, #7c3aed 0%, transparent 50%),
+                        radial-gradient(circle at 80% 20%, #2563eb 0%, transparent 50%),
+                        radial-gradient(circle at 40% 40%, #ec4899 0%, transparent 50%);
+            opacity: 0.15;
+            animation: backgroundShift 20s ease-in-out infinite;
+        }
+
+        @keyframes backgroundShift {
+            0%, 100% { transform: scale(1) rotate(0deg); }
+            50% { transform: scale(1.2) rotate(180deg); }
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        h1 {
+            font-size: 4em;
+            text-align: center;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, #7c3aed, #2563eb, #ec4899);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: titleGlow 3s ease-in-out infinite;
+        }
+
+        @keyframes titleGlow {
+            0%, 100% { filter: brightness(1) drop-shadow(0 0 20px rgba(124, 58, 237, 0.5)); }
+            50% { filter: brightness(1.2) drop-shadow(0 0 40px rgba(124, 58, 237, 0.8)); }
+        }
+
+        .subtitle {
+            text-align: center;
+            font-size: 1.3em;
+            opacity: 0.8;
+            margin-bottom: 60px;
+        }
+
+        /* Section styles */
+        .section {
+            margin-bottom: 80px;
+        }
+
+        .section-title {
+            font-size: 2.5em;
+            margin-bottom: 40px;
+            text-align: center;
+            position: relative;
+            padding-bottom: 20px;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, #7c3aed, transparent);
+            animation: lineGlow 2s ease-in-out infinite;
+        }
+
+        @keyframes lineGlow {
+            0%, 100% { width: 100px; opacity: 0.5; }
+            50% { width: 200px; opacity: 1; }
+        }
+
+        /* Types of ML Cards */
+        .ml-types {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin-bottom: 80px;
+        }
+
+        .type-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .type-card::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, #7c3aed, #2563eb, #ec4899);
+            border-radius: 20px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: -1;
+        }
+
+        .type-card:hover::before {
+            opacity: 1;
+        }
+
+        .type-card:hover {
+            transform: translateY(-10px);
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .type-icon {
+            font-size: 3em;
+            margin-bottom: 20px;
+            display: block;
+        }
+
+        .type-name {
+            font-size: 1.8em;
+            margin-bottom: 15px;
+            color: #7c3aed;
+        }
+
+        .type-description {
+            line-height: 1.6;
+            opacity: 0.9;
+            margin-bottom: 20px;
+        }
+
+        .type-examples {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .example-tag {
+            display: inline-block;
+            background: rgba(124, 58, 237, 0.2);
+            padding: 5px 15px;
+            border-radius: 20px;
+            margin: 5px;
+            font-size: 0.9em;
+            border: 1px solid rgba(124, 58, 237, 0.3);
+        }
+
+        /* Use Cases Grid */
+        .use-cases {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin-bottom: 80px;
+        }
+
+        .use-case {
+            background: linear-gradient(135deg, rgba(124, 58, 237, 0.1), rgba(37, 99, 235, 0.1));
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .use-case::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: radial-gradient(circle, rgba(236, 72, 153, 0.3), transparent);
+            transition: all 0.5s ease;
+            transform: translate(-50%, -50%);
+        }
+
+        .use-case:hover::after {
+            width: 300px;
+            height: 300px;
+        }
+
+        .use-case:hover {
+            transform: scale(1.05);
+            border-color: rgba(236, 72, 153, 0.5);
+        }
+
+        .use-case-icon {
+            font-size: 2.5em;
+            margin-bottom: 15px;
+        }
+
+        .use-case-title {
+            font-size: 1.3em;
+            margin-bottom: 10px;
+            color: #ec4899;
+        }
+
+        .use-case-desc {
+            font-size: 0.95em;
+            opacity: 0.8;
+            line-height: 1.5;
+        }
+
+        /* Techniques Section */
+        .techniques-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .technique-category {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 20px;
+            padding: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .technique-category h3 {
+            font-size: 1.5em;
+            margin-bottom: 20px;
+            color: #2563eb;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .technique-list {
+            list-style: none;
+        }
+
+        .technique-item {
+            background: rgba(255, 255, 255, 0.05);
+            margin: 10px 0;
+            padding: 15px;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            padding-left: 40px;
+        }
+
+        .technique-item::before {
+            content: '▶';
+            position: absolute;
+            left: 15px;
+            color: #ec4899;
+            transition: transform 0.3s ease;
+        }
+
+        .technique-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateX(10px);
+        }
+
+        .technique-item:hover::before {
+            transform: translateX(5px);
+        }
+
+        /* Interactive elements */
+        .interactive-demo {
+            background: rgba(124, 58, 237, 0.1);
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            margin: 40px 0;
+            border: 2px dashed rgba(124, 58, 237, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .interactive-demo:hover {
+            border-style: solid;
+            background: rgba(124, 58, 237, 0.15);
+        }
+
+        /* Process Pipeline Styles */
+        .process-pipeline {
+            position: relative;
+            padding: 40px 0;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            align-items: start;
+        }
+
+        .process-step {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 30px;
+            position: relative;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            overflow: hidden;
+        }
+
+        .process-step::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(124, 58, 237, 0.1), rgba(236, 72, 153, 0.1));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .process-step:hover::before {
+            opacity: 1;
+        }
+
+        .process-step:hover {
+            transform: translateY(-10px);
+            border-color: #7c3aed;
+            box-shadow: 0 20px 40px rgba(124, 58, 237, 0.3);
+        }
+
+        .step-number {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #7c3aed, #ec4899);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+
+        .step-icon {
+            font-size: 3em;
+            margin-bottom: 15px;
+            display: block;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .step-title {
+            font-size: 1.5em;
+            color: #7c3aed;
+            margin-bottom: 15px;
+        }
+
+        .step-description {
+            color: #fff;
+            opacity: 0.9;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+
+        .step-details {
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            padding-top: 20px;
+        }
+
+        .detail-item {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 10px 15px;
+            margin: 8px 0;
+            border-radius: 10px;
+            font-size: 0.95em;
+            opacity: 0.8;
+            transition: all 0.3s ease;
+        }
+
+        .detail-item:hover {
+            background: rgba(124, 58, 237, 0.2);
+            transform: translateX(10px);
+        }
+
+        .process-connector {
+            display: none;
+        }
+
+        /* Timeline Styles */
+        .timeline-container {
+            margin-top: 60px;
+            padding: 40px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 20px;
+        }
+
+        .timeline {
+            display: flex;
+            width: 100%;
+            height: 60px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 30px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .timeline-item {
+            position: relative;
+            height: 100%;
+            transition: all 0.3s ease;
+        }
+
+        .timeline-item:hover {
+            transform: scaleY(1.2);
+        }
+
+        .timeline-bar {
+            height: 100%;
+            width: 100%;
+            transition: all 0.3s ease;
+        }
+
+        .timeline-label {
+            position: absolute;
+            bottom: -50px;
+            left: 50%;
+            transform: translateX(-50%);
+            text-align: center;
+            font-size: 0.9em;
+            white-space: nowrap;
+            opacity: 0.8;
+        }
+
+        .timeline-label span {
+            display: block;
+            font-size: 0.8em;
+            color: #7c3aed;
+            margin-top: 5px;
+        }
+
+        /* Floating particles */
+        .particle {
+            position: fixed;
+            pointer-events: none;
+            opacity: 0.5;
+            animation: float 20s infinite linear;
+        }
+
+        @keyframes float {
+            from {
+                transform: translateY(100vh) translateX(0);
+            }
+            to {
+                transform: translateY(-100px) translateX(100px);
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            h1 { font-size: 2.5em; }
+            .section-title { font-size: 2em; }
+            .ml-types { grid-template-columns: 1fr; }
+            .use-cases { grid-template-columns: 1fr; }
+            .techniques-grid { grid-template-columns: 1fr; }
+            .process-pipeline { grid-template-columns: 1fr; }
+            .timeline { flex-direction: column; height: auto; }
+            .timeline-item { width: 100% !important; height: 40px; }
+            .timeline-label { position: static; transform: none; margin-top: 10px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Machine Learning</h1>
+        <p class="subtitle">Explore the types, use cases, and techniques that power AI</p>
+
+        <!-- Types of Machine Learning -->
+        <section class="section">
+            <h2 class="section-title">Types of Machine Learning</h2>
+            <div class="ml-types">
+                <div class="type-card" onclick="highlightCard(this)">
+                    <span class="type-icon">👁️</span>
+                    <h3 class="type-name">Supervised Learning</h3>
+                    <p class="type-description">
+                        Learns from labeled training data where each example has an input and a known output. 
+                        The algorithm learns to map inputs to outputs by finding patterns in the labeled examples.
+                    </p>
+                    <div class="type-examples">
+                        <strong>Common Algorithms:</strong>
+                        <div>
+                            <span class="example-tag">Linear Regression</span>
+                            <span class="example-tag">Decision Trees</span>
+                            <span class="example-tag">Neural Networks</span>
+                            <span class="example-tag">SVM</span>
+                            <span class="example-tag">Random Forest</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="type-card" onclick="highlightCard(this)">
+                    <span class="type-icon">🔍</span>
+                    <h3 class="type-name">Unsupervised Learning</h3>
+                    <p class="type-description">
+                        Discovers hidden patterns in unlabeled data without predefined categories. 
+                        The algorithm explores the data structure to find natural groupings or relationships.
+                    </p>
+                    <div class="type-examples">
+                        <strong>Common Algorithms:</strong>
+                        <div>
+                            <span class="example-tag">K-Means Clustering</span>
+                            <span class="example-tag">DBSCAN</span>
+                            <span class="example-tag">PCA</span>
+                            <span class="example-tag">Autoencoders</span>
+                            <span class="example-tag">Hierarchical Clustering</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="type-card" onclick="highlightCard(this)">
+                    <span class="type-icon">🎮</span>
+                    <h3 class="type-name">Reinforcement Learning</h3>
+                    <p class="type-description">
+                        Learns through interaction with an environment using rewards and penalties. 
+                        The algorithm takes actions and learns from the consequences to maximize cumulative reward.
+                    </p>
+                    <div class="type-examples">
+                        <strong>Common Algorithms:</strong>
+                        <div>
+                            <span class="example-tag">Q-Learning</span>
+                            <span class="example-tag">Deep Q-Networks</span>
+                            <span class="example-tag">Policy Gradient</span>
+                            <span class="example-tag">Actor-Critic</span>
+                            <span class="example-tag">SARSA</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Use Cases -->
+        <section class="section">
+            <h2 class="section-title">Real-World Use Cases</h2>
+            <div class="use-cases">
+                <div class="use-case">
+                    <div class="use-case-icon">🏥</div>
+                    <h3 class="use-case-title">Healthcare</h3>
+                    <p class="use-case-desc">Disease diagnosis, drug discovery, patient risk assessment, treatment recommendation</p>
+                </div>
+
+                <div class="use-case">
+                    <div class="use-case-icon">💰</div>
+                    <h3 class="use-case-title">Finance</h3>
+                    <p class="use-case-desc">Fraud detection, credit scoring, algorithmic trading, risk management</p>
+                </div>
+
+                <div class="use-case">
+                    <div class="use-case-icon">🛍️</div>
+                    <h3 class="use-case-title">E-commerce</h3>
+                    <p class="use-case-desc">Product recommendations, demand forecasting, customer segmentation, pricing optimization</p>
+                </div>
+
+                <div class="use-case">
+                    <div class="use-case-icon">🚗</div>
+                    <h3 class="use-case-title">Transportation</h3>
+                    <p class="use-case-desc">Autonomous vehicles, route optimization, traffic prediction, maintenance scheduling</p>
+                </div>
+
+                <div class="use-case">
+                    <div class="use-case-icon">🎬</div>
+                    <h3 class="use-case-title">Entertainment</h3>
+                    <p class="use-case-desc">Content recommendation, music generation, game AI, video editing</p>
+                </div>
+
+                <div class="use-case">
+                    <div class="use-case-icon">🏭</div>
+                    <h3 class="use-case-title">Manufacturing</h3>
+                    <p class="use-case-desc">Quality control, predictive maintenance, supply chain optimization, defect detection</p>
+                </div>
+
+                <div class="use-case">
+                    <div class="use-case-icon">🌾</div>
+                    <h3 class="use-case-title">Agriculture</h3>
+                    <p class="use-case-desc">Crop yield prediction, pest detection, irrigation optimization, soil analysis</p>
+                </div>
+
+                <div class="use-case">
+                    <div class="use-case-icon">📱</div>
+                    <h3 class="use-case-title">Technology</h3>
+                    <p class="use-case-desc">Natural language processing, computer vision, speech recognition, cybersecurity</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Techniques -->
+        <section class="section">
+            <h2 class="section-title">Machine Learning Techniques</h2>
+            <div class="techniques-grid">
+                <div class="technique-category">
+                    <h3><span>📊</span> Classification Techniques</h3>
+                    <ul class="technique-list">
+                        <li class="technique-item">Logistic Regression</li>
+                        <li class="technique-item">k-Nearest Neighbors (k-NN)</li>
+                        <li class="technique-item">Support Vector Machines (SVM)</li>
+                        <li class="technique-item">Naive Bayes</li>
+                        <li class="technique-item">Random Forest Classifier</li>
+                        <li class="technique-item">Gradient Boosting</li>
+                    </ul>
+                </div>
+
+                <div class="technique-category">
+                    <h3><span>📈</span> Regression Techniques</h3>
+                    <ul class="technique-list">
+                        <li class="technique-item">Linear Regression</li>
+                        <li class="technique-item">Polynomial Regression</li>
+                        <li class="technique-item">Ridge/Lasso Regression</li>
+                        <li class="technique-item">Elastic Net</li>
+                        <li class="technique-item">Support Vector Regression</li>
+                        <li class="technique-item">Neural Network Regression</li>
+                    </ul>
+                </div>
+
+                <div class="technique-category">
+                    <h3><span>🔮</span> Clustering Techniques</h3>
+                    <ul class="technique-list">
+                        <li class="technique-item">K-Means Clustering</li>
+                        <li class="technique-item">Hierarchical Clustering</li>
+                        <li class="technique-item">DBSCAN</li>
+                        <li class="technique-item">Gaussian Mixture Models</li>
+                        <li class="technique-item">Mean Shift</li>
+                        <li class="technique-item">Spectral Clustering</li>
+                    </ul>
+                </div>
+
+                <div class="technique-category">
+                    <h3><span>🧠</span> Deep Learning Techniques</h3>
+                    <ul class="technique-list">
+                        <li class="technique-item">Convolutional Neural Networks (CNN)</li>
+                        <li class="technique-item">Recurrent Neural Networks (RNN)</li>
+                        <li class="technique-item">Long Short-Term Memory (LSTM)</li>
+                        <li class="technique-item">Transformer Models</li>
+                        <li class="technique-item">Generative Adversarial Networks (GAN)</li>
+                        <li class="technique-item">Autoencoders</li>
+                    </ul>
+                </div>
+
+                <div class="technique-category">
+                    <h3><span>🎯</span> Ensemble Techniques</h3>
+                    <ul class="technique-list">
+                        <li class="technique-item">Bagging (Bootstrap Aggregating)</li>
+                        <li class="technique-item">Boosting (AdaBoost, XGBoost)</li>
+                        <li class="technique-item">Stacking</li>
+                        <li class="technique-item">Voting Classifiers</li>
+                        <li class="technique-item">Random Forest</li>
+                        <li class="technique-item">Extra Trees</li>
+                    </ul>
+                </div>
+
+                <div class="technique-category">
+                    <h3><span>⚡</span> Dimensionality Reduction</h3>
+                    <ul class="technique-list">
+                        <li class="technique-item">Principal Component Analysis (PCA)</li>
+                        <li class="technique-item">t-SNE</li>
+                        <li class="technique-item">Linear Discriminant Analysis (LDA)</li>
+                        <li class="technique-item">UMAP</li>
+                        <li class="technique-item">Feature Selection</li>
+                        <li class="technique-item">Autoencoders</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- ML Process Pipeline -->
+        <section class="section">
+            <h2 class="section-title">Machine Learning Process Pipeline</h2>
+            <div class="process-pipeline">
+                <div class="process-step" data-step="1">
+                    <div class="step-number">1</div>
+                    <div class="step-icon">🎯</div>
+                    <h3 class="step-title">Problem Identification</h3>
+                    <div class="step-content">
+                        <p class="step-description">Define the business problem and determine if ML is the right solution</p>
+                        <div class="step-details">
+                            <div class="detail-item">✓ Define clear objectives and success metrics</div>
+                            <div class="detail-item">✓ Assess feasibility and ROI</div>
+                            <div class="detail-item">✓ Identify constraints and requirements</div>
+                            <div class="detail-item">✓ Choose ML problem type (classification, regression, etc.)</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="process-connector"></div>
+
+                <div class="process-step" data-step="2">
+                    <div class="step-number">2</div>
+                    <div class="step-icon">📊</div>
+                    <h3 class="step-title">Data Collection</h3>
+                    <div class="step-content">
+                        <p class="step-description">Gather relevant data from various sources</p>
+                        <div class="step-details">
+                            <div class="detail-item">✓ Identify data sources (databases, APIs, files)</div>
+                            <div class="detail-item">✓ Determine data volume requirements</div>
+                            <div class="detail-item">✓ Ensure data quality and relevance</div>
+                            <div class="detail-item">✓ Handle data privacy and compliance</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="process-connector"></div>
+
+                <div class="process-step" data-step="3">
+                    <div class="step-number">3</div>
+                    <div class="step-icon">🔧</div>
+                    <h3 class="step-title">Data Preparation</h3>
+                    <div class="step-content">
+                        <p class="step-description">Clean, transform, and prepare data for modeling</p>
+                        <div class="step-details">
+                            <div class="detail-item">✓ Handle missing values and outliers</div>
+                            <div class="detail-item">✓ Feature engineering and selection</div>
+                            <div class="detail-item">✓ Data normalization/standardization</div>
+                            <div class="detail-item">✓ Split data (train/validation/test)</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="process-connector"></div>
+
+                <div class="process-step" data-step="4">
+                    <div class="step-number">4</div>
+                    <div class="step-icon">🤖</div>
+                    <h3 class="step-title">Model Selection</h3>
+                    <div class="step-content">
+                        <p class="step-description">Choose appropriate algorithms and architectures</p>
+                        <div class="step-details">
+                            <div class="detail-item">✓ Compare different algorithms</div>
+                            <div class="detail-item">✓ Consider complexity vs performance</div>
+                            <div class="detail-item">✓ Account for interpretability needs</div>
+                            <div class="detail-item">✓ Select evaluation metrics</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="process-connector"></div>
+
+                <div class="process-step" data-step="5">
+                    <div class="step-number">5</div>
+                    <div class="step-icon">⚡</div>
+                    <h3 class="step-title">Training & Optimization</h3>
+                    <div class="step-content">
+                        <p class="step-description">Train models and tune hyperparameters</p>
+                        <div class="step-details">
+                            <div class="detail-item">✓ Train baseline models</div>
+                            <div class="detail-item">✓ Hyperparameter tuning</div>
+                            <div class="detail-item">✓ Cross-validation</div>
+                            <div class="detail-item">✓ Monitor for overfitting</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="process-connector"></div>
+
+                <div class="process-step" data-step="6">
+                    <div class="step-number">6</div>
+                    <div class="step-icon">📈</div>
+                    <h3 class="step-title">Model Evaluation</h3>
+                    <div class="step-content">
+                        <p class="step-description">Assess model performance and validate results</p>
+                        <div class="step-details">
+                            <div class="detail-item">✓ Test on holdout data</div>
+                            <div class="detail-item">✓ Analyze performance metrics</div>
+                            <div class="detail-item">✓ Check for bias and fairness</div>
+                            <div class="detail-item">✓ Validate business impact</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="process-connector"></div>
+
+                <div class="process-step" data-step="7">
+                    <div class="step-number">7</div>
+                    <div class="step-icon">🚀</div>
+                    <h3 class="step-title">Deployment</h3>
+                    <div class="step-content">
+                        <p class="step-description">Deploy model to production environment</p>
+                        <div class="step-details">
+                            <div class="detail-item">✓ Containerize model (Docker)</div>
+                            <div class="detail-item">✓ Set up API endpoints</div>
+                            <div class="detail-item">✓ Configure infrastructure</div>
+                            <div class="detail-item">✓ Implement A/B testing</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="process-connector"></div>
+
+                <div class="process-step" data-step="8">
+                    <div class="step-number">8</div>
+                    <div class="step-icon">👀</div>
+                    <h3 class="step-title">Monitoring & Maintenance</h3>
+                    <div class="step-content">
+                        <p class="step-description">Track performance and maintain model health</p>
+                        <div class="step-details">
+                            <div class="detail-item">✓ Monitor prediction accuracy</div>
+                            <div class="detail-item">✓ Detect data/concept drift</div>
+                            <div class="detail-item">✓ Schedule retraining</div>
+                            <div class="detail-item">✓ Update and version control</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Process Timeline Visualization -->
+            <div class="timeline-container">
+                <h3 style="text-align: center; margin: 40px 0; color: #7c3aed;">Typical Timeline</h3>
+                <div class="timeline">
+                    <div class="timeline-item" style="width: 10%;">
+                        <div class="timeline-bar" style="background: #ff6b6b;"></div>
+                        <div class="timeline-label">Problem ID<br><span>1-2 weeks</span></div>
+                    </div>
+                    <div class="timeline-item" style="width: 15%;">
+                        <div class="timeline-bar" style="background: #4ecdc4;"></div>
+                        <div class="timeline-label">Data Collection<br><span>2-4 weeks</span></div>
+                    </div>
+                    <div class="timeline-item" style="width: 20%;">
+                        <div class="timeline-bar" style="background: #f7b731;"></div>
+                        <div class="timeline-label">Data Prep<br><span>2-6 weeks</span></div>
+                    </div>
+                    <div class="timeline-item" style="width: 25%;">
+                        <div class="timeline-bar" style="background: #5f27cd;"></div>
+                        <div class="timeline-label">Model Development<br><span>4-8 weeks</span></div>
+                    </div>
+                    <div class="timeline-item" style="width: 15%;">
+                        <div class="timeline-bar" style="background: #00d2d3;"></div>
+                        <div class="timeline-label">Deployment<br><span>2-4 weeks</span></div>
+                    </div>
+                    <div class="timeline-item" style="width: 15%;">
+                        <div class="timeline-bar" style="background: #6c5ce7;"></div>
+                        <div class="timeline-label">Monitoring<br><span>Ongoing</span></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="interactive-demo">
+            <h3 style="margin-bottom: 15px;">💡 Interactive Tip</h3>
+            <p>Click on any card or process step to explore it in detail. Hover over the timeline to see typical durations!</p>
+        </div>
+    </div>
+
+    <script>
+        // Create floating particles
+        function createParticle() {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            particle.style.left = Math.random() * window.innerWidth + 'px';
+            particle.style.width = particle.style.height = Math.random() * 10 + 5 + 'px';
+            particle.style.background = `rgba(${Math.random() * 255}, ${Math.random() * 255}, ${Math.random() * 255}, 0.5)`;
+            particle.style.borderRadius = '50%';
+            particle.style.animationDuration = Math.random() * 20 + 10 + 's';
+            document.body.appendChild(particle);
+
+            setTimeout(() => particle.remove(), 30000);
+        }
+
+        // Create particles periodically
+        setInterval(createParticle, 2000);
+
+        // Highlight card function
+        function highlightCard(card) {
+            card.style.transform = 'scale(1.05)';
+            card.style.background = 'rgba(124, 58, 237, 0.2)';
+            
+            setTimeout(() => {
+                card.style.transform = '';
+                card.style.background = '';
+            }, 1000);
+        }
+
+        // Add hover sound effect (visual feedback)
+        document.querySelectorAll('.type-card, .use-case, .technique-item').forEach(element => {
+            element.addEventListener('mouseenter', function() {
+                this.style.transition = 'all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55)';
+            });
+        });
+
+        // Animate elements on scroll
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -100px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        // Observe all cards
+        document.querySelectorAll('.type-card, .use-case, .technique-category, .process-step').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(30px)';
+            el.style.transition = 'all 0.6s ease-out';
+            observer.observe(el);
+        });
+
+        // Process step click animation
+        document.querySelectorAll('.process-step').forEach((step, index) => {
+            step.addEventListener('click', function() {
+                // Expand effect
+                this.style.transform = 'scale(1.05)';
+                this.style.boxShadow = '0 20px 60px rgba(124, 58, 237, 0.5)';
+                
+                // Create ripple effect
+                const ripple = document.createElement('div');
+                ripple.style.position = 'absolute';
+                ripple.style.width = '20px';
+                ripple.style.height = '20px';
+                ripple.style.background = 'rgba(255, 255, 255, 0.5)';
+                ripple.style.borderRadius = '50%';
+                ripple.style.left = '50%';
+                ripple.style.top = '50%';
+                ripple.style.transform = 'translate(-50%, -50%)';
+                ripple.style.animation = 'rippleEffect 1s ease-out';
+                this.appendChild(ripple);
+                
+                setTimeout(() => {
+                    this.style.transform = '';
+                    this.style.boxShadow = '';
+                    ripple.remove();
+                }, 1000);
+            });
+            
+            // Add stagger animation delay
+            step.style.animationDelay = `${index * 0.1}s`;
+        });
+
+        // Add ripple animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes rippleEffect {
+                to {
+                    width: 200px;
+                    height: 200px;
+                    opacity: 0;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Timeline hover effect
+        document.querySelectorAll('.timeline-item').forEach(item => {
+            item.addEventListener('mouseenter', function() {
+                const label = this.querySelector('.timeline-label');
+                label.style.transform = 'translateX(-50%) scale(1.1)';
+                label.style.opacity = '1';
+            });
+            
+            item.addEventListener('mouseleave', function() {
+                const label = this.querySelector('.timeline-label');
+                label.style.transform = 'translateX(-50%) scale(1)';
+                label.style.opacity = '0.8';
+            });
+        });
+    </script>
+</body>
+</html>
