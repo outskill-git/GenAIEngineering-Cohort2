@@ -1,0 +1,581 @@
+filename,page_number,chunk_number,chunk
+VB.NET_CODING_IN_UIPATH.pdf,1,1,1 | P a
+VB.NET_CODING_IN_UIPATH.pdf,1,2, g e C 
+VB.NET_CODING_IN_UIPATH.pdf,1,3,l i c k
+VB.NET_CODING_IN_UIPATH.pdf,1,4, t o fo
+VB.NET_CODING_IN_UIPATH.pdf,1,5, l l o w
+VB.NET_CODING_IN_UIPATH.pdf,2,1,2 | P a g e C l i c k t o fo l l o w The Best UiPath RPA Courses by Leon Pet
+VB.NET_CODING_IN_UIPATH.pdf,2,2,rou STEP 1: Go from Beginner to Intermediate with UiPat h RPA Complete UiPat
+VB.NET_CODING_IN_UIPATH.pdf,2,3,h RPA Developer Course : Build 7 Robots Click here for 95% off Coupon Free R
+VB.NET_CODING_IN_UIPATH.pdf,2,4,PA Training / Webinar Click here for Free Training STEP 2: Go from Intermedi
+VB.NET_CODING_IN_UIPATH.pdf,2,5,ate to Advanced with UiPath RPA Complete RPA Bootcamp Click here to learn more
+VB.NET_CODING_IN_UIPATH.pdf,3,1,3 | P a g e C l i c k t o fo l l o w Contents 1 Introduction ................................ ................................ ................................ ................................ ................................ ... 1 1.1 Why I Wrote this eBook ................................ ................................ ................................ ................................ .......... 1 1.2 Why Do We Need to Use VB.NET in UiPath? ................................ ................................ ................................ .......... 1 1.3 What is VB.NET ................................ ................................ ................................ ................................ ....................... 1 1.4 About the Au thor ................................ ................................ ................................ ................................ .................... 2 1.5 How to Land a High Paying Job as an RPA Developer? ................................ ................................ ........................... 2 1.6 How to Get Free UiPath Support? ................................ .....
+VB.NET_CODING_IN_UIPATH.pdf,3,2,........................... ................................ .......................... 2 1.7 Example of Using VB.NET ................................ ................................ ................................ ................................ ........ 2 1.8 Terminology ................................ ................................ ................................ ................................ ............................ 6 1.9 Symbols ................................ ................................ ................................ ................................ ................................ ... 6 1.10 VB.NET Reference Cheat Sheet ................................ ................................ ................................ ............................. 8 2. Excel ................................ ................................ ................................ ................................ ................................ .............. 9 2.1 How to Count Rows in a DataTable ................................ ................................ ................................ ........................
+VB.NET_CODING_IN_UIPATH.pdf,3,3, 9 2.2 How to Get a DataTable With Specified Columns ................................ ................................ ................................ 11 2.3 How to Get the Sheet Name From Excel ................................ ................................ ................................ .............. 13 2.4 How to Get Top N Records from a DataTable ................................ ................................ ................................ ....... 15 2.5 How to Find the Max and Average Value from a DataTable ................................ ................................ ................. 17 2.6 How to Reorder Columns in a DataTable ................................ ................................ ................................ .............. 19 2.7 How to Rename DataTable Columns ................................ ................................ ................................ .................... 22 2.8 How to Convert a DataTable Column to a List ................................ ................................ ................................ ...... 24 2.9 How to Only Get the Headers From a Datatable 
+VB.NET_CODING_IN_UIPATH.pdf,3,4,................................ ................................ ................................ .. 26 2.10 How to Reverse a DataTable ................................ ................................ ................................ ............................... 28 2.11 How to Remove Duplicates from a Datatable ................................ ................................ ................................ .... 30 2.12 How to Transpose a DataTable ................................ ................................ ................................ ........................... 32 2.13 How to Compare Two Excel Files of the Same Format and Get Matched Data ................................ ................. 34 2.14 How to Find Common/Uncommon Rows Between Two Datatables ................................ ................................ .. 36 2.15 How to Include a HTML Table in Mail Body with Dynamic Values ................................ ................................ ..... 39 3 File / Folder Operations ................................ ................................ ................................ ....................
+VB.NET_CODING_IN_UIPATH.pdf,3,5,"............ ............... 42 3.1 How to Get the Latest File from a Folder ................................ ................................ ................................ .............. 42 3.2 How to Delete Multiple Files in a Folder ................................ ................................ ................................ ............... 44 3.3 How to Get Specific Types of Files from a Folder ................................ ................................ ................................ . 47 4 Text and List Manipulations ................................ ................................ ................................ ................................ ......... 49 4.1 How to Read / Write to a Text File ................................ ................................ ................................ ........................ 49 4.2 How to Define a Dictionary, Add Items To a Dictionary and Access Items From a Dictionary ............................. 51 4.3 How to Use Regular Expres sions (Regex) ................................ ................................ ................................ .............. 54"
+VB.NET_CODING_IN_UIPATH.pdf,4,1,"4 | P a g e C l i c k t o fo l l o w 4.4 How to Initialize, Add and Removed Items from a List ................................ ................................ ......................... 59 4.5 How to Trim / Clean a String ................................ ................................ ................................ ................................ . 62 4.6 How to Split a String ................................ ................................ ................................ ................................ .............. 65 4.7 How to Replace Text in a String ................................ ................................ ................................ ............................ 68 4.8 How to Find Common/Uncommon Items Between Two Lists ................................ ................................ .............. 70 4.9 How to Check If a String is Numeric ................................ ......................"
+VB.NET_CODING_IN_UIPATH.pdf,4,2,.......... ................................ ...................... 73 4.10 How to Get the Word Count from a String ................................ ................................ ................................ ......... 75 4.11 How to Count the Characters in a String ................................ ................................ ................................ ............ 76 4.12 How to Convert a List to an Array ................................ ................................ ................................ ....................... 78 4.13 How to Reverse a String ................................ ................................ ................................ ................................ ...... 80 4.14 How to Convert a SecureString DataType to a String DataType ................................ ................................ ......... 82 5 Email ................................ .............................
+VB.NET_CODING_IN_UIPATH.pdf,4,3,"... ................................ ................................ ................................ ............. 85 5.1 How to Retrieve E -mail Body / Subject / Sender Details ................................ ................................ ...................... 85 5.2 How to Download Specific Files from a Mail ................................ ................................ ................................ ........ 88 5.3 How to Reverse a Mail List ................................ ................................ ................................ ................................ .... 91 6 DateTime Operations ................................ ................................ ................................ ................................ ................... 94 6.1 How to Find the Date Difference (Days, Months and Years) ................................ ................................ ................ 94 6.2 How to C"
+VB.NET_CODING_IN_UIPATH.pdf,4,4,ompare Time in UiPath ................................ ................................ ................................ .......................... 96 6.3 How to Get the Amount of Days in a Month ................................ ................................ ................................ ........ 98 6.4 How to Convert a DateTime to String ................................ ................................ ................................ ................... 99 6.5 How to Convert Milliseconds to TimeSpan ................................ ................................ ................................ ......... 100 6.6 How to Convert TimeStamp to 12/24hrs Format ................................ ................................ ............................... 101 6.7 How to Convert String to DateTime and DateTime Manipulation ................................ ................................ ..... 102 7 Invoke Code .......
+VB.NET_CODING_IN_UIPATH.pdf,4,5,......................... ................................ ................................ ................................ ................................ 106 7.1 How to Sum a Column Using Invoke Code ................................ ................................ ................................ .......... 106 7.2 How to Process and Add a Column Using Invoke Code ................................ ................................ ...................... 109 8 Conclusion ................................ ................................ ................................ ................................ ................................ .. 112 8.1 Where to Look for VB.NET Code if You Can’t Find it in this Guide? ................................ ................................ .... 112 8.2 How to Take Your UiPath RPA Skills to an Advanced Level? ................................ ................................ ............... 112
+VB.NET_CODING_IN_UIPATH.pdf,5,1,"1 | P a g e C l i c k t o fo l l o w 1 Introduction 1.1 Why I Wrote This eBook UiPath is primarily drag-and-drop and does not require much coding. This h as attracted many non - programmers to start learning and using UiPath to develop automations. These non -programmers usually reach a hurdle when they need to write some VB. NET code to expand their bots’ functionality but have no idea how to write code. Leaving you stuck, co"
+VB.NET_CODING_IN_UIPATH.pdf,5,2,"nfused, and needing to hire expensive developers or learn a new programming language, which not to mention has a steep learning curve for non -programmers. That is why I wrote this book. It is a n easy to understand , step-by-step instructional guide on how to use VB.net in UiPath with the most common use -cases of VB.NET in UiPath for industry projects. This book can be used both as a learning resource and as a quick -referen"
+VB.NET_CODING_IN_UIPATH.pdf,5,3,"ce go-to guide for VB.NET while building your automations. 1.2 Why Do We Need to Use VB.NET in UiPath? Process automation functionality of the UiPath Activities are limited to th e Activities provided . However, many processes require additional functionality which are not provided by the suite of activities. Note that the activities in UiPath are simply code packaged into use r-friendly activities to speed up the development "
+VB.NET_CODING_IN_UIPATH.pdf,5,4,"process. If you need functionality not provided by UiPath Activities, you can most likely do it with VB. NET code. Therefore, we need VB. NET in UiPath to expand the functionality of our automations to build more advanced automations. 1.3 What is VB.NET VB.NET stands for Visual Basic .NET, and it is a computer programming language developed by Microsoft. VB.NET is an object -oriented programmin g language (meaning it is made u"
+VB.NET_CODING_IN_UIPATH.pdf,5,5,"p of data objects, made up of various properties and can perform different functions). Visual Basic runs on the .NET framework, which means that it has full access to the .NET libraries. It is a very productive tool for rapi d creation of a wide range of Web, Windows, Office, and Mobile applications that have been built on the .NET framework. We will be using .NET to add additionally functionality to our bots developed in UiPath."
+VB.NET_CODING_IN_UIPATH.pdf,6,1,"2 | P a g e C l i c k t o fo l l o w 1.4 About the Author My name is Leon Petrou . I am an engineer and educator. I graduated from the University of Pretoria with a Bachelor of Engineering (BEng) degree with distinction (specialised in Industrial and Systems Engin eering). I’m an experienced Robotic Process Automation (RPA) developer, award winning Udemy Inst"
+VB.NET_CODING_IN_UIPATH.pdf,6,2,"ructor and founder at FutureRPA , a smart automation consultancy where we use RPA to streamline our clients' business processes. I’m also the lead instructor of the Complete RPA Bootcamp where I coach my students to develop their advanced technical skills in RPA so that they can launch their careers as RPA Developer s. 1.5 How to Land a High Paying Job as an "
+VB.NET_CODING_IN_UIPATH.pdf,6,3,"RPA Developer? Watch the free training / webinar here: https://www.completerpabootcamp.com/rpatr aining 1.6 How to Get Free UiPath Support? Join o ur private Facebook group to ask any of your RPA / UiPath / VB.NET questions : https://www.facebook.com/groups/2481744772043143/ 1.7 Example of Using VB.NET Let’s say a user inputs a number, then we want to find th"
+VB.NET_CODING_IN_UIPATH.pdf,6,4,"e square root of that number and display in a message box like so, “The answer is X”. You can download this example here: https://drive.google.com/drive/folders/1El3J8Ej -7Fe6pDiCQykSNXVVcQW2iq54?usp=sharing Let’s see how to build this workflow… Step 1: We drag in an “Input Dialog ” activit y for the user to enter a number . We save the number is a string var"
+VB.NET_CODING_IN_UIPATH.pdf,6,5,iable. Step 2: We convert the string to a double (which is a number which can contain decimals and negative values ) using an “Assign” activity. We do the conversion because we can perform mathematical calculations with a double but we can’t with a text string. We use this code: convert.ToDouble(stringNumber) Note: Replace stringNumber with your string variable
+VB.NET_CODING_IN_UIPATH.pdf,7,1,3 | P a g e C l i c k t o fo l l o w Remember to set the doubleNu mber variable to a System.Double type in the variable panel. Step 3: Write this code in a “Message box ” a
+VB.NET_CODING_IN_UIPATH.pdf,7,2,"ctivity . Note that a “Message box ” activity requires a String input. ""The answer is "" + Math.Sqrt(doubleNumber).ToString In VB.NET we w rite a string in double quotation "
+VB.NET_CODING_IN_UIPATH.pdf,7,3,"marks like this ""The answer is "" or we can use the .ToString method to convert a variable or expression to a string as we use above. To concatenate (or combine ) two string"
+VB.NET_CODING_IN_UIPATH.pdf,7,4,"s together into one, we use a + like we do above. To calculate the square root, we can use the Math function from the “System” namespace. If the “System” namespace is alrea"
+VB.NET_CODING_IN_UIPATH.pdf,7,5,"dy imported in your Imports panel, then you can simply use the Math function directly. Else, if the System namespace is not already imported you will have to write System.Math"
+VB.NET_CODING_IN_UIPATH.pdf,8,1,4 | P a g e C l i c k t o fo l l o w You can import a namespace by simply typing it in to the search bar in the ‘Import s’ panel whe
+VB.NET_CODING_IN_UIPATH.pdf,8,2,re it says “Enter or select namespace” . If you enter a period after the math function you will see a list of methods in the math fu
+VB.NET_CODING_IN_UIPATH.pdf,8,3,"nction. Like so : Since we are calculating the square root, we want to select the Sqrt() method. You can see the Sqrt() method requi"
+VB.NET_CODING_IN_UIPATH.pdf,8,4,"res a parameter as a ‘double ’ data type. So , inside the brackets, we add in our doubleNumber varia ble: Note that we are getting a"
+VB.NET_CODING_IN_UIPATH.pdf,8,5,"n error as can be seen by the blue exclamation mark. If we hover our pointer over the exclamation mark, we can read the error message."
+VB.NET_CODING_IN_UIPATH.pdf,9,1,5 | P a g e C l i c k t o fo l l o w The error above is because the expression Math.Sqrt(doubl
+VB.NET_CODING_IN_UIPATH.pdf,9,2,"eNumber) is of data type ‘ Double’ but the “Message Box” requires a ‘ String’ data type, so we"
+VB.NET_CODING_IN_UIPATH.pdf,9,3, can simply convert the double to a string using the .ToString method like so : Math.Sqrt(doub
+VB.NET_CODING_IN_UIPATH.pdf,9,4,"leNumber).ToS tring The error is now gone! Step 4: We run the workflow, enter a number in to t"
+VB.NET_CODING_IN_UIPATH.pdf,9,5,he input dialog and see the output in a message box popup . In this case I entered the number 5.
+VB.NET_CODING_IN_UIPATH.pdf,10,1,6 | P a g e C l i c k t o fo l l o w 1.8 Terminology Using the example from above: System. Math .Sqrt( doubleNumber ).ToString System is the namespace Math is 
+VB.NET_CODING_IN_UIPATH.pdf,10,2,the function Sqrt() is the method of the Math function doubleNumber is the parameter (here we entered ou r doubleNumber local variable) ToString is also a meth
+VB.NET_CODING_IN_UIPATH.pdf,10,3,od You can learn more about the Math function and methods here and you can learn more about the .ToString method here. 1.9 Symbols If you click CTRL+SPACE whil
+VB.NET_CODING_IN_UIPATH.pdf,10,4,"e in an expression editor in UiPath and intellisense will popup like below, to show all available options. The symbols on the left of the nam es represent the "
+VB.NET_CODING_IN_UIPATH.pdf,10,5,type of object. It is often useful to know what those symbols represent when coding in VB.NET… Here are some symbols and their object types: Namespace For example
+VB.NET_CODING_IN_UIPATH.pdf,11,1,7 | P a g e C l i c k t o fo l l o 
+VB.NET_CODING_IN_UIPATH.pdf,11,2,w Class (also called a function) Fo
+VB.NET_CODING_IN_UIPATH.pdf,11,3,r example Method For example Variab
+VB.NET_CODING_IN_UIPATH.pdf,11,4,le For example: There are a few oth
+VB.NET_CODING_IN_UIPATH.pdf,11,5,ers but those are the most used ones.
+VB.NET_CODING_IN_UIPATH.pdf,12,1,8 | P a g e C l i c k t o fo l l o w 1.10 VB.NET R
+VB.NET_CODING_IN_UIPATH.pdf,12,2,eference Cheat Sheet For another VB.NET Cheat Shee
+VB.NET_CODING_IN_UIPATH.pdf,12,3,t visit this link: https://drive.google.com/file/d
+VB.NET_CODING_IN_UIPATH.pdf,12,4,/1fZbQBSnZq9IwfJNE -5-kQiCbr4H304f9/view?usp=shari
+VB.NET_CODING_IN_UIPATH.pdf,12,5,ng Let’s now get into the fun and do some examples…
+VB.NET_CODING_IN_UIPATH.pdf,13,1,"9 | P a g e C l i c k t o fo l l o w 2. Excel 2.1 How to Count Rows in a DataTable While working with Excel, sometimes it is necessa"
+VB.NET_CODING_IN_UIPATH.pdf,13,2,ry to find the number of records / rows available in it. total_Count = my_DataTable.Rows.Count Note: my_DataTable is the DataTable y
+VB.NET_CODING_IN_UIPATH.pdf,13,3,ou are counting the rows of. Let us implement a workflow to count the total number of rows in Excel. Implementation with UiPath Step
+VB.NET_CODING_IN_UIPATH.pdf,13,4, 1: Drag the “Read Range ” activity from the Workbook library into the design panel and supply the “File Path” to it. Step 2: Ensure
+VB.NET_CODING_IN_UIPATH.pdf,13,5, the ‘Add Headers ’ property is checked and you have created a new output DataTable variable . In this case we called it my_DataTable
+VB.NET_CODING_IN_UIPATH.pdf,14,1,10 | P a g e C l i c k t o fo l l o w Step 3: Drag a “Message Box” 
+VB.NET_CODING_IN_UIPATH.pdf,14,2,"activity to display the rows count. Step 4: Now, run the code . It "
+VB.NET_CODING_IN_UIPATH.pdf,14,3,returns 3 because there are three rows in the Excel Sheet (excludin
+VB.NET_CODING_IN_UIPATH.pdf,14,4,g the header). Click the link below to download the example project
+VB.NET_CODING_IN_UIPATH.pdf,14,5,: https://drive.google.com/open?id=1OgRsFEypWz1G3nTP5f_lFrxXUHtAcpPn
+VB.NET_CODING_IN_UIPATH.pdf,15,1,"11 | P a g e C l i c k t o fo l l o w 2.2 How to Get a DataTable With Specified Columns While dealing with data table operations, sometimes we might want to retrieve only specific columns from it. You can do t his using the following co"
+VB.NET_CODING_IN_UIPATH.pdf,15,2,"de: dt_New=dt_Original.DefaultView.toTable(false,”Column1 ″,”Column2 ″,…) Note: Simply replace the “Column1 ″,”Column2 ” and so on with your required Columns Implementation with UiPath Let us implement a workflow which takes a “ DataTab"
+VB.NET_CODING_IN_UIPATH.pdf,15,3,"le” and outputs the “DataTable with specified columns”. In this case, only the “Name” column. Step 1: Drag a “Build Data Table” activity into the design panel and populate it with some sample data. Step 2: Drag an “Assign” activity into"
+VB.NET_CODING_IN_UIPATH.pdf,15,4, the des ign panel and fill it with above -mentioned code. Step 3: Drag a “Message Box” activity to display the result Note: Here we have used LINQ to display the DataTable Instead of Output DataTable . LINQ is Language Integrated Query
+VB.NET_CODING_IN_UIPATH.pdf,15,5, is a Microsoft .NET Framework component that adds native data querying capabilities to .NET languages. This expression is equivalent to using an “Output DataTable” Activity (used to convert a DataTable data type to a String D ataTyp e).
+VB.NET_CODING_IN_UIPATH.pdf,16,1,12 | P a g e C l i c k t o fo l l o w string.join(System.Environ
+VB.NET_CODING_IN_UIPATH.pdf,16,2,"ment.NewLine, dt_YourDataTable.Rows.Cast(of DataRow).Select(func"
+VB.NET_CODING_IN_UIPATH.pdf,16,3,"tion(row) string.join(“,”,row.ItemArray)))) Step 3: Finally, the"
+VB.NET_CODING_IN_UIPATH.pdf,16,4, output: Click the link below to download the example project: h
+VB.NET_CODING_IN_UIPATH.pdf,16,5,ttps://drive.google.com/open?id=1LLC_7bsfnpUQWDVnHHQWZo7tLlcfEIux
+VB.NET_CODING_IN_UIPATH.pdf,17,1,"13 | P a g e C l i c k t o fo l l o w 2.3 How to Get the Sheet Name From Excel Excel is the most used application in the business process automation. To work with it, we might so"
+VB.NET_CODING_IN_UIPATH.pdf,17,2,"metimes want to know the sheets available in it, let us see how to find all the sheet names available in a workbook. wb as WorkbookApplication wb.GetSheets Implementation with Ui"
+VB.NET_CODING_IN_UIPATH.pdf,17,3,Path Let us implem ent a workflow which takes a sample excel file and displays all the sheets available in it. Step 1: Drag “Excel Application Scope” activity into the designer p
+VB.NET_CODING_IN_UIPATH.pdf,17,4,anel and supply the following values into the activity’s properties panel . Excel needs to be installed on your machine to use this. Note: WorkbookPath: “Sample_Excel.xlsx” (Stri
+VB.NET_CODING_IN_UIPATH.pdf,17,5,ng type) Workbook: myWorkbook (WorkbookApplication type) Step 2: Drag “For Each” activity into the designer panel and supply the values to it as shown below. myWorkbook.GetSheets
+VB.NET_CODING_IN_UIPATH.pdf,18,1,14 | P a g e C l i c k t o fo l l o w Step 3: 
+VB.NET_CODING_IN_UIPATH.pdf,18,2,Use “ Message Box ” to display the sheets. Ste
+VB.NET_CODING_IN_UIPATH.pdf,18,3,"p 4: Now, execute . Click the link below to do"
+VB.NET_CODING_IN_UIPATH.pdf,18,4,wnload the example project: https://drive.goog
+VB.NET_CODING_IN_UIPATH.pdf,18,5,le.com/open?id=1ON0JghAo07tljlrjN8R7kaUWN7aRwPXR
+VB.NET_CODING_IN_UIPATH.pdf,19,1,15 | P a g e C l i c k t o fo l l o w 2.4 How to Get Top N Records from a DataTable Sometimes we might be asked to process only the top N records out of the total available records in t
+VB.NET_CODING_IN_UIPATH.pdf,19,2,he DataTable . Let us see how to implement it … new_DataTable=old_DataTable.AsEnumerable().Take(N).CopyToDataTable() Note: Replace old_DataTable with your DataTable And replace N with a
+VB.NET_CODING_IN_UIPATH.pdf,19,3," number e.g. N= 1,2,3…. Implementation with UiPath Let us implement a workflow which takes a sample DataTable and displays the top N records of it, according to our supplied input. Step"
+VB.NET_CODING_IN_UIPATH.pdf,19,4, 1: Drag “Build Data Table” activity into the designer panel and insert some sample data into it. Step 2: Drag “Assign” activity into the designer panel and populate it with the below c
+VB.NET_CODING_IN_UIPATH.pdf,19,5,ode to get the top 3 records . dt_Sample.AsEnumerable().Take(3).CopyToData Table() Step 3: Drag “Output Data Table” activity into the designer panel to convert Data Table to String type.
+VB.NET_CODING_IN_UIPATH.pdf,20,1,16 | P a g e C l i c k t o fo l l o w Step 4: Drag “Messag
+VB.NET_CODING_IN_UIPATH.pdf,20,2,e Box” activity into the designer panel to display the mod
+VB.NET_CODING_IN_UIPATH.pdf,20,3,"ified data table. Step 5: Finally, let’s run the project. "
+VB.NET_CODING_IN_UIPATH.pdf,20,4,Click the link below to download the example project: http
+VB.NET_CODING_IN_UIPATH.pdf,20,5,s://drive.google.com/open?id=1_3sevd7NpAgY2huoNMKWphuQ3amZRYnR
+VB.NET_CODING_IN_UIPATH.pdf,21,1,17 | P a g e C l i c k t o fo l l o w 2.5 How to Find the Max and Average Value from a DataTable Assuming we have a data set and we need to calculate the max and average of a particular column. How do we do it? MAX Value: myMax_Value 
+VB.NET_CODING_IN_UIPATH.pdf,21,2,= dt_Sample.AsEnumerable().Max(Function(row) cint(row(“ColumnName”))) AVERAGE Value: myAverageValue = dt_Sample.AsEnumerable().Average(Function(row) cint(r ow(“ColumnName”))) Note: 1.Replace dt_Sample with your DataTable 2.Replace Col
+VB.NET_CODING_IN_UIPATH.pdf,21,3,umnName with your required column name Implementation with UiPath Let us implement a workflow which takes a sample DataTable and displays the Max and Average of a particular column of that DataTable Step 1: Drag “Build Data Table” act
+VB.NET_CODING_IN_UIPATH.pdf,21,4,ivity into the design panel and populate it with some sample data. Step 2: Drag “Message Box” activity into the design panel to display the Max value of Sales Column and populate it with the below code. dt_Sample.AsEnumerable().Max(Fu
+VB.NET_CODING_IN_UIPATH.pdf,21,5,nction(row) cint(row(“Sales”))) Step 3: Drag “Message Box” activity into the design panel to display the Average value of Sales column and populate it with the below code. dt_Sample.AsEnumerable().Average(Function(row) cint(row(“Sales”)))
+VB.NET_CODING_IN_UIPATH.pdf,22,1,18 | P a g e C l i c k t o fo l l o w Step 4
+VB.NET_CODING_IN_UIPATH.pdf,22,2,": Finally, let’s run the project. Max Value:"
+VB.NET_CODING_IN_UIPATH.pdf,22,3, Average Value: Click the link below to down
+VB.NET_CODING_IN_UIPATH.pdf,22,4,load the example project: https://drive.goog
+VB.NET_CODING_IN_UIPATH.pdf,22,5,le.com/open?id=1JgHyueNlR59U8tJVUfIMr31w67G2cKKw
+VB.NET_CODING_IN_UIPATH.pdf,23,1,19 | P a g e C l i c k t o fo l l o w 2.6 How to Reorder Columns in a DataTable Sometimes we need to change the order of the columns in excel and then process the d
+VB.NET_CODING_IN_UIPATH.pdf,23,2,ata. dt_Sample.Columns(“ ColumnName ”).SetOrdinal( Parameter ) Note: 1.ColumnName – The name of the column for which we want to change the position. 2.Parameter – T
+VB.NET_CODING_IN_UIPATH.pdf,23,3,he position or index to which we want to move the column to (Indexing starts from zero). SetOrdinal method can be used to achieve the above using an “Invoke Method 
+VB.NET_CODING_IN_UIPATH.pdf,23,4,” activity. This is the same thing as: dt_Sample = dt_Sample.Columns(“Country”).SetOrdinal(0) Implementation with UiPath Let us implement a workflow which reads an 
+VB.NET_CODING_IN_UIPATH.pdf,23,5,excel file and then we will try to reorder the columns. Step 1: Drag a Workbook “Read Range” activit y into the design panel to read the excel file into a Data Table.
+VB.NET_CODING_IN_UIPATH.pdf,24,1,20 | P a g e C l i c k t o fo l l o w Step 2: Drag “Invoke Method” activity into the design panel and
+VB.NET_CODING_IN_UIPATH.pdf,24,2, populate it with the below -mentioned code. Note: TargetObject – dt_Sample.Columns(“Country”) Method
+VB.NET_CODING_IN_UIPATH.pdf,24,3,Name – SetOrdinal In Parameter – 0 (0 indicates first column position) Drag another “Invoke Method” a
+VB.NET_CODING_IN_UIPATH.pdf,24,4,ctivity into the design panel and populate it with the below -mentioned code. Note: TargetObject – dt
+VB.NET_CODING_IN_UIPATH.pdf,24,5,_Sample.Columns(“City”) MethodName – SetOrdinal In Parameter – 1 (1 indicates second column positio n)
+VB.NET_CODING_IN_UIPATH.pdf,25,1,21 | P a g e C l i c k t o fo l l o w Step 3: Drag “Output Data Table” activity into the design panel and convert 
+VB.NET_CODING_IN_UIPATH.pdf,25,2,the Data Table to String type. Step 4: Drag “Message Box” activity into the design panel to display the modified d
+VB.NET_CODING_IN_UIPATH.pdf,25,3,"ata table. Step 5: Finally, we execute the workflow . We can see the modified DataTable with reordered column name"
+VB.NET_CODING_IN_UIPATH.pdf,25,4,"s . The original order was Name, Country, City. Now the new order is Country, City, Name Click the link below to d"
+VB.NET_CODING_IN_UIPATH.pdf,25,5,ownload the example project: https://driv e.google.com/drive/folders/136dTOAt9GMl3e8ycxISufwXYuR_zQfzH?usp=sharing
+VB.NET_CODING_IN_UIPATH.pdf,26,1,"22 | P a g e C l i c k t o fo l l o w 2.7 How to Rename DataTable Columns In RPA as we often work with excel, there are so many operations that we usually perform on it. What if we are asked"
+VB.NET_CODING_IN_UIPATH.pdf,26,2, to rename a column of a DataTable? Let us see how to do it!!! dataTable .Columns( “old_ColumnName”) .ColumnName = “new_ColumnName” Note: 1. old_ColumnName is the name of the specific column
+VB.NET_CODING_IN_UIPATH.pdf,26,3, that you want to rename 2. new_ColumnName is the column name with which you want to rename the above old column name with. Implementation with UiPath Let us implement a workflow which takes
+VB.NET_CODING_IN_UIPATH.pdf,26,4, a sample DataTable as input and we will try to rename an existing column of it from “Name” to “FirstName” Step 1: Drag “Build Data Table” activity into the design panel and populate it with
+VB.NET_CODING_IN_UIPATH.pdf,26,5, some sample data. Step 2: Drag an “Assign” activity into the design panel and fill it with above -mentioned code. Note: We are renaming “Name” column of above build DataTable to “FirstName”
+VB.NET_CODING_IN_UIPATH.pdf,27,1,23 | P a g e C l i c k t o fo l l o w Step 3: Drag “Output Data Table” activity
+VB.NET_CODING_IN_UIPATH.pdf,27,2, into the design panel and convert Data Table to Str ing type. Step 4: Drag “Me
+VB.NET_CODING_IN_UIPATH.pdf,27,3,ssage Box” activity into the design panel to display the modified data table. S
+VB.NET_CODING_IN_UIPATH.pdf,27,4,"tep 5: Finally, let’s run the project. Click the link below to download the exa"
+VB.NET_CODING_IN_UIPATH.pdf,27,5,mple project: https://drive.google.com/open?id=1K26DHdDYFgRffuyq3qqIOQ4 -D9vQ1czw
+VB.NET_CODING_IN_UIPATH.pdf,28,1,24 | P a g e C l i c k t o fo l l o w 2.8 How to Convert a DataTable Column to a List We may be required to take the values from a column of a DataTable and then convert it to a list so that we
+VB.NET_CODING_IN_UIPATH.pdf,28,2, can perform further actions or decision flows. Let us see how to do it in UiPath? MyList = ( From row in dt_Sample.AsEnumerable() Select Convert.Tostring( row(“ColumnName”)) ).ToList() Note: 1
+VB.NET_CODING_IN_UIPATH.pdf,28,3,. ColumnName is the specific column name which you want to convert to list 2. MyList is the variable containing your values Implementation with UiPath Let us implement a workflow which takes a 
+VB.NET_CODING_IN_UIPATH.pdf,28,4,sample data table as input and converts a particular Column ’s values into a list of string. Step 1: Drag “Build Data Table” activity into the design panel and populate it with some sample data
+VB.NET_CODING_IN_UIPATH.pdf,28,5,. Step 2: Drag “Assign” activity into the design panel and fill it with above -mentioned code. Step 3: Drag “For Each” activity into the design panel and pass the above “ MyList” variable to it.
+VB.NET_CODING_IN_UIPATH.pdf,29,1,25 | P a g e C l i c k t o fo l l o w Step 4: Drag “Message Box” activity 
+VB.NET_CODING_IN_UIPATH.pdf,29,2,into the For Each activity and pass the “ item” value into it. Step 5: Fin
+VB.NET_CODING_IN_UIPATH.pdf,29,3,"ally, let’s run the bot. Now, we can see all the values in the columns bei"
+VB.NET_CODING_IN_UIPATH.pdf,29,4,ng displayed by clicking OK . Click the link below to download the example
+VB.NET_CODING_IN_UIPATH.pdf,29,5, project: https://drive.google.com/open?id=1iOaeCwh18p0EJ8td6kudYIBnPNIM67Vj
+VB.NET_CODING_IN_UIPATH.pdf,30,1,26 | P a g e C l i c k t o fo l l o w 2.9 How to Only Get the Headers From a Datatable Sometimes you might want to copy the schema of one excel to another excel. dt_New = dt_Origi
+VB.NET_CODING_IN_UIPATH.pdf,30,2,"nal.Clone This only clones the structure of the DataTable, i.e. the headers. It doesn’t copy the content of the DataTable, to do that you would use the Copy Method like so: dt_New"
+VB.NET_CODING_IN_UIPATH.pdf,30,3, = dt_Original.Copy Implementation with UiPath Let us implement a workflow which takes a “ DataTable ” and displays the “ Headers ” of it. Step 1: Drag “Build Data Table” activity
+VB.NET_CODING_IN_UIPATH.pdf,30,4, into the design panel and populate it with some sample data. Step 2: Drag an “Assign” activity into the design panel and fill it with the above -mentioned code. Step 3: Drag “Out
+VB.NET_CODING_IN_UIPATH.pdf,30,5,put Data Table” activity into the design panel and convert the Data Table type to String type. Step 4: Drag a “Message Box” activity into the design panel to display the headers .
+VB.NET_CODING_IN_UIPATH.pdf,31,1,27 | P a g e C l i c k t o fo l l o w S
+VB.NET_CODING_IN_UIPATH.pdf,31,2,"tep 5: Finally, let’s run the project. "
+VB.NET_CODING_IN_UIPATH.pdf,31,3,Click the link below to download the ex
+VB.NET_CODING_IN_UIPATH.pdf,31,4,ample project: https ://drive.google.co
+VB.NET_CODING_IN_UIPATH.pdf,31,5,m/open?id=1uRdAHkqWojMstGQ562FWF3oqaBtdcmLJ
+VB.NET_CODING_IN_UIPATH.pdf,32,1,28 | P a g e C l i c k t o fo l l o w 2.10 How to Reverse a DataTable We may come across situations where we need to process the records 
+VB.NET_CODING_IN_UIPATH.pdf,32,2,available in excel or a data table in reverse. So let’s explore how to do that in UiPath!!! dt_Reverse = dt_Original.AsEnumerable.Reverse
+VB.NET_CODING_IN_UIPATH.pdf,32,3,.CopyToDataTable Note: 1. Simply replace the “dt_Original” with your required “ DataTable” Implementation with UiPath Let us implement a 
+VB.NET_CODING_IN_UIPATH.pdf,32,4,workflow which takes a sample data table as input and outputs the reverse of it. Step 1: Drag a “Build Data Table” activity into the desi
+VB.NET_CODING_IN_UIPATH.pdf,32,5,gn panel and populate it with some sample data. Step 2: Drag “ Assign” activity into the design panel and fill it with above -mentioned code.
+VB.NET_CODING_IN_UIPATH.pdf,33,1,29 | P a g e C l i c k t o fo l l o w Step 3: Drag “Output Data Table” activit
+VB.NET_CODING_IN_UIPATH.pdf,33,2,y into the design panel and convert Datatable to String type. Step 4: Drag “Me
+VB.NET_CODING_IN_UIPATH.pdf,33,3,ssage Box” activity into the design panel to dis play the reversed data table.
+VB.NET_CODING_IN_UIPATH.pdf,33,4," Step 5: Finally, we run the project. Click the link below to download the exa"
+VB.NET_CODING_IN_UIPATH.pdf,33,5,mple project: https://drive.google.com/open?id=1V4KvRcwonDDzUd6lhcNS -DP-uyRElFMh
+VB.NET_CODING_IN_UIPATH.pdf,34,1,30 | P a g e C l i c k t o fo l l o w 2.11 How to Remove Duplicates from a Datatable Sometimes a data table will contain duplicate records which you want to remove to only keep unique records.
+VB.NET_CODING_IN_UIPATH.pdf,34,2, We can use the below LINQ query to achieve it . dataTable new_dt = old_dt.AsEnumerable().GroupBy(Function(i) i.Field(Of String)(“ ColumnWithDuplic ate”)).Select(Function(g) g.First).CopyToDat
+VB.NET_CODING_IN_UIPATH.pdf,34,3,aTable Note: This is u seful when we are removing duplicates with respect to some “Column” name . Simply replace the “ColumnWithDuplic ate” with your required column name OR We can use the sim
+VB.NET_CODING_IN_UIPATH.pdf,34,4,ple DefaultView Code too… dataTable new_dt = old_dt.DefaultView.ToTable(True) Note: Useful when we are removing duplicates with respect to every “Column” Implementation with UiPath Assume we h
+VB.NET_CODING_IN_UIPATH.pdf,34,5,"ave sample data, which includes information about 3 customers . Step 1: Drag a “Build Data Table” activity into the design panel Step 2: Populate the “Build Data Table” activity with sample data"
+VB.NET_CODING_IN_UIPATH.pdf,35,1,31 | P a g e C l i c k t o fo l l o w Step 3: Create a variable of DataTable type with some name and supply it to the Output property of “
+VB.NET_CODING_IN_UIPATH.pdf,35,2,Build Data Table” activity Step 4: Drag “Assign” activity into the design panel and in the ‘Value ’ property of that activity use the abov
+VB.NET_CODING_IN_UIPATH.pdf,35,3,e code with the assigned column name. Note: Here we are using the “Name” column to remove the duplicates from the data table. Step 5: Drag
+VB.NET_CODING_IN_UIPATH.pdf,35,4, an “Output Data Table” and “Message Box” activity into the design panel and supply the appropriate parameters to display the data. Step 6
+VB.NET_CODING_IN_UIPATH.pdf,35,5,: Run the workflow . Click the link below to download the example project: https://drive.google.com/open?id=1eN9M1_usqzO_k5d_FNJQga2JBZtGRTWC
+VB.NET_CODING_IN_UIPATH.pdf,36,1,"32 | P a g e C l i c k t o fo l l o w 2.12 How to Transpose a DataTable Some times while working with DataTables, we might need to convert"
+VB.NET_CODING_IN_UIPATH.pdf,36,2, rows to column and vice versa. Implementation with UiPath Let us implement a workflow to convert rows to columns in a DataTable. Sample F
+VB.NET_CODING_IN_UIPATH.pdf,36,3,"ile: Step 1: Drag a Workbook “Read Range ” activi ty into the design panel to read the input excel Step 2: Drag a “While “, “Add Data Colu"
+VB.NET_CODING_IN_UIPATH.pdf,36,4,mn ” and “ Assign ” activities into the design panel to create dummy columns (Because here we are transposing the headers too) Step 3: Dra
+VB.NET_CODING_IN_UIPATH.pdf,36,5,"g a “For Each Row “, “While “, “Add Data Row ” and “ Assign ” activities into the design panel and write the logic to convert rows to columns."
+VB.NET_CODING_IN_UIPATH.pdf,37,1,33 | P a g e C l i c k t o fo l l o w Step 4: F
+VB.NET_CODING_IN_UIPATH.pdf,37,2,"inally, execute the workflow to see the results"
+VB.NET_CODING_IN_UIPATH.pdf,37,3, . Click the link below to download the example
+VB.NET_CODING_IN_UIPATH.pdf,37,4, project: https://drive.google.com/drive/folder
+VB.NET_CODING_IN_UIPATH.pdf,37,5,s/1ZmAYAl32LZlnFnz08JA -ZFlsGKza3ira?usp=sharing
+VB.NET_CODING_IN_UIPATH.pdf,38,1,"34 | P a g e C l i c k t o fo l l o w 2.13 How to Compare Two Excel Files of the Same Format and Get Matched Data While dealing with data table operations, sometimes we might want to compare two data tables and get match ing data based on a single column . Use this expression: (From a In SourceDT.AsEnum"
+VB.NET_CODING_IN_UIPATH.pdf,38,2,"erable Join b In Destination_Table.AsEnumerable On a(“Column_Name”).ToString Equals b(“Column_Name”).tostring Select a).CopyToDataTable. Select().CopyToDataTable().DefaultView.toTable(False, ” Column_Name_To_Output ”) Note: Replace SourceDT and DestinationDT with your required data tables and Column_Nam"
+VB.NET_CODING_IN_UIPATH.pdf,38,3,e with your required column name that you want to find a match with and Column_Name_To_Output for the column you want to output which is the matched data. Implementation with UiPath Let us implement a workflow which takes two excel files as input and gives us matched data between those excel files as ou
+VB.NET_CODING_IN_UIPATH.pdf,38,4,tput Step 1: Drag a “Read Range ” (here I have used workbook activity) activity and read excel file 1 (Source.xlsx) and set SourceDT as the output variable . Drag a “Read Range” (here I have used workbook activity) activity and read excel file 2 (Destination.xlsx) and set Destination_Table as the output
+VB.NET_CODING_IN_UIPATH.pdf,38,5, variable . Step 2: Drag an “Assign ” activity into the design panel and enter the above -mentioned code. Note that we are looking for a match of the serial number “S.No” then we output the person’s “Name” in the Column_Name_To_Output property. Step 3: Drag a “Message Box ” activity to display the result.
+VB.NET_CODING_IN_UIPATH.pdf,39,1,35 | P a g e C l i c k t o fo l l o w Note: Here I have used LINQ to display the DataTable instead of output Datatable Step 4: 
+VB.NET_CODING_IN_UIPATH.pdf,39,2,"Execute the workflow . If you want to see the entire row as output, then don’t enter a value for the Column_Name_To_Output like"
+VB.NET_CODING_IN_UIPATH.pdf,39,3," so: (From a In SourceDT.AsEnumerable Join b In Destination_Table.AsEnumerable On a(""S.No"").ToString Equals b(""S.No"").tostring "
+VB.NET_CODING_IN_UIPATH.pdf,39,4,Select a).CopyToDataTabl e.Select().CopyToDataTable().DefaultView.toTable(True) Then the output will look like this: Click the 
+VB.NET_CODING_IN_UIPATH.pdf,39,5,link below to download the example project: https://drive.google.com/drive/folders/1DXCDIIwAboBylG -UUOPw4CfojkNYemiu?usp=sharing
+VB.NET_CODING_IN_UIPATH.pdf,40,1,36 | P a g e C l i c k t o fo l l o w 2.14 How to Find Common/Uncommon Rows Between Two Datatables Datat ables in programming are commonly used to store the collection of data in ro
+VB.NET_CODING_IN_UIPATH.pdf,40,2,ws and columns . Sometimes we may need to find the common or uncommon records between the two DataTables . Common Value s: dt_CommonRows = dt1.AsEnumerable().Intersect (dt2.AsEnumer
+VB.NET_CODING_IN_UIPATH.pdf,40,3,"able(),System.Data.DataRowComparer.Default).CopyToDataTable UnCommon Values : dt_UnCommonRows = dt1.AsEnumerable().Except(dt2.AsEnumerable(),System.Data.DataRowComparer.Default).Cop"
+VB.NET_CODING_IN_UIPATH.pdf,40,4,yToDataTable Note: Replace dt1 and dt2 with your appropriate data tables. Implementation with UiPath Let us implement a workflow that takes a two -sample DataTables and displays the
+VB.NET_CODING_IN_UIPATH.pdf,40,5, common and uncommon rows between them. Step 1: Drag “Build DataTable” activity into the design panel to build Sample DataTable 1 and initialize it with some sample data as shown below.
+VB.NET_CODING_IN_UIPATH.pdf,41,1,37 | P a g e C l i c k t o fo l l o w Step 2: Drag “Build DataTable” activity into the design panel to build Sample DataTable 2 and initialize it with some sample data as
+VB.NET_CODING_IN_UIPATH.pdf,41,2, shown below. Step 3: Drag an “Assign” activity into the design panel and use the below -mentioned code to find the COMMON rows between two DataTables. dt1.AsEnumerable()
+VB.NET_CODING_IN_UIPATH.pdf,41,3,".Intersect (dt2.AsEnumerable(),System.Data.DataRowComparer.Default).CopyToDataTable And use “Output DataTable” and the “Message box” to display the result ing DataTabl e."
+VB.NET_CODING_IN_UIPATH.pdf,41,4, Step 4: Drag another “Assign” activity into the design panel and use the below -mentioned code to find the UNCOMMON rows between two DataTables. dt1.AsEnumerable().Excep
+VB.NET_CODING_IN_UIPATH.pdf,41,5,"t(dt2.AsEnumerable(),System.Data.DataRowComparer.Default).CopyToDataTable And use “Output DataTable” and the “Message box” activities to display the result ing DataTabl e."
+VB.NET_CODING_IN_UIPATH.pdf,42,1,38 | P a g e C l i c k t o fo l l o w Step 4: Finall
+VB.NET_CODING_IN_UIPATH.pdf,42,2,"y, execute the workflow to see the results . Common "
+VB.NET_CODING_IN_UIPATH.pdf,42,3,Rows: Uncommon Rows: Click the link below to downloa
+VB.NET_CODING_IN_UIPATH.pdf,42,4,d the example project: https://drive.google.com/driv
+VB.NET_CODING_IN_UIPATH.pdf,42,5,e/folders/1imgyq_0upuBbqbrAAOzpqmTg3er3kaSp?usp=sharing
+VB.NET_CODING_IN_UIPATH.pdf,43,1,39 | P a g e C l i c k t o fo l l o w 2.15 How to Include a HTML Table in Mail Body with Dynamic Values Sometimes we might need to send emails which
+VB.NET_CODING_IN_UIPATH.pdf,43,2, contain tabular data . This HTML template can help you in inserting tabular structure inside the mail body. Implementation with UiPath In the Html 
+VB.NET_CODING_IN_UIPATH.pdf,43,3,"Template file provided, Add the required number of “tags” for t he required number of rows inside the table. Step 1: Drag a “Read Text File ” activi"
+VB.NET_CODING_IN_UIPATH.pdf,43,4,ty into the design panel and provide the html file path to it . Read the Html Content into a String Variable called UserData. Step 2: Drag an “Assig
+VB.NET_CODING_IN_UIPATH.pdf,43,5,n ” activity into the design panel and use the Replace method to replace the “varXXX” values with the respective variables to pass the data dynamically.
+VB.NET_CODING_IN_UIPATH.pdf,44,1,40 | P a g e C l i c k t o fo l l o w Step 3: Drag a “Send Out
+VB.NET_CODING_IN_UIPATH.pdf,44,2,look Mail Message ” activity into the design panel and try to 
+VB.NET_CODING_IN_UIPATH.pdf,44,3,"provide the required property fields i.e . SUBJECT, TOMAIL etc"
+VB.NET_CODING_IN_UIPATH.pdf,44,4,. A long with the “UserData” Variable that we have with us fro
+VB.NET_CODING_IN_UIPATH.pdf,44,5,m the above steps performed and check the property “IsBodyHtml”.
+VB.NET_CODING_IN_UIPATH.pdf,45,1,41 | P a g e C l i c k t o fo l l o w This is what th
+VB.NET_CODING_IN_UIPATH.pdf,45,2,e final flow looks like: Step 4: Run the bot and see 
+VB.NET_CODING_IN_UIPATH.pdf,45,3,the output (sent mail): Click the link below to downl
+VB.NET_CODING_IN_UIPATH.pdf,45,4,oad the example project: https://drive.google.com/dri
+VB.NET_CODING_IN_UIPATH.pdf,45,5,ve/folders/11SCFz AuCOZGhmPYYUztrj7ttdFNZ3jQ_?usp=sharing
+VB.NET_CODING_IN_UIPATH.pdf,46,1,"42 | P a g e C l i c k t o fo l l o w 3 File / Folder Operations 3.1 How to Get the Latest File from a Folder When we download a file from the browser or some other application, we might need to use the most recently downloaded file to proceed fu"
+VB.NET_CODING_IN_UIPATH.pdf,46,2,"rther. So, how to get the latest file from a folder? String.Join(“”, Directory.GetFiles(our_FolderPath, ”*”,SearchOption.AllDirectories).OrderByDescending(Function(d) New FileInfo(d).CreationTime).Take(1) ) Note: 1. Replace our_FolderPath with yo"
+VB.NET_CODING_IN_UIPATH.pdf,46,3,ur desired folder path 2. Replace “*” with your required file format “*.xl sx” or “*.pdf ” etc. If set to “*” it will read all file type s. Implementation with UiPath Let us implement a project to get the latest file from a folder . Step 1: Drag 
+VB.NET_CODING_IN_UIPATH.pdf,46,4,an “Assign” activity into the design panel and supply the “Folder Path” to it. Here we use the relative path instead of the full path because the SampleFolder is in the same folder as our Main.xaml file. our_FolderPath = “SampleFolder” Step 2: Dr
+VB.NET_CODING_IN_UIPATH.pdf,46,5,"ag a “Message Box” activity into the design panel and supply the below -mentioned code to it. String.Join(“”, Directory.GetFiles(our_FolderPath, ”*”,SearchOption.AllDirectories).OrderByDescending(Function(d) New FileInfo(d).CreationTime).Take(1) )"
+VB.NET_CODING_IN_UIPATH.pdf,47,1,43 | P a g e C l i c k t o fo l l o w Step 3: Fina
+VB.NET_CODING_IN_UIPATH.pdf,47,2,"lly, run the workflow to display the path of the l"
+VB.NET_CODING_IN_UIPATH.pdf,47,3,atest file Click the link below to download the ex
+VB.NET_CODING_IN_UIPATH.pdf,47,4,ample project: https://drive.google.com/drive/fold
+VB.NET_CODING_IN_UIPATH.pdf,47,5,ers/1O44zFQNLP5q1O06Q_pXJu_rgiVKwaZMt?u sp=sharing
+VB.NET_CODING_IN_UIPATH.pdf,48,1,"44 | P a g e C l i c k t o fo l l o w 3.2 How to Delete Multiple Files in a Folder While automating business processes, we deal with many files and mig"
+VB.NET_CODING_IN_UIPATH.pdf,48,2,"ht perform few activities on them like deleting, moving or renaming. Let us see how to delete multiple files from a folder . Array.ForEach(Directory.Ge"
+VB.NET_CODING_IN_UIPATH.pdf,48,3,"tFiles(our_DirectoryPath),Sub(x) File.Delete(x)) Note: Replace our_DirectoryPath with your desired folder path . This can be a full or relative path. I"
+VB.NET_CODING_IN_UIPATH.pdf,48,4,mplementation with UiPath Let us implement a project to delete multiple files from a given folder . Step 1: Drag an “Assign” activity into the design p
+VB.NET_CODING_IN_UIPATH.pdf,48,5,anel and supply the “Folder Path” to it. Step 2: Drag “If” activity to check if the folder contains any files. Directory.GetFiles(DirectoryPath).Count > 0
+VB.NET_CODING_IN_UIPATH.pdf,49,1,"45 | P a g e C l i c k t o fo l l o w Step 3: Drag an “Invoke Code” activity, add the b"
+VB.NET_CODING_IN_UIPATH.pdf,49,2,elow -mentioned code to it to and pass the folder’s Path from which we have to delete t
+VB.NET_CODING_IN_UIPATH.pdf,49,3,"he files. Array.ForEach(Directory.GetFiles( DirectoryPath),Sub(x) File.Delete(x)) Note "
+VB.NET_CODING_IN_UIPATH.pdf,49,4,this above expression in the Invoke Code activity is the same as doing this: Step 4: No
+VB.NET_CODING_IN_UIPATH.pdf,49,5,"w, execute the workflow to find the result . The OurFolder folder will be empty. Before:"
+VB.NET_CODING_IN_UIPATH.pdf,50,1,46 | P a g e C l i c k t o fo l l o 
+VB.NET_CODING_IN_UIPATH.pdf,50,2,w After: Click the link below to dow
+VB.NET_CODING_IN_UIPATH.pdf,50,3,nload the example project: https://d
+VB.NET_CODING_IN_UIPATH.pdf,50,4,rive.google.com/drive/folders/1Bov66
+VB.NET_CODING_IN_UIPATH.pdf,50,5,E67ZQs -7Y8h1dOrGtjUhyWbchor?usp=sharing
+VB.NET_CODING_IN_UIPATH.pdf,51,1,"47 | P a g e C l i c k t o fo l l o w 3.3 How to Get Specific Type s of Files from a Folder File management is inevitable in business processes automations. We might want to copy, move , delete or process files based on few conditions . Let’s see how to get specific type of files fr"
+VB.NET_CODING_IN_UIPATH.pdf,51,2,"om a folder myList = Directory.GetFiles(folderPath, “*.elsx”,System.IO.SearchOption.AllDirectories) Note: 1. folderPath is the folder path where you have your files 2. myList is the variable containing your required files (this is a string list of file paths) 3. Replace “*. xlsx” wi"
+VB.NET_CODING_IN_UIPATH.pdf,51,3,"th your desired extension . Another example “*.pdf” . You can Even set it to contain a part of a file name. For example, “Invoce -2020 -09-*.pdf”. This will get all pdf files for all days in September 2020. Implementation with UiPath Let us implement a workflow which displays the na"
+VB.NET_CODING_IN_UIPATH.pdf,51,4,"mes of prespecified files (i.e. .xlsx extension files) from a folder. Step 1: Drag “Assign” activity into the design panel and populate it with your folder path , here we use the relative file path to MyFolder : “MyFolder” Step 2: Drag an “Assign” activity into the design panel and "
+VB.NET_CODING_IN_UIPATH.pdf,51,5,"populate it with above -mentioned code “Directory.GetFiles(folderPath, ”*.xlsx”,System.IO.SearchOption.AllDirectories)” Step 3: Drag a “For Each” activity into the design panel and pass the above “ filesList ” variable to it. Set the type argument in the properties panel to a String."
+VB.NET_CODING_IN_UIPATH.pdf,52,1,48 | P a g e C l i c k t o fo l l o w Step 4: Drag “Message Box” activit
+VB.NET_CODING_IN_UIPATH.pdf,52,2,y into the For Each activity and pass the “ item” value into it. Step 5:
+VB.NET_CODING_IN_UIPATH.pdf,52,3," When we run it, we can see the file names of . xlsx extension being dis"
+VB.NET_CODING_IN_UIPATH.pdf,52,4,played. Click the link below to download the example project: https://dr
+VB.NET_CODING_IN_UIPATH.pdf,52,5,ive.google.com/drive/folders/1OhaftBlK1Z -6Eigp256cachh1Jw4CpvU?usp=sharing
+VB.NET_CODING_IN_UIPATH.pdf,53,1,49 | P a g e C l i c k t o fo l l o w 4 Text and List Manipulations 4.1 How to Read / Write to a Text File Let’s see how to read and write to Text file . This is useful for storing and editing text. 
+VB.NET_CODING_IN_UIPATH.pdf,53,2,"Implementation with UiPath Let us implement a workflow to write the data to a text file, then read data from it and then again append some text to it. Different Text file Operations: 1. Writing data "
+VB.NET_CODING_IN_UIPATH.pdf,53,3,to a text file 2. Reading data from a text file 3. Appe nding data to a n existing text file Step 1: Drag “ Input Dialog ” activity into the design panel and create a variable to store the user -prov
+VB.NET_CODING_IN_UIPATH.pdf,53,4,"ided value. Step 2: Drag “ Write Text File ” activity to write the data provided by the user to a text file. (If the supplied .txt file is not available in the directory, the activity will create a n"
+VB.NET_CODING_IN_UIPATH.pdf,53,5,ew file with that name) Step 3: Drag “ Read Text File ” activity to read the data from the provided text file. Step 4: Drag “ Message Box ” activity to display the text o btained from the above step.
+VB.NET_CODING_IN_UIPATH.pdf,54,1,50 | P a g e C l i c k t o fo l l o w Step 4: Drag “ Append Line ” activity into the design panel to append the text to a
+VB.NET_CODING_IN_UIPATH.pdf,54,2,n existing text file and pass the inputs i.e. data that is to be appended and text file’s path. When we use “Append Line”
+VB.NET_CODING_IN_UIPATH.pdf,54,3," activity, it will not overwrite the text file data but instead, it will write the new data from the next new line unlike"
+VB.NET_CODING_IN_UIPATH.pdf,54,4," “Write Text File” . Step 5: Finally, execute the workflow and observe the output in the SampleFile.txt Click the link be"
+VB.NET_CODING_IN_UIPATH.pdf,54,5,low to download the example project: https://drive.google.com/drive/folders/1jbl6Ztcwx_JEcdJZoRb1V -zCmWS7M9aQ?usp=sharing
+VB.NET_CODING_IN_UIPATH.pdf,55,1,"51 | P a g e C l i c k t o fo l l o w 4.2 How to Define a Dictionary, Add Items To a Dictionary and Access Items From a Dictionary What is a Dictionary? In general, a Dictionary is a collection of key and value pairs , where “"
+VB.NET_CODING_IN_UIPATH.pdf,55,2,"Key” is equivalent to Words and “Value” is equivalent to Meanings/Definitions. The Dictionary<TKey, TValue> is a generic collection class available in the System.Collection.Generics namespace. Here “TKey” denotes the type of k"
+VB.NET_CODING_IN_UIPATH.pdf,55,3,"ey and “TValue” is the type of TValue. For example , a Country Capital dictionary in VB.NET would look like this: {{“South Africa”, “Pretoria”},{“USA”,“Washington DC”}} Implementation with UiPath Major Steps That We Will Imple"
+VB.NET_CODING_IN_UIPATH.pdf,55,4,ment: 1. Defining a Dictionary 2. Adding items to the Dictionary 3. Accessing items from the Dictionary Step 1: Drag “ Assign ” activity into the design panel and define the dictionary. my_Dictionary = new Dictionary(Of String
+VB.NET_CODING_IN_UIPATH.pdf,55,5,", String) Here my_Dictionary is of System.Collection.Generics.Dictionary<String, String> type Step 2: Drag “ Invoke Method ” activity into the design panel to add items to the Dictionary. Example: Key: South Africa Value: Pretoria"
+VB.NET_CODING_IN_UIPATH.pdf,56,1,52 | P a g e C l i c k t o fo l l o w Click “Parameters” in the prop
+VB.NET_CODING_IN_UIPATH.pdf,56,2,erties panel of the Invoke Method activity. Step 3: Another way of a
+VB.NET_CODING_IN_UIPATH.pdf,56,3,dding Dictionary items is by using Microsoft. Activities.Extensions 
+VB.NET_CODING_IN_UIPATH.pdf,56,4,package. Drag “ Add to dictionary ” activity into the design panel t
+VB.NET_CODING_IN_UIPATH.pdf,56,5,"o add items to the Dictionary. Example: Key: USA Value: Washington, D.C"
+VB.NET_CODING_IN_UIPATH.pdf,57,1,53 | P a g e C l i c k t o fo l l o w Step 4: Drag “ Message Box ” activity to display the fir
+VB.NET_CODING_IN_UIPATH.pdf,57,2,st added Key and Value pair i.e. Find the Value of the Key “ South Africa ” Step 5: Drag “ Mes
+VB.NET_CODING_IN_UIPATH.pdf,57,3,sage Box ” activity to display the second added Key and Value pair. i.e. Find the Value of the
+VB.NET_CODING_IN_UIPATH.pdf,57,4," Key “USA” Step 6: Finally, execute the workflow . Click the link below to download the exampl"
+VB.NET_CODING_IN_UIPATH.pdf,57,5,e project: https://drive.google.com/drive/folders/1jbl6Ztcwx_JEcdJZoRb1V -zCmWS7M9aQ?usp=sharing
+VB.NET_CODING_IN_UIPATH.pdf,58,1,"54 | P a g e C l i c k t o fo l l o w 4.3 How to Use Regular Expressions (Regex) A regular expression is a sequence of characters that define a search pattern. Usually such patterns are used by string searching algorithms for ""find"" or ""find and replace"" operations on strings, or for in"
+VB.NET_CODING_IN_UIPATH.pdf,58,2,"put validation for online forms. We write a pattern that will match our requirement in a body of text. For example we can write a Regex expression for an email address, phone number, social security number, zip code or any other piece string which follows a pattern . Implementa tion wit"
+VB.NET_CODING_IN_UIPATH.pdf,58,3,h UiPath Let us implement a workflow to extract a “email address “ from a given text using Regular Expressions. Major steps that we will implement: 1. Check if the given text contains any email id? 2. Find all the matches 3. Extract the URLs from the email id. Step 1: Drag an “Assign ” 
+VB.NET_CODING_IN_UIPATH.pdf,58,4,"activity into the design panel and supply sample data to it. i.e. ""My email address is leon@futurerpa.com and my other email is leon@completerpabootcamp.com ” Step 2: Drag “ Is Match ” activity into the design panel to find if the sample data contains any email addresses in it and suppl"
+VB.NET_CODING_IN_UIPATH.pdf,58,5,"y the required parameters. The output of this activity is a Boolean. Note: The r egular expression for an email address is “([a -zA-Z0-9_\-\.]+)@([a -zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})” I found this on Google but you can also generate Regex expressions yourself from scratch using the RegEx"
+VB.NET_CODING_IN_UIPATH.pdf,59,1,55 | P a 
+VB.NET_CODING_IN_UIPATH.pdf,59,2,g e C l i
+VB.NET_CODING_IN_UIPATH.pdf,59,3, c k t o 
+VB.NET_CODING_IN_UIPATH.pdf,59,4,fo l l o 
+VB.NET_CODING_IN_UIPATH.pdf,59,5,w Builder:
+VB.NET_CODING_IN_UIPATH.pdf,60,1,56 | P a g e C l i c k t o fo l l o w Step 3: Drag an “If” activity into the design pa
+VB.NET_CODING_IN_UIPATH.pdf,60,2,nel to check if we found any matches through the above activity Step 4: Drag a “Matche
+VB.NET_CODING_IN_UIPATH.pdf,60,3,s ” activity into the design panel to find all the email matches and supply the requir
+VB.NET_CODING_IN_UIPATH.pdf,60,4,ed parameters. The Result is a list of matches. Step 5: Drag a “ For Each ” activity t
+VB.NET_CODING_IN_UIPATH.pdf,60,5,o loop through each match. Set the Type Argument to System.Text.RegularExpressions.Match
+VB.NET_CODING_IN_UIPATH.pdf,61,1,57 | P a g e C l i c k t o fo l l o w Step 6: Drag a “Message Box ” activity into the bod
+VB.NET_CODING_IN_UIPATH.pdf,61,2,y of the For Each activity to display each match in the list. Step 7: Drag a “Replace ” a
+VB.NET_CODING_IN_UIPATH.pdf,61,3,ctivity to extract the URL from the above -fetched email id and pass the mandatory fields
+VB.NET_CODING_IN_UIPATH.pdf,61,4," Note that we replace the username part of the email which follow the Regex ""([a -zA-Z0-9"
+VB.NET_CODING_IN_UIPATH.pdf,61,5,"_\-\.]+)@"" with a blank string “” This will leave just the URL part of t he email address."
+VB.NET_CODING_IN_UIPATH.pdf,62,1,58 | P a g e C l i c k t o fo l l o w Step 7: Drag another “Message Box ” activity to display the UR
+VB.NET_CODING_IN_UIPATH.pdf,62,2,"L. Step 8: Finally, execute the workflow and see the output of email and URL. Confused about writing"
+VB.NET_CODING_IN_UIPATH.pdf,62,3, a R egular Expression ? Click here for a Regex playlist on YouTube (highly recommend) and click her
+VB.NET_CODING_IN_UIPATH.pdf,62,4,e for a great website to experiment with Regex expression s. Click the link below to download the ex
+VB.NET_CODING_IN_UIPATH.pdf,62,5,ample project: https://drive.google.com/drive/folders/1jbl6 Ztcwx_JEcdJZoRb1V -zCmWS7M9aQ?usp=sharing
+VB.NET_CODING_IN_UIPATH.pdf,63,1,"59 | P a g e C l i c k t o fo l l o w 4.4 How to Initialize, Add and Removed Items from a List Sometimes when we work with a List, we may need to initialize"
+VB.NET_CODING_IN_UIPATH.pdf,63,2, them. We use lists when the number of items in the list is undefined (as opposed to an array which has a fixed length). We are able to add and remove items
+VB.NET_CODING_IN_UIPATH.pdf,63,3, from a list. Major steps that we will implement: 1. Initialize list 2. Add item to list 3. Remove item from list Implementation with UiPath Step 1: Initial
+VB.NET_CODING_IN_UIPATH.pdf,63,4,"ize List my_List = new List(of string)(new string(){ “value1 ”, “value2” }) Note: Create a List with your required DataType , i.e. string, Int, boolean…. Fi"
+VB.NET_CODING_IN_UIPATH.pdf,63,5,rst we initialise the list and add the three primary colours to the list Set the Variable Type to an I Collection <string> which is basically a list of strings.
+VB.NET_CODING_IN_UIPATH.pdf,64,1,60 | P a g e C l i c k t o fo l l o w Step 2: Add 
+VB.NET_CODING_IN_UIPATH.pdf,64,2,item to list Next we add the colour “orange” to th
+VB.NET_CODING_IN_UIPATH.pdf,64,3,e list with an Invoke Method activity using the Ad
+VB.NET_CODING_IN_UIPATH.pdf,64,4,d method We could also add items using the “Add to
+VB.NET_CODING_IN_UIPATH.pdf,64,5, Collection” activity from the Statements library.
+VB.NET_CODING_IN_UIPATH.pdf,65,1,61 | P a g e C l i c k t o fo l l o w Step 3: Remove item from list using “Remove From Collecti
+VB.NET_CODING_IN_UIPATH.pdf,65,2,on” activity. Write the final list to the output panel using a “For Each ” set up like this: St
+VB.NET_CODING_IN_UIPATH.pdf,65,3,"ep 4: Finally, the output . We started with blue, red and yellow. Then added orange and removed"
+VB.NET_CODING_IN_UIPATH.pdf,65,4," red. We are then left with blue, yellow and orange. Click the link below to download the examp"
+VB.NET_CODING_IN_UIPATH.pdf,65,5,le project: https://drive.google.com/drive/folders/1tPs_fu4Jsmf0fffUjq33MVZ5ZRzf2xXN?usp=sharing
+VB.NET_CODING_IN_UIPATH.pdf,66,1,"62 | P a g e C l i c k t o fo l l o w 4.5 How to Trim / Clean a String There is always a possibility of extra spaces being added to the text by mistake, which needs to be handled before performing any operations"
+VB.NET_CODING_IN_UIPATH.pdf,66,2, on the data. The TRIM() method of string can be used and it removes (or deletes) all leading and trailing white -space characters from the current String. To remove the all leading and trailing white -spac e ch
+VB.NET_CODING_IN_UIPATH.pdf,66,3,aracters : our_String.Trim To remove the all leading white -space characters : our_String.TrimStart To remove the all trailing white -space characters : our_String.TrimEnd Note: Replace our_String with your stri
+VB.NET_CODING_IN_UIPATH.pdf,66,4,ng variable Implementation with UiPath Let us implement a workflow which takes input from the user and displays the text by removing the extra spaces in it as per the method used. Step 1: Drag three “Assign ” ac
+VB.NET_CODING_IN_UIPATH.pdf,66,5,tivit ies into the design panel and add the following sample string Step 2: Drag “Write Line ” activity into the design panel and use TRIM method to remove all leading and trailing white -space characters if any.
+VB.NET_CODING_IN_UIPATH.pdf,67,1,63 | P a g e C l i c k t o fo l l o w Step 3: Use another “Write Line ” activity and use TRIMSTART met
+VB.NET_CODING_IN_UIPATH.pdf,67,2,hod to remove all leading white -space characters if any. Step 4: Use one more “Write Line ” activity 
+VB.NET_CODING_IN_UIPATH.pdf,67,3,"and use TRIMEND method to remove all trailing white -space characters if any. Step 5: Now, execute the"
+VB.NET_CODING_IN_UIPATH.pdf,67,4," workflow to display the appropriate results . In the output panel, it does not look like any trimming"
+VB.NET_CODING_IN_UIPATH.pdf,67,5," happened, but if you double click each of these three logs, you will see how the message output looks."
+VB.NET_CODING_IN_UIPATH.pdf,68,1,64 | P a g e C l i c k t o fo l l o
+VB.NET_CODING_IN_UIPATH.pdf,68,2, w Click the link below to download
+VB.NET_CODING_IN_UIPATH.pdf,68,3, the example project: https://drive
+VB.NET_CODING_IN_UIPATH.pdf,68,4,.google.com/drive/folders/1RGrv2hUL
+VB.NET_CODING_IN_UIPATH.pdf,68,5,PNpE0Da2MLh5pNSTjVA9HLJZ?usp=sharing
+VB.NET_CODING_IN_UIPATH.pdf,69,1,"65 | P a g e C l i c k t o fo l l o w 4.6 How to Split a String Sometimes we might want to break down a string datatype value into an array of substrings based on some separator /delimiter (a delimiter can be a space, a comma, a newLine e.t.c). You can not use a word as a delimiter, only a single char"
+VB.NET_CODING_IN_UIPATH.pdf,69,2,"acter can be a delimiter. However, you can use the Replace method to convert a word to a character and then use that c haracter as the delimiter. See the next section for how to use the Replace method. Let’s do an example where we split a comma separated string of numbers into an array using the comma"
+VB.NET_CODING_IN_UIPATH.pdf,69,3," as a delimiter . Assume we have a list of numbers assigned like so: numbers_Data = “1,2,3,4,5” Then we use an assign to split the string: result_List = numbers_Data.Split(“,”c) Note: 1. Replace numbers_Data with any string variable 2. result_List is a string array i.e. String[] You can also use the s"
+VB.NET_CODING_IN_UIPATH.pdf,69,4,plit string activity to accomplish the same thing. Implementation with UiPath Let’s develop a project which takes a string value consisting of numbers separator by comma and displays the values. Step 1: Drag “Assign” activity into the design panel and initialize the string variable with some sample da
+VB.NET_CODING_IN_UIPATH.pdf,69,5,"ta as shown below. numbers_Data = “1,2,3,4,5” Step 2: Drag “Split String” activity into the design panel and supply the below -mentioned parameters. Install “Microsoft.Activities” Package ,if you don’t find the split activity in your activities panel Input: numbers_Data Result: result_List Separator: “,”"
+VB.NET_CODING_IN_UIPATH.pdf,70,1,"66 | P a g e C l i c k t o fo l l o w Where, 1. Input is our input String value 2. Result is our"
+VB.NET_CODING_IN_UIPATH.pdf,70,2," output List 3. Separator is the desired delimiter ex: comma, space, hyphen e.t .c Step 3: Drag "
+VB.NET_CODING_IN_UIPATH.pdf,70,3,a “For Each” activity into the design panel and supply the above -created list variable into it.
+VB.NET_CODING_IN_UIPATH.pdf,70,4," Then, drag a “Message Box ” activity to display the values available in the list variable. Step"
+VB.NET_CODING_IN_UIPATH.pdf,70,5," 4: Finally, execute the project to display all the values available in the list on by one!!! etc."
+VB.NET_CODING_IN_UIPATH.pdf,71,1,67 | P a g e C l i c k t o fo l l o w How to get specific items from an array? You can access specific items in the result_List array by referencing the index using round brackets. The 
+VB.NET_CODING_IN_UIPATH.pdf,71,2,"first item starts from index 0. For example, to get the first item in the result_List array, you pull the zero’th index like so result_List(0) this would return 1. Same applie s to the "
+VB.NET_CODING_IN_UIPATH.pdf,71,3,other indices: result_List(0) = 1 result_List(1) = 2 result_List(2) = 3 result_List(3) = 4 result_List(4) = 5 To grab the last item in the array we can use the 4th index in the array li
+VB.NET_CODING_IN_UIPATH.pdf,71,4,"ke we did above. This is because we know the 4th index is the last item. However, s ometimes we don’t know how many items are in the array, so to grab the last item in the array we can "
+VB.NET_CODING_IN_UIPATH.pdf,71,5,use the Last method like so: result_List.Last = 5 Click the link below to download the example project: https://drive.google.com/drive/folders/11xIFbLER0zaXvESGFkI0cjtW09iyfio -?usp=sharing
+VB.NET_CODING_IN_UIPATH.pdf,72,1,"68 | P a g e C l i c k t o fo l l o w 4.7 How to Replace Text in a String We may need to replac e characters or a s tring of characters with something else. We can use an expression like so: sample_String = sample_String.Replace(“Before”,”"
+VB.NET_CODING_IN_UIPATH.pdf,72,2,After”) Note: Set your string variable in place of sample_String Set “Before” to the character or characters you want to replace in your sample_String Set “After” to the character or characters you want to replace the “Before” with. Implem
+VB.NET_CODING_IN_UIPATH.pdf,72,3,entation with UiPath Let us assume that we have a string of a date in string forma t that looks like this (25/12/2020) and we want it to look like this 25 -12-2020 . We can use the Replace method to remove the round brackets and also repla
+VB.NET_CODING_IN_UIPATH.pdf,72,4,"ce the forward slashes with hyphens. Step 1: We drag in an “Assign” and set the value of the sample_String Step 2: We drag in another “Assign” and set the following expression sample_String = sample_String.Replace(“(”,””).Replace(“)”,””).R"
+VB.NET_CODING_IN_UIPATH.pdf,72,5,"eplace(“/”,”c”) This expression first replaces the open bracket with an empty string, then replaces the cl ose bracket with an empty string, then replaces the forward slash with a hyphen. Step 3: Drag in a “Message Box” to display the result."
+VB.NET_CODING_IN_UIPATH.pdf,73,1,69 | P a g e C l i c k t o fo l l o w St
+VB.NET_CODING_IN_UIPATH.pdf,73,2,ep 4: Run the workflow Click the link be
+VB.NET_CODING_IN_UIPATH.pdf,73,3,low to download the example project: htt
+VB.NET_CODING_IN_UIPATH.pdf,73,4,ps://drive.google.com/drive/folders/1wPO
+VB.NET_CODING_IN_UIPATH.pdf,73,5,VuLYTv3kjNIIueEV9whJSz7ekgpFw?usp=sharing
+VB.NET_CODING_IN_UIPATH.pdf,74,1,"70 | P a g e C l i c k t o fo l l o w 4.8 How to Find Common/Uncommon Items Between Two Lists Lists in programming are commonly used to store the collection of items such as String, Int or man"
+VB.NET_CODING_IN_UIPATH.pdf,74,2,y other data types. We need to sometimes identify the common/uncommon items between the two Lists or two Arrays . Let us see how to implement it . Common Values : list_1.Intersect(list_2) UnCo
+VB.NET_CODING_IN_UIPATH.pdf,74,3,mmon Values : list_1.Except(list_2) Note: Replace list_1 and list_2 with your appropriate lists Implementation with UiPath Let us implement a workflow which takes a two sample lists and displa
+VB.NET_CODING_IN_UIPATH.pdf,74,4,ys the common and uncommon values. Step 1: Drag an “Assign” activity into the design panel and initialize the list 1 with some sample data as shown below. list_1 = new List(Of Int32)(New Int32
+VB.NET_CODING_IN_UIPATH.pdf,74,5,"(){1, 3, 4, 6, 7}) Step 2: Drag another “Assign” activity into the design panel and initialize the list 2 with some sample data as shown below. list_2 = new List(Of Int32)(New Int32(){1, 2, 4, 5})"
+VB.NET_CODING_IN_UIPATH.pdf,75,1,71 | P a g e C l i c k t o fo l l o w Step 3: Drag a “For Each” activity into the desi
+VB.NET_CODING_IN_UIPATH.pdf,75,2,gn panel and supply the below -mentioned code into it and use a “Message Box” to displ
+VB.NET_CODING_IN_UIPATH.pdf,75,3,ay the Common values between two lists list_1.Intersect(list_2) Step 4: Drag a “For Ea
+VB.NET_CODING_IN_UIPATH.pdf,75,4,ch” activity into the design panel and supply the below -mentioned code into it and us
+VB.NET_CODING_IN_UIPATH.pdf,75,5,e a “Message Box” to display the Uncommon values between two lists list_1.Except(list_2)
+VB.NET_CODING_IN_UIPATH.pdf,76,1,72 | P a g e C l i c k t o fo l l o w Step
+VB.NET_CODING_IN_UIPATH.pdf,76,2," 5: Finally, run the workflow . Click the "
+VB.NET_CODING_IN_UIPATH.pdf,76,3,link below to download the example project
+VB.NET_CODING_IN_UIPATH.pdf,76,4,: https://drive.google.com/drive/folders/1
+VB.NET_CODING_IN_UIPATH.pdf,76,5,ToPantAsBJRGOJ726CVQe_lzWjtI1UXc?usp=sharing
+VB.NET_CODING_IN_UIPATH.pdf,77,1,73 | P a g e C l i c k t o fo l l o w 4.9 How to Check If a String is Numeric Sometimes we need to validate a string is a number before entering it into a system or before
+VB.NET_CODING_IN_UIPATH.pdf,77,2, trying to convert it to a double or integer. Let us see how to check if the provided string is numeric or if it is not numeric . booleanResult = Information.IsNumeric(use
+VB.NET_CODING_IN_UIPATH.pdf,77,3,r_Input) Note: 1. input Var is the argument to the IsNumeric Function 2. boolenResult returns the true or false value based on the input Implementation with UiPath Let us 
+VB.NET_CODING_IN_UIPATH.pdf,77,4,implement a workflow which takes a string input from the user and checks if it is a numeric or not a numeric. Step 1: Drag a “Input Dialog ” activity into the design panel
+VB.NET_CODING_IN_UIPATH.pdf,77,5, and try to save the user provided value into a variable for further operations. Step 2: Drag “ If” activity into the design p anel and fill it with above -mentioned code.
+VB.NET_CODING_IN_UIPATH.pdf,78,1,74 | P a g e C l i c k t o fo l l o w Step 3: Drag two “Message Box” activities into the If a
+VB.NET_CODING_IN_UIPATH.pdf,78,2,"ctivity and represent the appropriate messages. Note: “If” activity returns true, then “Is a "
+VB.NET_CODING_IN_UIPATH.pdf,78,3,"Numeric” else “Is not a numeric” Step 4: Finally, let’s run the project Note: You can also ch"
+VB.NET_CODING_IN_UIPATH.pdf,78,4,eck for other data types besides just IsNumeric: Click the link below to download the example
+VB.NET_CODING_IN_UIPATH.pdf,78,5, project: https://drive.google.com/drive/folders/1RfqmC2R3TjUGCQoGQzV0uJHaY7YwpHfC?usp=sharing
+VB.NET_CODING_IN_UIPATH.pdf,79,1,"75 | P a g e C l i c k t o fo l l o w 4.10 How to Get the Word Count from a String For a few business proces ses, you might be required to validate a sentence and then proceed forward. So how can we find"
+VB.NET_CODING_IN_UIPATH.pdf,79,2, the count of the words in a string? We can split a sentence using a space as a delimiter then count the number of items in the array. no_OfWords = (our_String).S plit(“ ”c).Count.ToString Note: Simply r
+VB.NET_CODING_IN_UIPATH.pdf,79,3,eplace the our_String with your required sentence as a string. Implementation with UiPath Let us implement a workflow which takes an input from the user which is a sentence and displays the word count. S
+VB.NET_CODING_IN_UIPATH.pdf,79,4,tep 1: Drag a “Input Dialog” activity into the design panel and save the user provided input into a variable. i.e. “My name is Leon Petrou ” Step 2: Drag a “Message Box” activity into the design panel an
+VB.NET_CODING_IN_UIPATH.pdf,79,5,d fill it with above -mentioned code. Step 3: Run the work flow. Click the link below to download the example project: https://drive.google.com/drive/folders/18OK6 -0iSzckHFlMPUsrjwTMiPZsRRCT2?usp=sharing
+VB.NET_CODING_IN_UIPATH.pdf,80,1,"76 | P a g e C l i c k t o fo l l o w 4.11 How to Count the Characters in a String For a few business proc esses, you might be required to validate a the number of characters in a string before attempting to enter it into"
+VB.NET_CODING_IN_UIPATH.pdf,80,2, a input field. This is because some input fields online have limited characters for input. So how can we find the number of characters in a s tring? We can use the .Length method. no_OfCharacters = (our_String).Length No
+VB.NET_CODING_IN_UIPATH.pdf,80,3,te: Simply replace the “our_String” with your required “Sentence” Implementation with UiPath Let us implement a workflow which takes an input from the user which is a sentence and displays the character count. Only a char
+VB.NET_CODING_IN_UIPATH.pdf,80,4,"acter count of 10 or less is valid, else it is invalid. Step 1: Drag an “Input Dialog” activity into the design panel and save the user provided input into a variable. i.e. “Leon Petrou” Step 2: Drag a n “Assign” activity"
+VB.NET_CODING_IN_UIPATH.pdf,80,5, into the design panel and enter the above -mentioned code. Set the no_OfCharacters to an Int32 variable type. Step 3: Check if the total number of characters is less than or equal to 10 using this code: no_OfCharacters <= 10
+VB.NET_CODING_IN_UIPATH.pdf,81,1,77 | P a g e C l i c k t o fo l l o w Step 4: Add two “Message Box” activities with the foll
+VB.NET_CODING_IN_UIPATH.pdf,81,2,"owing code: Then: ""Valid: "" + no_OfCharacters.ToString + "" is less than or equal to 10"" Else"
+VB.NET_CODING_IN_UIPATH.pdf,81,3,": ""Not valid: "" + no_OfCharacters.ToString + "" greater than 10"" Step 5: Let’s input “Leon Pe"
+VB.NET_CODING_IN_UIPATH.pdf,81,4,trou” and run the workflow. We get this output: Click the link below to download the example
+VB.NET_CODING_IN_UIPATH.pdf,81,5, project: https://drive.google.com/drive/folders/1xkXk -VXoeUfmjb1g4xS6yCWLAINJytHS?usp=sharing
+VB.NET_CODING_IN_UIPATH.pdf,82,1,78 | P a g e C l i c k t o fo l l o w 4.12 How to Convert a List to an Array Converting one datatype to another is one of the most common things we do in programming. Let’s see how to convert a list to an array and Vice Vers a
+VB.NET_CODING_IN_UIPATH.pdf,82,2,". This is useful because both lists and arrays have their own sets of methods and functions that may be useful. For example , you can add and remove items from a list but you can’t do that with an array. In this example we wil"
+VB.NET_CODING_IN_UIPATH.pdf,82,3,l: 1. Convert List to Array 2. Convert Array To List Convert List to Array our_Array = our_List.ToArray Let us implement a workflow which converts a “List” to an “Array” Step 1: Create variables as shown below Step 2: Drag an 
+VB.NET_CODING_IN_UIPATH.pdf,82,4,“Assign” activity into the design panel and initialize the list of string type. Step 3: Drag another “Assign” activity into the de sign panel Use the above -mentioned code and its done. Click the link below to download the exa
+VB.NET_CODING_IN_UIPATH.pdf,82,5,mple project: https://drive.google.com/drive/folders/154g98JoEk3MEIT39jj3xDHsnBCOxKQDW?usp=sharing Convert Array to List Let us implement a workflow which converts an “Arr ay” to “List” Step 1: Create variables as shown below .
+VB.NET_CODING_IN_UIPATH.pdf,83,1,79 | P a g e C l i c k t o fo l l o w Step 2: Drag “Assign” activity into t
+VB.NET_CODING_IN_UIPATH.pdf,83,2,he design panel and initialize the Array of string type. Step 3: Drag anoth
+VB.NET_CODING_IN_UIPATH.pdf,83,3,er “Assign” activity into the design panel . Use the above -mentioned code 
+VB.NET_CODING_IN_UIPATH.pdf,83,4,and its done. Click the link below to download the example project: https:/
+VB.NET_CODING_IN_UIPATH.pdf,83,5,/drive.google.com/drive/folders/1 -AUiIPDb -6pYVs89SKL_jw2AKtwYDZ2H?usp=sharing
+VB.NET_CODING_IN_UIPATH.pdf,84,1,80 | P a g e C l i c k t o fo l l o w 4.13 How to Reverse a String Reversing a string is something that may be required when dealing with strings. That can be done by creating an array of characters and reversing that arra
+VB.NET_CODING_IN_UIPATH.pdf,84,2,y then rejoining all the characters together again. String reversedString = stringtoBeReversed.AsEnumerable.Reverse.ToArray Note: 1. Simp ly replace the “stringToBeReveresed” with your required “string” 2. It returns an ar
+VB.NET_CODING_IN_UIPATH.pdf,84,3,"ray of char and then ; string.Join(“”,reverse dString) Note: 1.Here we are converting an array of char to string type 2.Here “” indicates the separator which is an empty string. Implementation with UiPath Let us implement "
+VB.NET_CODING_IN_UIPATH.pdf,84,4,"a workflow which takes “ LeonPetrou ” as input and outputs the reverse of it , i.e. “uortePnoeL ” Step 1: Drag an “Assign” activity into the design panel and pass a value to it. Step 2: Drag an “Assign” activity into the d"
+VB.NET_CODING_IN_UIPATH.pdf,84,5,esign panel and obtain an array of char in reverse order by using the above -mentioned first code. Step 3: Drag a “Message Box” activity into the design panel and obtain the reverse by using the above - mentioned second code.
+VB.NET_CODING_IN_UIPATH.pdf,85,1,81 | P a g e C l i c k t o fo l l o w Step 4:
+VB.NET_CODING_IN_UIPATH.pdf,85,2, Run the workflo w. My name is now backwards.
+VB.NET_CODING_IN_UIPATH.pdf,85,3, Click the link below to download the example
+VB.NET_CODING_IN_UIPATH.pdf,85,4, project: https://drive.google.com/drive/fold
+VB.NET_CODING_IN_UIPATH.pdf,85,5,ers/1I6VcGnPQTgYRNxMYUqFhC7DWGYqIXTgt?usp=sharing
+VB.NET_CODING_IN_UIPATH.pdf,86,1,82 | P a g e C l i c k t o fo l l o w 4.14 How to Convert a SecureString DataType to a String DataType Almost all processes fetch credentials from Windows Credentials or Orches
+VB.NET_CODING_IN_UIPATH.pdf,86,2,"trator which are of data type SecureString. However, the Mail activities that the UiPath provide us with only accepts the string data type for the password field. And so we wil"
+VB.NET_CODING_IN_UIPATH.pdf,86,3,l need to convert the SecureString to a String. Let’s see how to handle i t: 1. Fetch username and password from Windows Credentials. 2. Convert Password from SecureString to S
+VB.NET_CODING_IN_UIPATH.pdf,86,4,tring Datatype. Assuming we have a credential saved with the name Robot_Credential under Windows Credentials in your control panel as shown below. Now let us see how to fetch i
+VB.NET_CODING_IN_UIPATH.pdf,86,5,t and convert the SecureString to string data type… Step 1: Fetch username and password from Windows Credentials First we must install the UiPath.Credentials.Activities package:
+VB.NET_CODING_IN_UIPATH.pdf,87,1,83 | P a g e C l i c k t o fo l l o w Use a “Get Secure Credentials ” activity : Target: Cred
+VB.NET_CODING_IN_UIPATH.pdf,87,2,entials Name (String) Results: Status Code (Boolean) Password: Fetched Password (SecureString
+VB.NET_CODING_IN_UIPATH.pdf,87,3,) Username: Fetched Username (String) Step 2: Convert Password from SecureString to String Da
+VB.NET_CODING_IN_UIPATH.pdf,87,4,tatype . Use an “Assign ” activity : password_String = new System.Net.NetworkCredential(strin
+VB.NET_CODING_IN_UIPATH.pdf,87,5,"g.Empty, Password).Password Then we can pass the password_String variable to a “Message Box” ."
+VB.NET_CODING_IN_UIPATH.pdf,88,1,84 | P a g e C l i c k t o fo l l o w St
+VB.NET_CODING_IN_UIPATH.pdf,88,2,ep 3: Then the output: Click the link be
+VB.NET_CODING_IN_UIPATH.pdf,88,3,low to download the example project: htt
+VB.NET_CODING_IN_UIPATH.pdf,88,4,ps://drive.google.com/drive/folders/10nk
+VB.NET_CODING_IN_UIPATH.pdf,88,5,LSSS__Z6JmnS_95CW6UyQP -Xd35QV?usp=sharing
+VB.NET_CODING_IN_UIPATH.pdf,89,1,85 | P a g e C l i c k t o fo l l o w 5 Email 5.1 How to Retrieve E -mail Body / Subject / Sender Details Emails are widely used in automation fo
+VB.NET_CODING_IN_UIPATH.pdf,89,2,r the purpose of communication between users and robots. Sometimes emails act as the input to a process . Let us see how to retrieve a mail’s Bod
+VB.NET_CODING_IN_UIPATH.pdf,89,3,"y, Subject and Sender details using UiPath acti vities. Implementation with UiPath Let us implement a workflow which will read the emails from Gm"
+VB.NET_CODING_IN_UIPATH.pdf,89,4,ail server and retrieve the emails . Step 1: Drag a “Get IMAP Mail Messages” activity into the design panel and supply the required parameters to
+VB.NET_CODING_IN_UIPATH.pdf,89,5, it as shown below. Remember to allow “less secure apps” in your gmail settings. You can do that here: https://myaccount.google.com/lesssecureapps
+VB.NET_CODING_IN_UIPATH.pdf,90,1,86 | P a g e C l i c k t o fo l l o w Step 2: Drag a “For Each” activit
+VB.NET_CODING_IN_UIPATH.pdf,90,2,y into the design panel and pass the above -created mail List to it. Ch
+VB.NET_CODING_IN_UIPATH.pdf,90,3,ange the “TypeArgument” in the properties panel to System.Net.Mail.Mail
+VB.NET_CODING_IN_UIPATH.pdf,90,4,Message Step 3: Drag three “Message Box” activities into the design pan
+VB.NET_CODING_IN_UIPATH.pdf,90,5,"el to display the Sender details, Subject and Body of the received mail."
+VB.NET_CODING_IN_UIPATH.pdf,91,1,"87 | P a g e C l i c k t o fo l l o w Step 3: Now,"
+VB.NET_CODING_IN_UIPATH.pdf,91,2, execute the workflow. Mail Sender: Mail Subject: 
+VB.NET_CODING_IN_UIPATH.pdf,91,3,Mail Body: Click the link below to download the ex
+VB.NET_CODING_IN_UIPATH.pdf,91,4,ample project: https://drive.google.com/drive/fold
+VB.NET_CODING_IN_UIPATH.pdf,91,5,ers/1gynb4AgdD_ -fmHwoK3aeqHVC5UNTnb4g?usp=sharing
+VB.NET_CODING_IN_UIPATH.pdf,92,1,88 | P a g e C l i c k t o fo l l o w 5.2 How to Download Specific Files from a Mail Mails are widely used in automation processes to receive inputs or to notify users of the bot’
+VB.NET_CODING_IN_UIPATH.pdf,92,2,"s progress . UiPath provides us the ability to download the attachments from emails. By default, it downloads all the attachments available, but what if we only want to down load "
+VB.NET_CODING_IN_UIPATH.pdf,92,3,a specific extension files? Let’s see how to do tha t. Filter = “.*(.xlsx|.XLSX|.xls|.pdf)” Note: Pass the EXTENSIONS according to your choice . This is a Regex expression where t
+VB.NET_CODING_IN_UIPATH.pdf,92,4,he | represents “Or”. You can also set this to only download files with specific names. Implementation with UiPath Let us implement a workflow that read emails from an account and
+VB.NET_CODING_IN_UIPATH.pdf,92,5, then download the attachments according to our requirement. Step 1: Drag a “Get IMAP Mail Messages” activity into the design panel and populate its properties with required fields.
+VB.NET_CODING_IN_UIPATH.pdf,93,1,89 | P a g e C l i c k t o fo l l o w Step 2: Drag a “For Each” activity into the design panel and pas
+VB.NET_CODING_IN_UIPATH.pdf,93,2,s the above “newMailList ” variable to it and change the type in the properties window to “System.Net.
+VB.NET_CODING_IN_UIPATH.pdf,93,3,Mail.MailMessage ”. Step 3: Drag a “Message Box” activity into the “For Each ” activity and pass the i
+VB.NET_CODING_IN_UIPATH.pdf,93,4,tem.Subject value into it to display the subject. Step 4: Drag a “Save Attachments” activity into the 
+VB.NET_CODING_IN_UIPATH.pdf,93,5,“For Each” activity just below the “Message Box” activity and pass the required fields as shown below.
+VB.NET_CODING_IN_UIPATH.pdf,94,1,"90 | P a g e C l i c k t o fo l l o w Step 5: Finally, w"
+VB.NET_CODING_IN_UIPATH.pdf,94,2,e run the workflow. We should be able to download the fi
+VB.NET_CODING_IN_UIPATH.pdf,94,3,les as per our defined criteria. Click the link below to
+VB.NET_CODING_IN_UIPATH.pdf,94,4, download the example project: https://drive.google.com/
+VB.NET_CODING_IN_UIPATH.pdf,94,5,drive/folders/1uOv0tRT9YArRAF1 -jXV5QG_7Xt8MkacD?usp=sharing
+VB.NET_CODING_IN_UIPATH.pdf,95,1,91 | P a g e C l i c k t o fo l l o w 5.3 How to Reverse a Mail List Emails are involved in m any of the processes that we automate. Using UiPath’s default activities we will receive the emails in F
+VB.NET_CODING_IN_UIPATH.pdf,95,2,"IFO (First In First Out) order, but what if we want them to be in LIFO (Last in First Out) ? Let us see how to do that? new_MailList = old_ MailList.OrderBy(Function(x) x.Headers(“date”)).ToList Not"
+VB.NET_CODING_IN_UIPATH.pdf,95,3,e: 1. old_MailList is the default list that you get from the output of the Get Mail Message activity 2. New_MailList is the new list with mails ordered in LIFO Implementation with UiPath Let us impl
+VB.NET_CODING_IN_UIPATH.pdf,95,4,"ement a workflow that read emails from an account and then provides us the emails in LIFO order , instead of FIFO. Step 1: Drag a “Get IMAP Mail Messages” activity into the design panel and populate"
+VB.NET_CODING_IN_UIPATH.pdf,95,5, its properties with required fields. Use your gmail address and password. Remember to allow “less secure apps” in your gmail settings. You can do that here: https://myaccount.google.com/lesssecureapps
+VB.NET_CODING_IN_UIPATH.pdf,96,1,92 | P a g e C l i c k t o fo l l o w Step 2: Drag an “Assign” activity into the design panel and popula
+VB.NET_CODING_IN_UIPATH.pdf,96,2,te it with an above -mentioned code example: mails_List.OrderBy(Function(x) x.Headers(“date”)).ToList St
+VB.NET_CODING_IN_UIPATH.pdf,96,3,ep 3: Drag a “For Each” activity into the design panel and pass the above “ newMailList ” variable to it
+VB.NET_CODING_IN_UIPATH.pdf,96,4, and change the type in the properties window to “ System.Net.Mail.MailMessage ” Step 4: Drag “Message B
+VB.NET_CODING_IN_UIPATH.pdf,96,5,ox” activity into the For Each activity and pass the “ item.Subject ” value into it to display the subject.
+VB.NET_CODING_IN_UIPATH.pdf,97,1,93 | P a g e C l i c k t o fo l l o w St
+VB.NET_CODING_IN_UIPATH.pdf,97,2,ep 5: Run the workflow. Click the link b
+VB.NET_CODING_IN_UIPATH.pdf,97,3,elow to download the example project: ht
+VB.NET_CODING_IN_UIPATH.pdf,97,4,tps://drive.google.com/drive/folders/1Lp
+VB.NET_CODING_IN_UIPATH.pdf,97,5,iTH3g5BJ2HHix3q5YLjvguWkraGdI2?usp=sharing
+VB.NET_CODING_IN_UIPATH.pdf,98,1,"94 | P a g e C l i c k t o fo l l o w 6 DateTime Operations 6.1 How to Find the Date Difference (Days, Months and Years) Date operations are frequently used in business automation. In a few business automations, decisio"
+VB.NET_CODING_IN_UIPATH.pdf,98,2,"ns have to be taken based on the date differences. Let’s see how to calculate the difference between two dates using dates written in string format. required_Difference = DateDiff(DateInterval.Day,Convert.ToDateTime(dat"
+VB.NET_CODING_IN_UIPATH.pdf,98,3,"e1),Convert.ToDateTime(date2)).Tostring Note: 1. Replace the “date1” with your first “Date” 2. Replace the “date2” with your second “Date” 3. Replace “required_Difference” with your output string variable. 4. For day di"
+VB.NET_CODING_IN_UIPATH.pdf,98,4,fference use – Dateinterval.Day 5. For month difference use – Dateinterval.Month 6. For year difference use – Dateinterval.Year Implementation with UiPath Let us imple ment a workflow which takes two dates and displays 
+VB.NET_CODING_IN_UIPATH.pdf,98,5,"the day difference. Step 1: Drag a “Message Box ” activity into the design panel and populate it with the above -mentioned code. Note: It follows the pattern of “month/day/year” Date1 = ""1/1 6/2020"" Date2 = ""1/30/20 20"""
+VB.NET_CODING_IN_UIPATH.pdf,99,1,"95 | P a g e C l i c k t o fo l l o w Step 2: Finally, when you run th"
+VB.NET_CODING_IN_UIPATH.pdf,99,2,"e workflow , we will get the day difference, in this case 14 days . Si"
+VB.NET_CODING_IN_UIPATH.pdf,99,3,"milarly, you can calculate the month and year differences (see Note ab"
+VB.NET_CODING_IN_UIPATH.pdf,99,4,ove). Click the link below to download the example project: https://dr
+VB.NET_CODING_IN_UIPATH.pdf,99,5,ive.google.com/drive/folders/1Rou3zFx_0g68zFoY0nNTlvXw7gAenLWP?usp=sharing
+VB.NET_CODING_IN_UIPATH.pdf,100,1,"96 | P a g e C l i c k t o fo l l o w 6.2 How to Compare Time in UiPath In our automation processes, we might come across situations where we are required to switch between va"
+VB.NET_CODING_IN_UIPATH.pdf,100,2,rious workflows based on time. So how can we do that? Datetime.Parse(DateTime.Now.ToString(“HH:mm:ss”)) < datetime.Parse(Time Var) Note: Replace the “Time Var” with your requi
+VB.NET_CODING_IN_UIPATH.pdf,100,3,red “TimeSpan” . E.g. 18:00:00 or 02:00: 00 etc. Implementation with UiPath Let us implement a workflow which compares the current time with the provided time and displays the
+VB.NET_CODING_IN_UIPATH.pdf,100,4, appropriate messages. Step 1: Drag an “If” activity into the desi gn panel and populates its condition property with the above - mentioned code with “18:00:00” in it. Step 2:
+VB.NET_CODING_IN_UIPATH.pdf,100,5, Drag a “Message Box” activity into the design panel and write “Before 6pm” in it. Step 3: Drag another “Message Box” activity into the design panel and write “After 6pm” in it.
+VB.NET_CODING_IN_UIPATH.pdf,101,1,97 | P a g e C l i c k t o fo l l o w Step 4: Based on 
+VB.NET_CODING_IN_UIPATH.pdf,101,2,"the current time set on your windows machine , we can s"
+VB.NET_CODING_IN_UIPATH.pdf,101,3,ee the appropriate message. Click the link below to dow
+VB.NET_CODING_IN_UIPATH.pdf,101,4,nload the example project: https://drive.google.com/dri
+VB.NET_CODING_IN_UIPATH.pdf,101,5,ve/folders/1oIVoKPvrnZRWPw3jf4a2RIklW -SWJctT?usp=sharing
+VB.NET_CODING_IN_UIPATH.pdf,102,1,"98 | P a g e C l i c k t o fo l l o w 6.3 How to Get the Amount of Days in a Month Sometimes we need to count the number of days in a given month . For example, sometimes a specific process must happen on the last day of the"
+VB.NET_CODING_IN_UIPATH.pdf,102,2," month or a day relative to that. Let’s see how to do get the number of days in a month. Int date_Variable = Datetime.DaysInMonth(year,month) Note: 1.Replace the “year” with your required “Year” 2.Replace the “month” with yo"
+VB.NET_CODING_IN_UIPATH.pdf,102,3,ur required “Month” Implementation with UiPath Let us implement a workflow which takes “Year” and “ Month ” as input and outputs the n umber of days in that month i.e. Step 1: Drag an “Input Dialogue” activity into the desig
+VB.NET_CODING_IN_UIPATH.pdf,102,4,n panel and create a variable to save the “ year” provided by the user. Step 2: Drag another “Input Dialogue” activity into the design panel and create a variable to save the “month” provided by the user. Step 3: Drag a “Mes
+VB.NET_CODING_IN_UIPATH.pdf,102,5,sage Box” activity into the design panel to display the days count. Step 4: Finally!!! Click the link below to download the example project: https://drive.google.com/drive/folders/1oBghLjI3lLX9E7JkQ04CD65lRkM8l43J?usp=sharing
+VB.NET_CODING_IN_UIPATH.pdf,103,1,"99 | P a g e C l i c k t o fo l l o w 6.4 How to Convert a DateTime to String Different business processes may demand different DateTime formats. Check out the patterns of DateTime available and pick the appropriate format 1. d >> Represents the day of the month i.e 1,2,16 or 31 2. dd >"
+VB.NET_CODING_IN_UIPATH.pdf,103,2,"> Represents the day of the month i.e 01,05,14 or 3 1 3. ddd >> Represents the abbreviated name of the day i.e Mon, Tues or Wed 4. dddd -> Represents the full name of the day i.e Monday, Tuesday or Wednesday 5. M >> Represents the month number i.e 1,5 or 12 6. MM >> Represents the month"
+VB.NET_CODING_IN_UIPATH.pdf,103,3," number with leading zero i.e 04,0 9 or 12 7. MMM >>Represents the abbreviated month Name i.e Jan, May or Dec 8. MMMM >> Represents the full month name i.e. January, June or December 9. y >> Represents the year i.e. 2019 as 19 10. yy >> Represents the year with a leading zero i.e. 2019 "
+VB.NET_CODING_IN_UIPATH.pdf,103,4,"as 019 11. yyy >> Rep resents the year i.e 2019 12. yyyy >> Represents the year i.e 2019 13. h >> Represents the 12 -hour clock i.e 4,11 or 2 14. hh >> Represents the 12 -hour clock with a leading 0 i.e. 04,05 or 12 15. H >> Represents the 24 -hour clock i.e 13,18 or 22 16. HH >> Repres"
+VB.NET_CODING_IN_UIPATH.pdf,103,5,"ents the 24-hour clock with a leading 0 i.e. 04,09 or 22 17. m >> Represents the minutes i.e. 12,40 or 56 18. mm >> Represents the minutes with a leading zero i.e 04,09 or 23 19. s >> Represents the seconds i.e 9,35 or 40 20. ss >> Represents the seconds with leading zero i.e. 04, 09 or 35"
+VB.NET_CODING_IN_UIPATH.pdf,104,1,100 | P a g e C l i c k t o fo l l o w 6.5 How to Convert Milliseconds to TimeSpan There might be situations where we might need to pass time as TimeSpan rath
+VB.NET_CODING_IN_UIPATH.pdf,104,2,er than in Milliseconds. This occurs with the delay activity which requires a Timespan as input. Let us see how to do that… Timespan.FromMilliseconds(millisec
+VB.NET_CODING_IN_UIPATH.pdf,104,3,onds) Note: Where milliseconds is an integer in milliseconds e.g. 3000 Implementation with UiPath Let us convert 3000 Milliseconds to TimeSpan i.e. 00:00:03 S
+VB.NET_CODING_IN_UIPATH.pdf,104,4,tep 1: Drag a “Delay” activity into the design panel Step 2: Type the above code with 3000 into the “Duration” property of Delay activity. i.e. Timespan.FromM
+VB.NET_CODING_IN_UIPATH.pdf,104,5,illiseconds(300 0) Click the link below to download the example project: https://drive.google.com/drive/folders/1pZNHS1I79TnF -59x5sOAFmyWCB3qetNC?usp=sharing
+VB.NET_CODING_IN_UIPATH.pdf,105,1,101 | P a g e C l i c k t o fo l l o w 6.6 How to Convert TimeStamp to 12/24hrs Format Different processes may demand different DateTime format based on their requirements . Let’s see how to c
+VB.NET_CODING_IN_UIPATH.pdf,105,2,"onvert TimeStamp formats … 1.DateTime in 12 -hour format 2.DateTime in 24 -hour format 6.6.1 DateTime in 12 -hour format DateTime. Now.ToString(“ h:mm:ss tt”) Where, • DateTime. Now = Gives Cu"
+VB.NET_CODING_IN_UIPATH.pdf,105,3,rrent Date and Time • .ToString(“h:mm:ss tt”) = Converts the Current Date and Time to 12 hours format Drag a “Message box” activity into the design panel and type the above code. 6.6.2 DateTim
+VB.NET_CODING_IN_UIPATH.pdf,105,4,"e in 24 -hour format Now.ToString(“HH:mm:ss tt”) Where, • DateTime. Now = Gives Current Date and Time • .ToString(“HH:mm:ss tt”) = Converts the string to 24 hours format Drag a “Message box” a"
+VB.NET_CODING_IN_UIPATH.pdf,105,5,ctivity into the design panel and type the above code. Click the link below to download the example project: https://drive.google.com/drive/folders/1tnrnoip0HSCuIaF9sPzguFYyYlQxZ9na?usp=sharing
+VB.NET_CODING_IN_UIPATH.pdf,106,1,"102 | P a g e C l i c k t o fo l l o w 6.7 How to Convert String to DateTime and DateTime Manipulation In this module, we will we looking into different DateTime Manipulations 1. Converting Strin"
+VB.NET_CODING_IN_UIPATH.pdf,106,2,"g to DateTime Datatype 2. Converting Date from one String format to another desired format 3. Including Hours, Minutes and Seconds to your Date 4. Adding or removing days from your respective dat"
+VB.NET_CODING_IN_UIPATH.pdf,106,3,e 6.7.1 Converting String to DateTime Datatype Let us implement a workflow that takes a string and converts it to a DateTime data type. Step 1: Drag an “Assign” activities into the design panel a
+VB.NET_CODING_IN_UIPATH.pdf,106,4,nd assign the string value and the format of DateTime. Use the “ Write Line ” activity to display the result. Example: If your input is like 19/09/2019 your format should be dd/MM/yyyy… If your i
+VB.NET_CODING_IN_UIPATH.pdf,106,5,"nput is like 2019/09/19 then your format should be yyyy/MM/dd… output_date=DateTime.ParseExact(input_date,formatconversion,System.Globalization.CultureInfo.Current UICu lture.DateTimeFormat) Output:"
+VB.NET_CODING_IN_UIPATH.pdf,107,1,103 | P a g e C l i c k t o fo l l o w 6.7.2. Converting Date from one String Format to Another Desired Format Let us implement a workflow that takes a Date string and co
+VB.NET_CODING_IN_UIPATH.pdf,107,2,"nverts it to another format. Example: If your input is like 19/09/2019 i.e.dd/MM/yyyy format, then you can convert it to another format like yyyy/dd/MM Step 2: Drag “Assi"
+VB.NET_CODING_IN_UIPATH.pdf,107,3,gn” activities into the design panel and assign the string value and the format of DateTime. Use the “ Write Line ” activity to display the result. output_date1=DateTime.
+VB.NET_CODING_IN_UIPATH.pdf,107,4,"ParseExact(input_date, “yyyy/MM/dd” , System.Globalization.CultureInfo.InvariantCulture).ToString(“yyyy/dd/MM”) Output: 6.7.3 Adding Hours, Minutes and Seconds to Your Da"
+VB.NET_CODING_IN_UIPATH.pdf,107,5,"te You can have the time along with your date Just add hh:mm:ss to the above formatconversion variable … For 12 hour format, it is hh:mm:ss For 24 hour format, it is HH:mm:ss"
+VB.NET_CODING_IN_UIPATH.pdf,108,1,104 | P a g e C l i c k t o fo l l o w Output: 6.7.4. Ad
+VB.NET_CODING_IN_UIPATH.pdf,108,2,ding or removing days from your respective date You can 
+VB.NET_CODING_IN_UIPATH.pdf,108,3,add days / hours / seconds etc. to a DateTime variable l
+VB.NET_CODING_IN_UIPATH.pdf,108,4,"ike so: For example, to add 14 days to the output_date 1"
+VB.NET_CODING_IN_UIPATH.pdf,108,5,0/19/2019 we use this code: output_date.AddDays(15).ToString
+VB.NET_CODING_IN_UIPATH.pdf,109,1,105 | P a g e C l i c k t o fo l l o w Output: To remote days
+VB.NET_CODING_IN_UIPATH.pdf,109,2, simply add a negative sign like this to get a previous date:
+VB.NET_CODING_IN_UIPATH.pdf,109,3, output_date.AddDays( -15).ToString Output: Click the link be
+VB.NET_CODING_IN_UIPATH.pdf,109,4,low to download the example project: https://drive.google.com
+VB.NET_CODING_IN_UIPATH.pdf,109,5,/drive/folders/1VJ7B4utKHw_2a -98i4qldFfFJqxs4Iob?usp=sharing
+VB.NET_CODING_IN_UIPATH.pdf,110,1,"106 | P a g e C l i c k t o fo l l o w 7 Invoke Code As processes become more complex, we might need to write our own code. More customization is possible in UiPath by using either VB.NET "
+VB.NET_CODING_IN_UIPATH.pdf,110,2,"or also C#. We have an activity to achieve the above, let’s see how to use it… 7.1 How to Sum a Column Using Invoke Code Let’s use the Invoke Code activity to calculate the sum of all valu"
+VB.NET_CODING_IN_UIPATH.pdf,110,3,es in a column. Implementation with UiPath Let us implement a workflow which takes a sample data table as input and outputs the SUM of total sales . Step 1: Drag a “Build Data Table” activ
+VB.NET_CODING_IN_UIPATH.pdf,110,4,ity into the design panel and populate it with sample data. Step 2: Drag a “Invoke Code” activity into the design panel. Ensure the language in the properties panel is set to VBNet. Step 3
+VB.NET_CODING_IN_UIPATH.pdf,110,5,": In the “Invoke Code” activity, click ‘Edit Arguments ’ to pass the required parameters as below. Note: Sample_DT is our DataTable (IN Argument) Sum is the summation result (OUT Argument)"
+VB.NET_CODING_IN_UIPATH.pdf,111,1,"107 | P a g e C l i c k t o fo l l o w Step 4: In the “Invoke Code” activity, click ‘Edit Code ’ to write the execution code. Note: The b elow "
+VB.NET_CODING_IN_UIPATH.pdf,111,2,code is used to count the total sales of all the divisions . Dim row As DataRow sum=0 For Each row In Sample_Dt.Rows sum= cInt(row(“Sales Amoun
+VB.NET_CODING_IN_UIPATH.pdf,111,3,t”).toString)+Sum Next row Code explanation : Dim row As DataRow creates a row variable of data type data row sum=0 assigns a variable sum to t
+VB.NET_CODING_IN_UIPATH.pdf,111,4,he value of 0 For Each row In Sample_Dt.Rows loops through each row in the data table (this is like a For Each Row activity) sum= cInt(row(“Sal
+VB.NET_CODING_IN_UIPATH.pdf,111,5,es Amount”).toString)+Sum adds the “Sales Amount” column value to the sum variable Next row continues to next row until all rows have been looped
+VB.NET_CODING_IN_UIPATH.pdf,112,1,108 | P a g e C l i c k t o fo l l o w Step 5: Drag a “Message Box” activ
+VB.NET_CODING_IN_UIPATH.pdf,112,2,ity into the design panel and pass the “Sum” variable into it. Step 6: Fi
+VB.NET_CODING_IN_UIPATH.pdf,112,3,"nally, we run the workflow . Now, we can see total sales value being disp"
+VB.NET_CODING_IN_UIPATH.pdf,112,4,layed. Click the link below to download the example project: https://driv
+VB.NET_CODING_IN_UIPATH.pdf,112,5,e.google.com/drive/folders/1SOopLrKpkcXUuK -vTxnd9qT92pomiG76?usp=sharing
+VB.NET_CODING_IN_UIPATH.pdf,113,1,109 | P a g e C l i c k t o fo l l o w 7.2 How to Process and Add a Column Using Invoke Code Let’s use the Invoke Code activity to calculate the per
+VB.NET_CODING_IN_UIPATH.pdf,113,2,centage of a column and add it in a new column. Implementation with UiPath Step 1: Drag in a “Read Range” to get the data from our excel worksheet i
+VB.NET_CODING_IN_UIPATH.pdf,113,3,nto a DataTable . Set the Add Headers property to True. Step 2: Drag a “Invoke Code” activity into the design panel. Ensure the language in the prop
+VB.NET_CODING_IN_UIPATH.pdf,113,4,"erties panel is set to VBNet. Step 3: In the “Invoke Code” activity, click “Edit Arguments” to pass the required parameters as below with the approp"
+VB.NET_CODING_IN_UIPATH.pdf,113,5,riate directions . Note: Input_Dt is our input DataTable (I n Argument) Final_Dt if our final output DataTabl e with the added column (O ut Argument)
+VB.NET_CODING_IN_UIPATH.pdf,114,1,"110 | P a g e C l i c k t o fo l l o w Step 4: In the “Invoke Code” activity, click “Edit Code” to write the execution code. Note: Below code is used to multiply the Profit Margin column by 100 Dim row As DataRow Input_Dt"
+VB.NET_CODING_IN_UIPATH.pdf,114,2,".Columns.Add(""Percentage"") For Each row In Input_Dt.Rows row(""Percentage"") = convert.ToDouble(row(""Profit Margin""))*100.00 Next row Final_Dt = Input_Dt Code explanation : Dim row As DataRow creates a row variable of data "
+VB.NET_CODING_IN_UIPATH.pdf,114,3,"type data row Input_Dt.Columns.Add(""Percentage"") creates a new column with the name “Percentage” For Each row In Sample_Dt.Rows loops through each row in the data table (this is like a For Each Row activity) row(""Percenta"
+VB.NET_CODING_IN_UIPATH.pdf,114,4,"ge"") = convert.ToDouble(row(""Profit Margin""))*100.00 multiplies the Profit Margin column by 100 and adds it to the corresponding row in the Percentage column Next row continues to next row until all rows have been looped "
+VB.NET_CODING_IN_UIPATH.pdf,114,5,Final_Dt = Input_Dt Make the Final DataTable equal to the Input DataTable to output it (we could have also set the Input_DT direction in ‘Edit Ar guments’ to In/Out and then there would be no need for an additional variable)
+VB.NET_CODING_IN_UIPATH.pdf,115,1,111 | P a g e C l i c k t o fo l l o w Step 5: Use a “Write Range
+VB.NET_CODING_IN_UIPATH.pdf,115,2,” activity to output the final data table. Set the ‘Add Headers ’
+VB.NET_CODING_IN_UIPATH.pdf,115,3, property to True. Step 6: Run the workflow… Input: Output: Click
+VB.NET_CODING_IN_UIPATH.pdf,115,4, the link below to download the example project: https://drive.go
+VB.NET_CODING_IN_UIPATH.pdf,115,5,ogle.com/drive/folders/1HY2bhwgHyoU_sJ_IEaQ6jhGP0 -mb7efE?usp=sharing
+VB.NET_CODING_IN_UIPATH.pdf,116,1,"112 | P a g e C l i c k t o fo l l o w 8 Conclusion I hope this eBook was helpful, you can use it as a reference whenever you need to use VB.NET code or scripts in your automations. 8.1 Where to Look for VB.NET Code if You Can’t Find it in this Guide? This guide covers the most common use cases of VB.NET in UiPath. However, it does not cover everything that VB.NET is capable of. These are the best sites to search for a solution if you can’t find it in this guide , and in this order: 1. UiPath Forum: https://forum.uipath"
+VB.NET_CODING_IN_UIPATH.pdf,116,2,.com/ 2. Stack Overflow: https://stackoverflow.com/ 3. A general Google search: https://www.google.com/ 4. Official .NET documentation: https://docs.microsoft.com/en -us/dotnet 5. Still can’t find what you’re looking for? Ask here https://www.facebook.com/groups/2481744772043143/ 8.2 How to Take Your UiPath RPA Skills to an Advanced Level? If you would like to take your UiPath RPA skills to an advanced level I have an advanced online training called the Complete RPA Bootcamp . Watch my free RPA training / webinar below 
+VB.NET_CODING_IN_UIPATH.pdf,116,3,"to learn mor e: https://www.completerpabootcamp.com/rpatraining Or enroll in the Complete RPA Boo tcamp now with a special 75% off: https://www.completerpabootcamp.com/special Copyright © 2020 by Leon Petrou, Inc. All rights reserved. No part of this publication may be reproduced, distributed, or transmitted in any f orm or by any means, including photocopying, recording, or other electronic or mechanical methods, without the prior written permission of the publisher, except in the ca se of brief quotations embodied in "
+VB.NET_CODING_IN_UIPATH.pdf,116,4,"critical reviews and certain other non -commercial u ses permitted by copyright law. For permission requests, write to the publisher, with subject line “Attention: Permissions Coordinator” at the address support@completerpabootcamp.com . This eBook is not associated with the UiPath website or UiPath Inc. Additionally, this site is NOT endorsed by UiPath in any way. UiPath is a trademark of UiPath, Inc. Disclaimer: The contents of this eBook are for information purposes only. Leon Petrou, Inc. and th e author Leon Petrou"
+VB.NET_CODING_IN_UIPATH.pdf,116,5," take no responsibility for any losses financially or other occurred due to the information provided in this book due to incorrect information, incomplete information or any other reaso n. Some content of this eBook ha s been reproduced f rom content on the UiPath Forum, Stack Overflow and other websites specifically Excel Cult authors include S umanth Veerali and Sharath Raju . Credit is given to those respective authors. Business Address: Leon Petrou, Inc, 651 N. Broad St.Suite 206, Middletown, DE 19709, United States"
