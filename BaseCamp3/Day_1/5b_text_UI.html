@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+.<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -28,13 +28,13 @@
 
   <script>
     // API base URL - change this to match your server address
-    const API_BASE_URL = 'http://127.0.0.1:8000';
+    const API_BASE_URL = 'http://0.0.0.0:9321';
 
 
 
     // Function to count words
     async function countWords() {
-      const textInput = document.getElementById('textInput').value;
+      const textInput = document.getElementById('textInput').value; 
       if (!textInput.trim()) {
         alert('Please enter some text first!');
         return;
