@@ -4,6 +4,7 @@
 **/.ipynb_checkpoints
 *.py[cod]
 *$py.class
+.DS_Store
 
 **/*_solution
 **/2_tabular_classification.ipynb
