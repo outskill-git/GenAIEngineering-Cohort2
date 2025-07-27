@@ -1,0 +1,17 @@
+*.safetensors
+error.png
+
+config.json
+.vscode
+.ipynb_checkpoints
+*.log
+*.ipynb
+env
+.DS_Store
+memory
+# history/*/*.csv
+**/__pycache__
+models
+runs
+wandb
+ppo_stonky.zip
