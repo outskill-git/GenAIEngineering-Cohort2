@@ -1,0 +1,35 @@
+FROM python:3.10
+COPY ./ /bot
+# RUN apt-get update -y && apt-get install -y gnupg2
+# RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add -
+# RUN sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list'
+# RUN sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list'
+# RUN sh -c 'echo "deb http://dl.google.com/linux/chrome/deb/ stable main" >>   /etc/apt/sources.list'
+
+RUN apt-get update -y
+# RUN apt-get install -yqq unzip
+# RUN apt-get install google-chrome-stable
+# Download the Chrome Driver
+# RUN wget -O /tmp/chromedriver.zip http://chromedriver.storage.googleapis.com/`curl -sS chromedriver.storage.googleapis.com/LATEST_RELEASE
+# `/chromedriver_linux64.zip
+# RUN unzip /tmp/chromedriver.zip chromedriver -d /usr/local/bin/
+# ENV DISPLAY=:99
+
+# FROM python:3.10-slim-buster
+# RUN apt-get update -y && apt-get install -y gnupg2
+# RUN apt-get install -y wget xvfb unzip
+# RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add -
+# RUN echo "deb http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list
+# RUN apt-get install -y google-chrome-stable
+# ENV CHROMEDRIVER_VERSION 2.19
+# ENV CHROMEDRIVER_DIR /chromedriver
+# RUN mkdir $CHROMEDRIVER_DIR
+# RUN wget -q --continue -P $CHROMEDRIVER_DIR "http://chromedriver.storage.googleapis.com/$CHROMEDRIVER_VERSION/chromedriver_linux64.zip"
+# RUN unzip $CHROMEDRIVER_DIR/chromedriver* -d $CHROMEDRIVER_DIR
+# ENV PATH $CHROMEDRIVER_DIR:$PATH
+
+WORKDIR /bot
+
+RUN pip install --upgrade pip && pip install -r requirements.txt
+
+ENTRYPOINT [ "python", "bot.py" ]

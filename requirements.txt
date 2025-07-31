@@ -105,3 +105,4 @@ uvicorn==0.34.3
 wcwidth==0.2.13
 wordcloud==1.9.4
 xgboost==3.0.2
+aiosqlite
