@@ -2,7 +2,11 @@
     "prefix": "/",
     "google_api_key": "",
     "token": "",
+//<<<<<<< HEAD
     "permissions": "8",
+//=======
+    "permissions": "",
+//>>>>>>> fc008ef336c75f7b29ca3074f0662f5e23e2d3e2
     "application_id": "",
     "guild_id": 0,
     "channel_id": 0,
