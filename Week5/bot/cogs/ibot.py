@@ -2,7 +2,11 @@
 
 from qdrant_client import QdrantClient
 from dotenv import load_dotenv  # For loading API key from a .env file
+<<<<<<< HEAD
 import google.generativeai as genai
+=======
+# import google.generativeai as genai
+>>>>>>> 29874bbe08e8c4f3e7a216db16628154c5656dd8
 from langchain_qdrant import Qdrant  # Qdrant Vector Store Wrapper
 from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_core.documents import Document

@@ -18,3 +18,12 @@ tabulate
 tqdm
 wikipedia
 wrapt
+<<<<<<< HEAD
+=======
+qdrant-client
+python-dotenv
+langchain-huggingface
+langchain-qdrant
+langchain-community
+sentence-transformers
+>>>>>>> 29874bbe08e8c4f3e7a216db16628154c5656dd8
