@@ -1,0 +1,15 @@
+matplotlib
+opencv-python
+torch
+torchvision
+transformers
+datasets
+evaluate
+tqdm
+numpy>=1.21.0
+ipython>=7.0.0
+jupyter>=1.0.0
+notebook>=6.0.0
+jupyterlab>=3.0.0
+yt-dlp
+torchmetrics
