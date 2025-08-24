@@ -1,4 +1,4 @@
-# Week 8: Embeddings and Fusion in Multimodal AI
+# Week 9: Embeddings and Fusion in Multimodal AI
 
 This week focuses on understanding and implementing embeddings for different modalities (text, images, and audio) and exploring fusion techniques to combine multimodal information effectively.
 
