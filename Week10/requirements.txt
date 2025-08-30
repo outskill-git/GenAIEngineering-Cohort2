@@ -1,0 +1,16 @@
+open-clip-torch
+lancedb>=0.5.0
+torch>=1.9.0
+gradio
+diffusers
+Pillow>=8.0.0
+transformers>=4.20.0
+openai
+datasets>=2.0.0
+accelerate>=0.20.0
+jupyter>=1.0.0
+ipython>=7.0.0
+pyarrow>=10.0.0
+numpy<2.0.0
+matplotlib>=3.5.0
+pandas
