@@ -1,0 +1,11 @@
+argparse
+deepeval
+fastapi
+langfuse
+openai
+openai-agents
+python-dotenv
+uvicorn
+gradio
+pydantic
+requests
