@@ -17,7 +17,11 @@ file_tool = FileReadTool()
 
 startup_idea = "AI-driven personalized learning platform"
 
-
+llm = LLM(
+        model='openai/gpt-4o',
+        api_key=os.getenv('OPEN_ROUTER_KEY'),
+        base_url="https://openrouter.ai/api/v1"
+    )
 # Create Agents for Iterative Process
 writer = Agent(
     role='Content Writer',
