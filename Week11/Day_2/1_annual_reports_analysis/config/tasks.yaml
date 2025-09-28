@@ -1,0 +1,209 @@
+extract_report_data:
+  description: |
+    Extract comprehensive data from all available annual reports in the repository.
+    For each company's annual report, extract:
+
+    1. Company Overview:
+       - Business description and segments
+       - Geographic presence and revenue breakdown
+       - Key products/services
+       - Total employees and headquarters
+
+    2. Financial Data (last 3 years if available):
+       - Revenue and revenue growth
+       - Gross profit and margins
+       - Operating income and margins
+       - Net income and margins
+       - Total assets and liabilities
+       - Shareholders' equity
+       - Cash and cash equivalents
+       - Long-term debt
+       - Free cash flow
+
+    3. Strategic Information:
+       - Growth strategies and initiatives
+       - Recent acquisitions or divestitures
+       - R&D investments
+       - Capital allocation priorities
+
+    4. Risk Factors:
+       - Key business risks
+       - Regulatory risks
+       - Market competition
+       - Technology risks
+
+    Available reports: {available_reports}
+    Total reports to analyze: {reports_count}
+  expected_output: |
+    A structured data extraction report for each company containing:
+    1. Company profile summary
+    2. Comprehensive financial data table with 3-year trends
+    3. Key strategic initiatives and growth drivers
+    4. Major risk factors and challenges
+    5. Notable management commentary and forward guidance
+    Format the financial data in a consistent, comparable structure
+  agent: document_analyst
+
+analyze_financials:
+  description: |
+    Perform detailed financial analysis on the extracted data:
+
+    1. Calculate Key Financial Ratios:
+       - Profitability: ROE, ROA, ROIC, profit margins
+       - Liquidity: Current ratio, quick ratio, cash ratio
+       - Leverage: Debt-to-equity, debt-to-assets, interest coverage
+       - Efficiency: Asset turnover, inventory turnover, receivables turnover
+       - Valuation: P/E, P/B, EV/EBITDA (if market data available)
+
+    2. Analyze Trends:
+       - Revenue growth rates (YoY and CAGR)
+       - Margin expansion/contraction
+       - Working capital trends
+       - Cash flow generation and quality
+       - Capital expenditure trends
+
+    3. Financial Health Assessment:
+       - Altman Z-Score calculation
+       - Piotroski F-Score
+       - Cash conversion cycle
+       - Free cash flow yield
+
+    Focus areas from user: {analysis_focus}
+    Apply investment criteria: {investment_criteria}
+  expected_output: |
+    Comprehensive financial analysis for each company including:
+    1. Financial ratio dashboard with industry context
+    2. Trend analysis with visualizations (described)
+    3. Financial health scorecard (1-10 scale)
+    4. Quality of earnings assessment
+    5. Key financial strengths and weaknesses
+    6. Red flags or concerns identified
+  agent: financial_analyst
+  context:
+    - extract_report_data
+
+compare_companies:
+  description: |
+    Create a comprehensive comparison of all analyzed companies:
+
+    1. Comparative Metrics Matrix:
+       - Build comparison table for metrics: {comparison_metrics}
+       - Rank companies by each metric
+       - Calculate peer group averages
+       - Identify outliers and best performers
+
+    2. Competitive Positioning:
+       - Market share analysis (if data available)
+       - Competitive advantages assessment
+       - Business model comparison
+       - Growth strategy effectiveness
+
+    3. Sector Analysis:
+       - Group companies by sector: {sectors_of_interest}
+       - Identify sector leaders and laggards
+       - Cross-sector opportunity analysis
+
+    4. Performance Attribution:
+       - What drives outperformance?
+       - Identify common success factors
+       - Operational efficiency comparison
+  expected_output: |
+    Detailed comparative analysis report containing:
+    1. Comprehensive metrics comparison table with rankings
+    2. Peer group analysis with performance quartiles
+    3. Competitive advantages matrix
+    4. Best-in-class identification for each metric
+    5. Investment attractiveness ranking
+    6. Sector-wise recommendations
+  agent: comparative_analyst
+  context:
+    - extract_report_data
+    - analyze_financials
+
+assess_risks:
+  description: |
+    Conduct thorough risk assessment for each company and the portfolio:
+
+    1. Company-Specific Risks:
+       - Business model risks and disruption potential
+       - Financial leverage and liquidity risks
+       - Regulatory and compliance risks
+       - Execution risks on growth strategies
+       - Management and governance concerns
+
+    2. Industry Risks:
+       - Sector-specific challenges
+       - Technological disruption threats
+       - Regulatory changes impact
+       - Market saturation risks
+
+    3. Macro Risks:
+       - Economic sensitivity analysis
+       - Interest rate impact
+       - Currency exposure
+       - Geopolitical risks
+
+    4. Portfolio Risks:
+       - Concentration risks
+       - Correlation analysis
+       - Scenario analysis (recession, inflation, etc.)
+
+    Risk tolerance level: {risk_tolerance}
+  expected_output: |
+    Comprehensive risk assessment report including:
+    1. Risk matrix for each company (probability vs impact)
+    2. Risk scores and rankings (1-10 scale)
+    3. Key risk factors detailed analysis
+    4. Risk mitigation recommendations
+    5. Portfolio-level risk assessment
+    6. Stress test scenarios and outcomes
+  agent: risk_analyst
+  context:
+    - extract_report_data
+    - analyze_financials
+    - compare_companies
+
+generate_recommendations:
+  description: |
+    Synthesize all analyses to create actionable investment recommendations:
+
+    1. Investment Recommendations:
+       - Rank companies by investment attractiveness
+       - Assign ratings (Strong Buy, Buy, Hold, Sell)
+       - Suggest portfolio allocation percentages
+       - Provide price targets or valuation ranges
+
+    2. Investment Thesis:
+       - Bull case and bear case for each recommendation
+       - Key catalysts and milestones to monitor
+       - Time horizon for investment thesis
+       - Expected returns and risk-adjusted returns
+
+    3. Portfolio Construction:
+       - Optimal portfolio mix based on criteria
+       - Diversification recommendations
+       - Risk-return optimization
+       - Rebalancing triggers
+
+    4. Monitoring Framework:
+       - Key metrics to track
+       - Red flags that would change thesis
+       - Quarterly review checklist
+
+    Investment horizon: {investment_horizon}
+    All criteria: {investment_criteria}
+  expected_output: |
+    Professional investment recommendation report containing:
+    1. Executive summary with top 3 investment ideas
+    2. Detailed recommendations for each company with ratings
+    3. Investment thesis with catalysts and risks
+    4. Suggested portfolio allocation with rationale
+    5. 12-month outlook and expected returns
+    6. Implementation roadmap and monitoring plan
+    7. Alternative scenarios and contingency plans
+  agent: investment_strategist
+  context:
+    - extract_report_data
+    - analyze_financials
+    - compare_companies
+    - assess_risks

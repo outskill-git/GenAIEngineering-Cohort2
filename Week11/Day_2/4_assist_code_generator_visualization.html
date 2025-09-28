@@ -1,0 +1,1040 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ultra-Fast AI Code Generator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #ffd89b 0%, #19547b 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg width="60" height="60" xmlns="http://www.w3.org/2000/svg"><defs><pattern id="grid" width="60" height="60" patternUnits="userSpaceOnUse"><path d="M 60 0 L 0 0 0 60" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="1"/></pattern></defs><rect width="100%" height="100%" fill="url(%23grid)"/></svg>');
+            opacity: 0.3;
+        }
+
+        .header h1 {
+            font-size: 3.5rem;
+            margin-bottom: 15px;
+            position: relative;
+            z-index: 1;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.3rem;
+            opacity: 0.95;
+            position: relative;
+            z-index: 1;
+        }
+
+        .lightning-icon {
+            display: inline-block;
+            animation: lightning 2s infinite;
+        }
+
+        @keyframes lightning {
+            0%, 100% { transform: scale(1) rotate(0deg); }
+            25% { transform: scale(1.1) rotate(5deg); }
+            75% { transform: scale(0.9) rotate(-5deg); }
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .section {
+            margin-bottom: 60px;
+        }
+
+        .section-title {
+            font-size: 2.2rem;
+            margin-bottom: 30px;
+            color: #2d3748;
+            border-bottom: 4px solid #ffd89b;
+            padding-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        /* System Overview */
+        .system-overview {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px;
+            border-radius: 20px;
+            margin-bottom: 40px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .system-overview::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
+            animation: shimmer 3s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+        }
+
+        .overview-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .overview-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-top: 30px;
+        }
+
+        .overview-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .overview-card:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-5px);
+        }
+
+        .overview-icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        .overview-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .overview-desc {
+            font-size: 0.95rem;
+            opacity: 0.9;
+            line-height: 1.4;
+        }
+
+        /* Component Architecture */
+        .component-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 30px;
+        }
+
+        .component-card {
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            border: 2px solid #cbd5e0;
+            border-radius: 20px;
+            padding: 35px;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .component-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 6px;
+            background: linear-gradient(90deg, #ffd89b 0%, #19547b 100%);
+        }
+
+        .component-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 25px 50px rgba(255, 216, 155, 0.3);
+            border-color: #ffd89b;
+        }
+
+        .component-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .component-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            margin-right: 20px;
+            color: white;
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+            background: linear-gradient(135deg, #ffd89b 0%, #19547b 100%);
+        }
+
+        .component-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #1a202c;
+            margin-bottom: 5px;
+        }
+
+        .component-subtitle {
+            font-size: 1.1rem;
+            color: #718096;
+        }
+
+        .component-content {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            border-left: 6px solid #ffd89b;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin: 25px 0;
+        }
+
+        .feature-item {
+            background: #f7fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .feature-item:hover {
+            border-color: #ffd89b;
+            background: #fffbf5;
+            transform: translateY(-3px);
+        }
+
+        .feature-title {
+            font-weight: 700;
+            color: #2d3748;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .feature-desc {
+            color: #4a5568;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        /* Mode Comparison */
+        .mode-comparison {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 30px;
+            margin: 30px 0;
+        }
+
+        .mode-card {
+            border-radius: 20px;
+            padding: 30px;
+            color: white;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .mode-card:hover {
+            transform: scale(1.02);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+        }
+
+        .ultra-fast-mode {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+        }
+
+        .explainer-mode {
+            background: linear-gradient(135deg, #4ecdc4 0%, #44a08d 100%);
+        }
+
+        .mode-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .mode-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-right: 15px;
+        }
+
+        .mode-title {
+            font-size: 1.6rem;
+            font-weight: 700;
+        }
+
+        .mode-features {
+            list-style: none;
+        }
+
+        .mode-features li {
+            padding: 8px 0;
+            opacity: 0.95;
+            font-size: 0.95rem;
+        }
+
+        .mode-features li::before {
+            content: "✨";
+            margin-right: 10px;
+        }
+
+        /* Data Flow */
+        .flow-container {
+            background: linear-gradient(135deg, #2d3748 0%, #4a5568 100%);
+            border-radius: 20px;
+            padding: 40px;
+            color: white;
+            margin: 40px 0;
+        }
+
+        .flow-title {
+            text-align: center;
+            font-size: 2rem;
+            margin-bottom: 40px;
+            font-weight: 700;
+        }
+
+        .flow-diagram {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .flow-step {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+            min-width: 200px;
+            flex: 1;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .flow-step:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: scale(1.05);
+        }
+
+        .step-number {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #ffd89b 0%, #19547b 100%);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.2rem;
+            margin: 0 auto 15px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .step-title {
+            font-weight: 700;
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+        }
+
+        .step-desc {
+            font-size: 0.9rem;
+            opacity: 0.9;
+            line-height: 1.4;
+        }
+
+        .flow-arrow {
+            font-size: 2.5rem;
+            color: rgba(255, 216, 155, 0.8);
+            animation: pulse-arrow 2s infinite;
+        }
+
+        @keyframes pulse-arrow {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.7; transform: scale(1.2); }
+        }
+
+        /* Performance Metrics */
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 25px;
+            margin: 30px 0;
+        }
+
+        .metric-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .metric-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(102, 126, 234, 0.3);
+        }
+
+        .metric-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255,255,255,0.1);
+            transform: translateX(-100%);
+            transition: transform 0.5s ease;
+        }
+
+        .metric-card:hover::before {
+            transform: translateX(0);
+        }
+
+        .metric-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .metric-label {
+            font-size: 1rem;
+            opacity: 0.9;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* API Integration */
+        .api-section {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 40px;
+            border-radius: 20px;
+            margin: 40px 0;
+        }
+
+        .api-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+
+        .api-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 15px;
+            padding: 25px;
+            transition: all 0.3s ease;
+        }
+
+        .api-card:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-5px);
+        }
+
+        .api-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .api-features {
+            list-style: none;
+        }
+
+        .api-features li {
+            padding: 5px 0;
+            opacity: 0.9;
+            font-size: 0.95rem;
+        }
+
+        .api-features li::before {
+            content: "🔗";
+            margin-right: 8px;
+        }
+
+        /* Tools Section */
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+        }
+
+        .tool-card {
+            background: white;
+            border: 2px solid #e2e8f0;
+            border-radius: 20px;
+            padding: 30px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .tool-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, #f093fb 0%, #f5576c 100%);
+            border-radius: 20px 20px 0 0;
+        }
+
+        .tool-card:hover {
+            border-color: #f093fb;
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(240, 147, 251, 0.15);
+        }
+
+        .tool-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .tool-icon {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            margin-right: 15px;
+        }
+
+        .tool-name {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #2d3748;
+        }
+
+        .tool-description {
+            color: #4a5568;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .tool-capabilities {
+            list-style: none;
+        }
+
+        .tool-capabilities li {
+            padding: 5px 0;
+            color: #4a5568;
+            font-size: 0.9rem;
+        }
+
+        .tool-capabilities li::before {
+            content: "⚙️";
+            margin-right: 8px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .component-grid, .features-grid, .mode-comparison, 
+            .metrics-grid, .api-grid, .tools-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .flow-diagram {
+                flex-direction: column;
+            }
+            
+            .flow-arrow {
+                transform: rotate(90deg);
+                margin: 15px 0;
+            }
+            
+            .header h1 {
+                font-size: 2.5rem;
+            }
+            
+            .section-title {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1><span class="lightning-icon">⚡</span> Ultra-Fast AI Code Generator</h1>
+            <p>Lightning-Fast Code Generation & Intelligent Code Explanation System</p>
+        </div>
+
+        <div class="content">
+            <!-- System Overview -->
+            <div class="section">
+                <div class="system-overview">
+                    <div class="overview-content">
+                        <h2 style="text-align: center; font-size: 2.2rem; margin-bottom: 20px;">🚀 System Capabilities</h2>
+                        <p style="text-align: center; font-size: 1.1rem; margin-bottom: 30px;">Dual-mode AI system optimized for speed and intelligence</p>
+                        
+                        <div class="overview-grid">
+                            <div class="overview-card">
+                                <span class="overview-icon">⚡</span>
+                                <div class="overview-title">Ultra-Fast Generation</div>
+                                <div class="overview-desc">Direct API calls deliver code in 5-15 seconds with maximum efficiency</div>
+                            </div>
+                            
+                            <div class="overview-card">
+                                <span class="overview-icon">🔍</span>
+                                <div class="overview-title">Intelligent Analysis</div>
+                                <div class="overview-desc">Deep code understanding with structure and complexity analysis</div>
+                            </div>
+                            
+                            <div class="overview-card">
+                                <span class="overview-icon">🛠️</span>
+                                <div class="overview-title">CrewAI Fallback</div>
+                                <div class="overview-desc">Multi-agent system for complex requests and advanced processing</div>
+                            </div>
+                            
+                            <div class="overview-card">
+                                <span class="overview-icon">📊</span>
+                                <div class="overview-title">Performance Focus</div>
+                                <div class="overview-desc">Optimized architecture with caching and concurrent processing</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Component Architecture -->
+            <div class="section">
+                <h2 class="section-title">🏗️ System Architecture</h2>
+                <div class="component-grid">
+                    <div class="component-card">
+                        <div class="component-header">
+                            <div class="component-icon">⚡</div>
+                            <div>
+                                <div class="component-title">assist.py</div>
+                                <div class="component-subtitle">Ultra-Fast AI Code Generator & Explainer</div>
+                            </div>
+                        </div>
+                        <div class="component-content">
+                            <p><strong>Purpose:</strong> Streamlit-based application providing lightning-fast code generation and intelligent code explanation with dual processing modes</p>
+                            
+                            <h4>Core Components:</h4>
+                            <div class="features-grid">
+                                <div class="feature-item">
+                                    <div class="feature-title">🎨 Streamlit Interface</div>
+                                    <div class="feature-desc">Modern web UI with tabbed navigation, real-time metrics, and interactive controls</div>
+                                </div>
+                                
+                                <div class="feature-item">
+                                    <div class="feature-title">⚡ Ultra-Fast Mode</div>
+                                    <div class="feature-desc">Direct OpenRouter API calls bypassing CrewAI for maximum speed (5-15s generation)</div>
+                                </div>
+                                
+                                <div class="feature-item">
+                                    <div class="feature-title">🤖 CrewAI Fallback</div>
+                                    <div class="feature-desc">Multi-agent system for complex requests requiring advanced processing</div>
+                                </div>
+                                
+                                <div class="feature-item">
+                                    <div class="feature-title">🔍 Code Analysis Engine</div>
+                                    <div class="feature-desc">Comprehensive code explanation with structure, complexity, and best practices analysis</div>
+                                </div>
+                                
+                                <div class="feature-item">
+                                    <div class="feature-title">💾 Export System</div>
+                                    <div class="feature-desc">Download generated code, tests, documentation, and analysis reports</div>
+                                </div>
+                                
+                                <div class="feature-item">
+                                    <div class="feature-title">📊 Performance Monitoring</div>
+                                    <div class="feature-desc">Real-time metrics tracking generation time, complexity scores, and system status</div>
+                                </div>
+                            </div>
+
+                            <h4>Key Classes & Functions:</h4>
+                            <div class="features-grid">
+                                <div class="feature-item">
+                                    <div class="feature-title">📋 CodeOutput</div>
+                                    <div class="feature-desc">Dataclass storing generated code, tests, docs, and metadata</div>
+                                </div>
+                                
+                                <div class="feature-item">
+                                    <div class="feature-title">🔧 FastCodeAnalysisTool</div>
+                                    <div class="feature-desc">CrewAI tool for rapid code validation and syntax checking</div>
+                                </div>
+                                
+                                <div class="feature-item">
+                                    <div class="feature-title">📖 CodeExplanationTool</div>
+                                    <div class="feature-desc">Tool for extracting code structure and complexity metrics</div>
+                                </div>
+                                
+                                <div class="feature-item">
+                                    <div class="feature-title">⚡ generate_code_ultra_fast()</div>
+                                    <div class="feature-desc">Direct API function for maximum speed code generation</div>
+                                </div>
+                                
+                                <div class="feature-item">
+                                    <div class="feature-title">🔍 explain_code_fast()</div>
+                                    <div class="feature-desc">Intelligent code analysis with detailed explanations</div>
+                                </div>
+                                
+                                <div class="feature-item">
+                                    <div class="feature-title">💾 @lru_cache API validation</div>
+                                    <div class="feature-desc">Cached API key validation for improved performance</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dual Mode System -->
+            <div class="section">
+                <h2 class="section-title">🎯 Dual Mode Operation</h2>
+                <div class="mode-comparison">
+                    <div class="mode-card ultra-fast-mode">
+                        <div class="mode-header">
+                            <div class="mode-icon">⚡</div>
+                            <div class="mode-title">Code Generator Mode</div>
+                        </div>
+                        <ul class="mode-features">
+                            <li>Ultra-Fast Mode: Direct API calls (5-15 seconds)</li>
+                            <li>CrewAI Fallback: Multi-agent processing</li>
+                            <li>Complete solution generation (code + tests + docs)</li>
+                            <li>Requirements.txt automatic generation</li>
+                            <li>Quick examples with one-click selection</li>
+                            <li>Performance metrics and time tracking</li>
+                            <li>Architecture notes and best practices</li>
+                            <li>Export functionality for all components</li>
+                        </ul>
+                    </div>
+
+                    <div class="mode-card explainer-mode">
+                        <div class="mode-header">
+                            <div class="mode-icon">🔍</div>
+                            <div class="mode-title">Code Explainer Mode</div>
+                        </div>
+                        <ul class="mode-features">
+                            <li>Instant code analysis and explanation</li>
+                            <li>Structure analysis (functions, classes, imports)</li>
+                            <li>Complexity scoring and assessment</li>
+                            <li>Best practices evaluation</li>
+                            <li>Sample code templates built-in</li>
+                            <li>File upload support (.py files)</li>
+                            <li>Educational detailed explanations</li>
+                            <li>Full analysis report export</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Data Flow Diagram -->
+            <div class="section">
+                <h2 class="section-title">🔄 System Data Flow</h2>
+                <div class="flow-container">
+                    <div class="flow-title">Processing Pipeline Architecture</div>
+                    <div class="flow-diagram">
+                        <div class="flow-step">
+                            <div class="step-number">1</div>
+                            <div class="step-title">User Input</div>
+                            <div class="step-desc">Requirements or code submitted via Streamlit interface</div>
+                        </div>
+
+                        <div class="flow-arrow">→</div>
+
+                        <div class="flow-step">
+                            <div class="step-number">2</div>
+                            <div class="step-title">Mode Selection</div>
+                            <div class="step-desc">Ultra-Fast or CrewAI mode selection with API validation</div>
+                        </div>
+
+                        <div class="flow-arrow">→</div>
+
+                        <div class="flow-step">
+                            <div class="step-number">3</div>
+                            <div class="step-title">Processing Engine</div>
+                            <div class="step-desc">Direct API calls or multi-agent CrewAI processing</div>
+                        </div>
+
+                        <div class="flow-arrow">→</div>
+
+                        <div class="flow-step">
+                            <div class="step-number">4</div>
+                            <div class="step-title">Result Generation</div>
+                            <div class="step-desc">Code/analysis generation with performance tracking</div>
+                        </div>
+
+                        <div class="flow-arrow">→</div>
+
+                        <div class="flow-step">
+                            <div class="step-number">5</div>
+                            <div class="step-title">UI Display</div>
+                            <div class="step-desc">Tabbed results with export functionality</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Performance Metrics -->
+            <div class="section">
+                <h2 class="section-title">📊 Performance Metrics</h2>
+                <div class="metrics-grid">
+                    <div class="metric-card">
+                        <div class="metric-value">5-15s</div>
+                        <div class="metric-label">Ultra-Fast Generation</div>
+                    </div>
+                    
+                    <div class="metric-card">
+                        <div class="metric-value">2-3s</div>
+                        <div class="metric-label">Code Analysis Time</div>
+                    </div>
+                    
+                    <div class="metric-card">
+                        <div class="metric-value">100%</div>
+                        <div class="metric-label">Syntax Validation</div>
+                    </div>
+                    
+                    <div class="metric-card">
+                        <div class="metric-value">32</div>
+                        <div class="metric-label">Cached API Validations</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- AI Tools & Integration -->
+            <div class="section">
+                <h2 class="section-title">🤖 AI Tools & Integration</h2>
+                <div class="tools-grid">
+                    <div class="tool-card">
+                        <div class="tool-header">
+                            <div class="tool-icon">⚡</div>
+                            <div class="tool-name">FastCodeAnalysisTool</div>
+                        </div>
+                        <div class="tool-description">
+                            Ultra-fast code validation and syntax checking tool for CrewAI integration
+                        </div>
+                        <ul class="tool-capabilities">
+                            <li>Real-time syntax validation</li>
+                            <li>Code compilation testing</li>
+                            <li>Best practices detection</li>
+                            <li>Wildcard import warnings</li>
+                        </ul>
+                    </div>
+
+                    <div class="tool-card">
+                        <div class="tool-header">
+                            <div class="tool-icon">📖</div>
+                            <div class="tool-name">CodeExplanationTool</div>
+                        </div>
+                        <div class="tool-description">
+                            Intelligent code structure analysis and complexity measurement tool
+                        </div>
+                        <ul class="tool-capabilities">
+                            <li>Function and class extraction</li>
+                            <li>Import dependency analysis</li>
+                            <li>Lines of code counting</li>
+                            <li>Complexity scoring algorithm</li>
+                        </ul>
+                    </div>
+
+                    <div class="tool-card">
+                        <div class="tool-header">
+                            <div class="tool-icon">🔧</div>
+                            <div class="tool-name">Direct API Engine</div>
+                        </div>
+                        <div class="tool-description">
+                            High-performance direct OpenRouter API integration bypassing CrewAI overhead
+                        </div>
+                        <ul class="tool-capabilities">
+                            <li>30-second timeout protection</li>
+                            <li>Temperature-controlled generation</li>
+                            <li>Model selection (GPT-3.5/GPT-4)</li>
+                            <li>Error handling and fallbacks</li>
+                        </ul>
+                    </div>
+
+                    <div class="tool-card">
+                        <div class="tool-header">
+                            <div class="tool-icon">🎯</div>
+                            <div class="tool-name">CrewAI Fallback System</div>
+                        </div>
+                        <div class="tool-description">
+                            Multi-agent system for complex code generation when ultra-fast mode is insufficient
+                        </div>
+                        <ul class="tool-capabilities">
+                            <li>Developer agent with constraints</li>
+                            <li>60-second execution timeout</li>
+                            <li>Sequential processing workflow</li>
+                            <li>Comprehensive output parsing</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- API Integration -->
+            <div class="section">
+                <div class="api-section">
+                    <h2 style="text-align: center; font-size: 2rem; margin-bottom: 20px;">🔗 API Integration Architecture</h2>
+                    <p style="text-align: center; font-size: 1.1rem; margin-bottom: 30px;">Multi-provider AI integration with intelligent fallback mechanisms</p>
+                    
+                    <div class="api-grid">
+                        <div class="api-card">
+                            <div class="api-title">🚀 OpenRouter Integration</div>
+                            <ul class="api-features">
+                                <li>Primary API for ultra-fast generation</li>
+                                <li>GPT-3.5 Turbo for speed optimization</li>
+                                <li>GPT-4 for complex analysis tasks</li>
+                                <li>Custom headers and referer handling</li>
+                                <li>Streaming disabled for consistency</li>
+                            </ul>
+                        </div>
+
+                        <div class="api-card">
+                            <div class="api-title">🔍 SERPER Search</div>
+                            <ul class="api-features">
+                                <li>Research capabilities for CrewAI agents</li>
+                                <li>Real-time information gathering</li>
+                                <li>Code example and pattern searching</li>
+                                <li>Best practices research integration</li>
+                            </ul>
+                        </div>
+
+                        <div class="api-card">
+                            <div class="api-title">🤗 HuggingFace Hub</div>
+                            <ul class="api-features">
+                                <li>Alternative model access</li>
+                                <li>Open-source model integration</li>
+                                <li>Fallback processing capabilities</li>
+                                <li>Research and experimentation support</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Features & Capabilities -->
+            <div class="section">
+                <h2 class="section-title">✨ Advanced Features</h2>
+                <div class="features-grid">
+                    <div class="feature-item">
+                        <div class="feature-title">🎨 Modern UI/UX</div>
+                        <div class="feature-desc">Streamlit-based interface with real-time metrics, progress tracking, and tabbed navigation</div>
+                    </div>
+
+                    <div class="feature-item">
+                        <div class="feature-title">📊 Performance Analytics</div>
+                        <div class="feature-desc">Generation time tracking, complexity scoring, and system performance monitoring</div>
+                    </div>
+
+                    <div class="feature-item">
+                        <div class="feature-title">💾 Smart Caching</div>
+                        <div class="feature-desc">LRU cache for API validation, reducing redundant calls and improving response times</div>
+                    </div>
+
+                    <div class="feature-item">
+                        <div class="feature-title">🚀 Quick Examples</div>
+                        <div class="feature-desc">Pre-built templates for common coding tasks with one-click selection</div>
+                    </div>
+
+                    <div class="feature-item">
+                        <div class="feature-title">📁 File Support</div>
+                        <div class="feature-desc">Upload .py files for analysis, with automatic code extraction and processing</div>
+                    </div>
+
+                    <div class="feature-item">
+                        <div class="feature-title">🛡️ Error Handling</div>
+                        <div class="feature-desc">Comprehensive error handling with timeouts, fallbacks, and user-friendly messages</div>
+                    </div>
+
+                    <div class="feature-item">
+                        <div class="feature-title">📤 Export Functionality</div>
+                        <div class="feature-desc">Download generated code, tests, documentation, and analysis reports</div>
+                    </div>
+
+                    <div class="feature-item">
+                        <div class="feature-title">🔄 Dual Processing</div>
+                        <div class="feature-desc">Intelligent mode selection between ultra-fast direct API and CrewAI multi-agent processing</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
