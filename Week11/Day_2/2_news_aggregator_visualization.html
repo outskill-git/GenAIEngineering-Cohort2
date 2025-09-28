@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI News Aggregator - Architecture</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .section {
+            margin-bottom: 50px;
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            margin-bottom: 25px;
+            color: #2d3748;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
+        }
+
+        /* File Structure */
+        .files-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .file-card {
+            background: #f8fafc;
+            border: 2px solid #e2e8f0;
+            border-radius: 15px;
+            padding: 25px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .file-card:hover {
+            border-color: #667eea;
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.2);
+        }
+
+        .file-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .file-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-right: 15px;
+            color: white;
+        }
+
+        .api-icon { background: #10b981; }
+        .ui-icon { background: #3b82f6; }
+        .crew-icon { background: #8b5cf6; }
+
+        .file-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #1a202c;
+        }
+
+        .file-subtitle {
+            font-size: 0.9rem;
+            color: #718096;
+            margin-top: 2px;
+        }
+
+        .file-content {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            border-left: 4px solid #667eea;
+        }
+
+        .component-list {
+            list-style: none;
+            margin: 15px 0;
+        }
+
+        .component-list li {
+            padding: 8px 0;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+        }
+
+        .component-list li:last-child {
+            border-bottom: none;
+        }
+
+        .component-list li::before {
+            content: "▸";
+            color: #667eea;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        /* Data Flow Diagram */
+        .flow-container {
+            background: #f8fafc;
+            border-radius: 15px;
+            padding: 30px;
+            position: relative;
+            overflow-x: auto;
+        }
+
+        .flow-diagram {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            min-width: 1000px;
+            position: relative;
+        }
+
+        .flow-step {
+            background: white;
+            border: 3px solid #e2e8f0;
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            min-width: 180px;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .flow-step:hover {
+            border-color: #667eea;
+            transform: scale(1.05);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.2);
+        }
+
+        .step-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            margin: 0 auto 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+        }
+
+        .step1 { background: #3b82f6; }
+        .step2 { background: #10b981; }
+        .step3 { background: #8b5cf6; }
+        .step4 { background: #f59e0b; }
+        .step5 { background: #ef4444; }
+
+        .step-title {
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: #1a202c;
+        }
+
+        .step-desc {
+            font-size: 0.85rem;
+            color: #718096;
+            line-height: 1.4;
+        }
+
+        .flow-arrow {
+            font-size: 2rem;
+            color: #667eea;
+            margin: 0 10px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.6; }
+        }
+
+        /* Technical Details */
+        .tech-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+        }
+
+        .tech-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tech-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255,255,255,0.1);
+            transform: translateX(-100%);
+            transition: transform 0.5s ease;
+        }
+
+        .tech-card:hover::before {
+            transform: translateX(0);
+        }
+
+        .tech-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .tech-list {
+            list-style: none;
+            position: relative;
+            z-index: 1;
+        }
+
+        .tech-list li {
+            padding: 5px 0;
+            opacity: 0.9;
+        }
+
+        .tech-list li::before {
+            content: "✓";
+            margin-right: 10px;
+            color: #4ade80;
+        }
+
+        /* API Endpoints */
+        .endpoints-grid {
+            display: grid;
+            gap: 15px;
+        }
+
+        .endpoint {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+
+        .endpoint:hover {
+            border-color: #667eea;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.1);
+        }
+
+        .endpoint-method {
+            background: #10b981;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            margin-right: 15px;
+            min-width: 50px;
+            text-align: center;
+        }
+
+        .endpoint-path {
+            font-family: 'Courier New', monospace;
+            font-weight: 600;
+            color: #2d3748;
+            flex: 1;
+        }
+
+        .endpoint-desc {
+            color: #718096;
+            font-size: 0.9rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .files-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .flow-diagram {
+                flex-direction: column;
+                min-width: auto;
+            }
+            
+            .flow-arrow {
+                transform: rotate(90deg);
+                margin: 20px 0;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🤖 AI News Aggregator</h1>
+            <p>System Architecture & Data Flow Visualization</p>
+        </div>
+
+        <div class="content">
+            <!-- File Structure Section -->
+            <div class="section">
+                <h2 class="section-title">📁 System Components</h2>
+                <div class="files-grid">
+                    <!-- news_api.py -->
+                    <div class="file-card">
+                        <div class="file-header">
+                            <div class="file-icon api-icon">🚀</div>
+                            <div>
+                                <div class="file-title">news_api.py</div>
+                                <div class="file-subtitle">FastAPI Backend Server</div>
+                            </div>
+                        </div>
+                        <div class="file-content">
+                            <p><strong>Purpose:</strong> RESTful API server providing news aggregation endpoints</p>
+                            
+                            <h4>Key Components:</h4>
+                            <ul class="component-list">
+                                <li>FastAPI application with CORS middleware</li>
+                                <li>Pydantic models (NewsItem, NewsResponse)</li>
+                                <li>Health check endpoint (/)</li>
+                                <li>News search endpoint (/api/news/{topic})</li>
+                                <li>Trending topics endpoint</li>
+                                <li>Error handling & logging</li>
+                            </ul>
+
+                            <h4>API Endpoints:</h4>
+                            <div class="endpoints-grid">
+                                <div class="endpoint">
+                                    <span class="endpoint-method">GET</span>
+                                    <span class="endpoint-path">/</span>
+                                    <span class="endpoint-desc">Health check</span>
+                                </div>
+                                <div class="endpoint">
+                                    <span class="endpoint-method">GET</span>
+                                    <span class="endpoint-path">/api/news/{topic}</span>
+                                    <span class="endpoint-desc">Fetch news articles</span>
+                                </div>
+                                <div class="endpoint">
+                                    <span class="endpoint-method">GET</span>
+                                    <span class="endpoint-path">/api/topics/trending</span>
+                                    <span class="endpoint-desc">Get trending topics</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- news_app.py -->
+                    <div class="file-card">
+                        <div class="file-header">
+                            <div class="file-icon ui-icon">🎨</div>
+                            <div>
+                                <div class="file-title">news_app.py</div>
+                                <div class="file-subtitle">Streamlit Frontend UI</div>
+                            </div>
+                        </div>
+                        <div class="file-content">
+                            <p><strong>Purpose:</strong> Interactive web interface for news browsing and analysis</p>
+                            
+                            <h4>Key Components:</h4>
+                            <ul class="component-list">
+                                <li>NewsAggregatorUI main class</li>
+                                <li>Custom CSS styling & animations</li>
+                                <li>API status monitoring</li>
+                                <li>Search interface with filters</li>
+                                <li>News cards with metadata</li>
+                                <li>Analytics dashboard with charts</li>
+                                <li>Export functionality (JSON)</li>
+                            </ul>
+
+                            <h4>UI Features:</h4>
+                            <ul class="component-list">
+                                <li>Trending topics sidebar</li>
+                                <li>Search history tracking</li>
+                                <li>Credibility filtering</li>
+                                <li>Interactive analytics charts</li>
+                                <li>Mock data toggle</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- news_crew.py -->
+                    <div class="file-card">
+                        <div class="file-header">
+                            <div class="file-icon crew-icon">🤖</div>
+                            <div>
+                                <div class="file-title">news_crew.py</div>
+                                <div class="file-subtitle">CrewAI Multi-Agent System</div>
+                            </div>
+                        </div>
+                        <div class="file-content">
+                            <p><strong>Purpose:</strong> AI agents for intelligent news search, curation, and formatting</p>
+                            
+                            <h4>Key Components:</h4>
+                            <ul class="component-list">
+                                <li>FastNewsSearchTool (SERPER API)</li>
+                                <li>NewsAggregatorCrew (production)</li>
+                                <li>MockNewsAggregatorCrew (testing)</li>
+                                <li>News Fetcher Agent</li>
+                                <li>News Formatter Agent</li>
+                                <li>Task definitions & workflows</li>
+                            </ul>
+
+                            <h4>AI Agents:</h4>
+                            <ul class="component-list">
+                                <li><strong>News Fetcher:</strong> Searches & filters articles</li>
+                                <li><strong>News Formatter:</strong> Structures data output</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Data Flow Section -->
+            <div class="section">
+                <h2 class="section-title">🔄 Data Flow Diagram</h2>
+                <div class="flow-container">
+                    <div class="flow-diagram">
+                        <div class="flow-step">
+                            <div class="step-icon step1">👤</div>
+                            <div class="step-title">User Input</div>
+                            <div class="step-desc">User enters search topic in Streamlit UI</div>
+                        </div>
+
+                        <div class="flow-arrow">→</div>
+
+                        <div class="flow-step">
+                            <div class="step-icon step2">🌐</div>
+                            <div class="step-title">API Request</div>
+                            <div class="step-desc">Frontend sends HTTP request to FastAPI backend</div>
+                        </div>
+
+                        <div class="flow-arrow">→</div>
+
+                        <div class="flow-step">
+                            <div class="step-icon step3">🤖</div>
+                            <div class="step-title">AI Agents</div>
+                            <div class="step-desc">CrewAI agents search and process news data</div>
+                        </div>
+
+                        <div class="flow-arrow">→</div>
+
+                        <div class="flow-step">
+                            <div class="step-icon step4">🔍</div>
+                            <div class="step-title">External API</div>
+                            <div class="step-desc">SERPER API fetches news articles from web</div>
+                        </div>
+
+                        <div class="flow-arrow">→</div>
+
+                        <div class="flow-step">
+                            <div class="step-icon step5">📊</div>
+                            <div class="step-title">Display Results</div>
+                            <div class="step-desc">Formatted news displayed with analytics</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Technical Stack -->
+            <div class="section">
+                <h2 class="section-title">⚙️ Technical Stack & Architecture</h2>
+                <div class="tech-grid">
+                    <div class="tech-card">
+                        <div class="tech-title">🎨 Frontend Layer</div>
+                        <ul class="tech-list">
+                            <li>Streamlit Web Framework</li>
+                            <li>Custom CSS Styling</li>
+                            <li>Interactive Charts & Analytics</li>
+                            <li>Responsive Design</li>
+                            <li>Real-time API Status Monitoring</li>
+                        </ul>
+                    </div>
+
+                    <div class="tech-card">
+                        <div class="tech-title">🚀 Backend Layer</div>
+                        <ul class="tech-list">
+                            <li>FastAPI REST Server</li>
+                            <li>Pydantic Data Validation</li>
+                            <li>CORS Middleware</li>
+                            <li>Error Handling & Logging</li>
+                            <li>Environment Configuration</li>
+                        </ul>
+                    </div>
+
+                    <div class="tech-card">
+                        <div class="tech-title">🤖 AI Agent Layer</div>
+                        <ul class="tech-list">
+                            <li>CrewAI Multi-Agent Framework</li>
+                            <li>Custom Tool Development</li>
+                            <li>Sequential Task Processing</li>
+                            <li>JSON Output Formatting</li>
+                            <li>Mock Data Support</li>
+                        </ul>
+                    </div>
+
+                    <div class="tech-card">
+                        <div class="tech-title">🔗 External Integrations</div>
+                        <ul class="tech-list">
+                            <li>SERPER News Search API</li>
+                            <li>OpenRouter AI Models</li>
+                            <li>Google News Sources</li>
+                            <li>Real-time Data Fetching</li>
+                            <li>Credibility Assessment</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- System Features -->
+            <div class="section">
+                <h2 class="section-title">✨ Key Features & Capabilities</h2>
+                <div class="tech-grid">
+                    <div class="tech-card">
+                        <div class="tech-title">🔍 Smart Search</div>
+                        <ul class="tech-list">
+                            <li>AI-powered news discovery</li>
+                            <li>Topic-based filtering</li>
+                            <li>Source credibility scoring</li>
+                            <li>Duplicate detection</li>
+                        </ul>
+                    </div>
+
+                    <div class="tech-card">
+                        <div class="tech-title">📊 Analytics</div>
+                        <ul class="tech-list">
+                            <li>Source distribution charts</li>
+                            <li>Category breakdowns</li>
+                            <li>Credibility analysis</li>
+                            <li>Search history tracking</li>
+                        </ul>
+                    </div>
+
+                    <div class="tech-card">
+                        <div class="tech-title">⚡ Performance</div>
+                        <ul class="tech-list">
+                            <li>Fast agent execution</li>
+                            <li>Concurrent processing</li>
+                            <li>Pre-fetched results</li>
+                            <li>Optimized timeouts</li>
+                        </ul>
+                    </div>
+
+                    <div class="tech-card">
+                        <div class="tech-title">🛠️ Developer Tools</div>
+                        <ul class="tech-list">
+                            <li>Mock data for testing</li>
+                            <li>API health monitoring</li>
+                            <li>JSON export functionality</li>
+                            <li>Comprehensive logging</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

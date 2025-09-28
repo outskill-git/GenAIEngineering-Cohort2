@@ -1,0 +1,182 @@
+analyze_business_requirements:
+  description: >
+    Analyze the provided app idea and conduct comprehensive business requirements analysis.
+    Identify key stakeholders, business objectives, success metrics, and constraints.
+    Document functional and non-functional requirements, user personas, and business rules.
+    Consider market analysis, competitive landscape, and regulatory requirements.
+    
+    App Idea: {app_idea}
+    Additional Requirements: {additional_requirements}
+    Target Users: {target_users}
+    Business Goals: {business_goals}
+  expected_output: >
+    A comprehensive business requirements document (business_requirements.md) containing:
+    - Executive summary of the business case
+    - Stakeholder analysis and user personas
+    - Functional requirements with acceptance criteria
+    - Non-functional requirements (performance, security, scalability)
+    - Business rules and constraints
+    - Success metrics and KPIs
+    - Risk analysis and mitigation strategies
+    - Regulatory and compliance considerations
+  output_file: "business_requirements.md"
+  agent: business_analyst
+
+create_product_requirements:
+  description: >
+    Based on the business requirements analysis, create detailed product requirements document.
+    Define product vision, features, user stories, and acceptance criteria.
+    Prioritize features using MoSCoW method and create feature specifications.
+    Include user journey mapping and interaction flows.
+    
+    Use the business requirements as foundation and expand into detailed product specifications.
+  expected_output: >
+    A detailed product requirements document (product_requirements.md) containing:
+    - Product vision and mission statement
+    - Feature list with detailed descriptions
+    - User stories with acceptance criteria
+    - Feature prioritization using MoSCoW method
+    - User journey maps and workflow diagrams
+    - Wireframes and mockups descriptions
+    - Integration requirements
+    - Data requirements and user permissions
+  output_file: "product_requirements.md"
+  agent: product_manager
+  context: [analyze_business_requirements]
+
+design_software_architecture:
+  description: >
+    Design comprehensive software architecture based on the product requirements.
+    Consider the specified tech stack: {tech_stack}
+    Create system architecture that is scalable, maintainable, and secure.
+    Define architectural patterns, data flow, and integration approaches.
+    Include deployment architecture and infrastructure requirements.
+  expected_output: >
+    A comprehensive software architecture document (software_architecture.md) containing:
+    - System architecture overview with diagrams
+    - Component architecture and microservices breakdown
+    - Data architecture and database design
+    - Security architecture and authentication patterns
+    - Integration patterns and external service connections
+    - Deployment architecture and infrastructure requirements
+    - Technology stack justification and alternatives analysis
+    - Scalability and performance considerations
+    - Monitoring and logging architecture
+  output_file: "software_architecture.md"
+  agent: software_architect
+  context: [create_product_requirements]
+
+design_api_specifications:
+  description: >
+    Create comprehensive API specifications for the application using OpenAPI 3.0 standard.
+    Design RESTful endpoints that support all product requirements.
+    Include authentication, error handling, and data validation specifications.
+    Ensure API design follows best practices and is developer-friendly.
+    Focus on FastAPI implementation patterns and Python data models.
+  expected_output: >
+    Complete API specifications (api_specifications.yaml) in OpenAPI 3.0 format containing:
+    - All REST endpoints with HTTP methods and paths
+    - Request and response schemas with validation rules
+    - Authentication and authorization specifications
+    - Error response formats and status codes
+    - API versioning strategy
+    - Rate limiting and throttling specifications
+    - Example requests and responses
+    - Data models and relationships
+    - File upload/download endpoints if applicable
+  output_file: "api_specifications.yaml"
+  agent: api_designer
+  context: [design_software_architecture]
+
+create_high_level_design:
+  description: >
+    Create high-level design document that bridges architecture and implementation.
+    Define system components, their interactions, and data flow.
+    Include database schema design, caching strategies, and external integrations.
+    Specify technology choices and framework usage patterns.
+  expected_output: >
+    A high-level design document (high_level_design.md) containing:
+    - System component diagram with interactions
+    - Database schema design with relationships
+    - Data flow diagrams for key user journeys
+    - Caching strategy and session management
+    - External service integrations design
+    - Error handling and logging strategies
+    - Background job processing design
+    - File storage and media handling approach
+    - Performance optimization strategies
+  output_file: "high_level_design.md"
+  agent: technical_lead
+  context: [design_software_architecture, design_api_specifications]
+
+create_low_level_design:
+  description: >
+    Create detailed low-level design for implementation teams.
+    Define class structures, module organization, and implementation patterns.
+    Include detailed database schemas, FastAPI route implementations, and Streamlit component designs.
+    Provide coding standards and implementation guidelines specific to the tech stack.
+  expected_output: >
+    A comprehensive low-level design document (low_level_design.md) containing:
+    - Detailed module and package structure
+    - Class diagrams with methods and properties
+    - Database table schemas with indexes and constraints
+    - FastAPI route implementations with dependency injection
+    - Streamlit page layouts and component structures
+    - Data models and Pydantic schemas
+    - Service layer design patterns
+    - Repository pattern implementations
+    - Unit testing structure and mocking strategies
+    - Code organization and folder structure
+    - Configuration management approach
+  output_file: "low_level_design.md"
+  agent: technical_lead
+  context: [create_high_level_design]
+
+develop_product_roadmap:
+  description: >
+    Create a detailed 2-month product roadmap with development phases and milestones.
+    Break down features into implementable chunks with realistic timelines.
+    Include testing phases, deployment strategies, and risk mitigation plans.
+    Project Timeline: {project_timeline}
+    
+    Consider development team capacity and dependencies between features.
+  expected_output: >
+    A comprehensive product roadmap (product_roadmap.md) containing:
+    - 8-week development timeline with weekly milestones
+    - Feature development phases (MVP, Core Features, Advanced Features)
+    - Sprint planning with user story assignments
+    - Testing and QA phases integration
+    - Deployment and release strategy
+    - Risk assessment and contingency plans
+    - Resource allocation and team assignments
+    - Dependency mapping and critical path analysis
+    - Success criteria for each milestone
+    - Go-live checklist and post-launch support plan
+  output_file: "product_roadmap.md"
+  agent: product_manager
+  context: [create_product_requirements, create_low_level_design]
+
+validate_tech_stack:
+  description: >
+    Validate and document the chosen technology stack for the project.
+    Analyze the suitability of Streamlit, FastAPI, and Python for the requirements.
+    Provide alternatives analysis and final recommendations with justifications.
+    Include setup instructions and development environment configuration.
+    
+    Current Tech Stack: {tech_stack}
+  expected_output: >
+    A technology stack analysis document (tech_stack_analysis.md) containing:
+    - Technology stack validation and suitability analysis
+    - Pros and cons of chosen technologies
+    - Alternative technologies considered and comparison
+    - Development environment setup instructions
+    - Required libraries and dependencies list
+    - Performance benchmarks and scalability analysis
+    - Security considerations for each technology
+    - Learning curve and team readiness assessment
+    - Cost analysis and licensing considerations
+    - Long-term maintenance and support considerations
+    - Integration compatibility analysis
+  output_file: "tech_stack_analysis.md"
+  agent: software_architect
+  context: [design_software_architecture]
