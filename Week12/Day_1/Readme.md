@@ -1,0 +1,1 @@
+pip install ipykernel phidata openai ddgs yfinance sqlalchemy fastapi python-multipart ipywidgets uvicorn crawl4ai duckdb httpx resend chromadb lancedb fastmcp pypdf markdown uvicorn duckduckgo_search ddgs
