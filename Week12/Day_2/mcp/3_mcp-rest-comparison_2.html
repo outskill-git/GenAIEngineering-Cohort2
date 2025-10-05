@@ -1,0 +1,1034 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>REST API vs MCP: Complete Guide</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+            color: #ffffff;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Introduction Section */
+        .intro-section {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            position: relative;
+        }
+
+        .intro-title {
+            font-size: 4rem;
+            margin-bottom: 2rem;
+            background: linear-gradient(45deg, #00ff88, #00d4ff, #ff006e);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: gradientShift 3s ease-in-out infinite;
+        }
+
+        @keyframes gradientShift {
+            0%, 100% { filter: hue-rotate(0deg); }
+            50% { filter: hue-rotate(30deg); }
+        }
+
+        .intro-subtitle {
+            font-size: 1.5rem;
+            color: #a8a8a8;
+            margin-bottom: 3rem;
+            max-width: 800px;
+        }
+
+        .intro-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            max-width: 1000px;
+            margin: 3rem 0;
+        }
+
+        .intro-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .intro-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .scroll-indicator {
+            position: absolute;
+            bottom: 2rem;
+            animation: bounce 2s infinite;
+            cursor: pointer;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(45deg, #00ff88, #00d4ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from { filter: drop-shadow(0 0 20px rgba(0, 255, 136, 0.5)); }
+            to { filter: drop-shadow(0 0 30px rgba(0, 212, 255, 0.7)); }
+        }
+
+        .subtitle {
+            text-align: center;
+            font-size: 1.2rem;
+            color: #a8a8a8;
+            margin-bottom: 3rem;
+        }
+
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #00ff88, #00d4ff);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .card h2 {
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .rest-title { color: #00ff88; }
+        .mcp-title { color: #00d4ff; }
+
+        .natural-language-demo {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 15px;
+            padding: 2rem;
+            margin: 2rem 0;
+            border: 2px dashed rgba(255, 255, 255, 0.2);
+        }
+
+        .chat-bubble {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 1rem 1.5rem;
+            margin: 1rem 0;
+            position: relative;
+            animation: slideIn 0.5s ease-out;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .user-bubble {
+            background: linear-gradient(135deg, rgba(0, 255, 136, 0.2), rgba(0, 255, 136, 0.1));
+            margin-left: 20%;
+        }
+
+        .ai-bubble {
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.2), rgba(0, 212, 255, 0.1));
+            margin-right: 20%;
+        }
+
+        .error-bubble {
+            background: linear-gradient(135deg, rgba(255, 0, 110, 0.2), rgba(255, 0, 110, 0.1));
+            border: 1px solid rgba(255, 0, 110, 0.5);
+        }
+
+        .stateless-demo {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 2rem;
+            margin: 2rem 0;
+        }
+
+        .state-box {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            padding: 1rem;
+            margin: 1rem 0;
+            font-family: monospace;
+            transition: all 0.3s ease;
+        }
+
+        .state-box.highlight {
+            border: 2px solid #ff006e;
+            box-shadow: 0 0 20px rgba(255, 0, 110, 0.5);
+        }
+
+        .architecture-diagram {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 15px;
+            padding: 2rem;
+            margin: 1.5rem 0;
+            position: relative;
+            min-height: 300px;
+        }
+
+        .flow-diagram {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin: 2rem 0;
+            position: relative;
+        }
+
+        .endpoint {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            margin: 0.5rem 0;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .endpoint:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: scale(1.05);
+        }
+
+        .endpoint.active {
+            background: rgba(0, 255, 136, 0.2);
+            border-color: #00ff88;
+            box-shadow: 0 0 15px rgba(0, 255, 136, 0.5);
+        }
+
+        .client-box, .server-box {
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 15px;
+            padding: 2rem;
+            text-align: center;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .client-box {
+            background: linear-gradient(135deg, rgba(0, 255, 136, 0.1), rgba(0, 255, 136, 0.05));
+        }
+
+        .server-box {
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.1), rgba(0, 212, 255, 0.05));
+        }
+
+        .arrow {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100px;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #00ff88, transparent);
+            opacity: 0;
+            animation: none;
+        }
+
+        .arrow.animate {
+            animation: flowData 2s ease-in-out;
+        }
+
+        @keyframes flowData {
+            0% { opacity: 0; transform: translate(-150%, -50%); }
+            50% { opacity: 1; }
+            100% { opacity: 0; transform: translate(50%, -50%); }
+        }
+
+        .feature-list {
+            list-style: none;
+            margin: 1rem 0;
+        }
+
+        .feature-list li {
+            padding: 0.5rem 0;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+
+        .feature-list li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: #00ff88;
+        }
+
+        .code-block {
+            background: #1a1a2e;
+            border-radius: 10px;
+            padding: 1rem;
+            margin: 1rem 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            overflow-x: auto;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .interactive-demo {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 2rem;
+            margin: 2rem 0;
+        }
+
+        .demo-controls {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+
+        input[type="number"] {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 8px;
+            padding: 0.5rem 1rem;
+            color: white;
+            font-size: 1rem;
+            width: 100px;
+        }
+
+        button {
+            background: linear-gradient(45deg, #00ff88, #00d4ff);
+            border: none;
+            border-radius: 8px;
+            padding: 0.5rem 1.5rem;
+            color: #1a1a2e;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(0, 255, 136, 0.4);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .result-box {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            padding: 1rem;
+            margin-top: 1rem;
+            min-height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+        }
+
+        .result-box.highlight {
+            border: 2px solid #00ff88;
+            box-shadow: 0 0 20px rgba(0, 255, 136, 0.3);
+        }
+
+        .comparison-table {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            overflow: hidden;
+            margin: 2rem 0;
+        }
+
+        .comparison-table table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .comparison-table th {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        .comparison-table td {
+            padding: 1rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .comparison-table tr:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .tool-box {
+            background: rgba(0, 212, 255, 0.1);
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            border-radius: 10px;
+            padding: 1rem;
+            margin: 0.5rem 0;
+            transition: all 0.3s ease;
+        }
+
+        .tool-box:hover {
+            background: rgba(0, 212, 255, 0.2);
+            transform: translateX(5px);
+        }
+
+        .big-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            .comparison-grid, .intro-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            h1, .intro-title {
+                font-size: 2rem;
+            }
+            
+            .demo-controls {
+                flex-direction: column;
+            }
+            
+            input[type="number"] {
+                width: 100%;
+            }
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Introduction Section -->
+    <div class="intro-section">
+        <h1 class="intro-title">Client-Server Communication</h1>
+        <p class="intro-subtitle">
+            Understanding the fundamental differences between REST APIs and MCP Servers
+            in modern software architecture
+        </p>
+        
+        <div class="intro-grid">
+            <div class="intro-card">
+                <div class="big-icon">🌐</div>
+                <h2 class="rest-title">REST API</h2>
+                <p style="margin-top: 1rem;">
+                    Traditional web service architecture using HTTP protocol.
+                    Perfect for web and mobile applications that need structured,
+                    predictable communication patterns.
+                </p>
+                <div style="margin-top: 1.5rem;">
+                    <strong>Key Trait:</strong><br>
+                    Requires specific URL endpoints and exact parameters
+                </div>
+            </div>
+            
+            <div class="intro-card">
+                <div class="big-icon">🤖</div>
+                <h2 class="mcp-title">MCP Server</h2>
+                <p style="margin-top: 1rem;">
+                    Model Context Protocol designed for AI assistants.
+                    Enables natural language interaction and intelligent
+                    tool discovery and usage.
+                </p>
+                <div style="margin-top: 1.5rem;">
+                    <strong>Key Trait:</strong><br>
+                    Understands natural language and context
+                </div>
+            </div>
+        </div>
+        
+        <div class="scroll-indicator" onclick="document.getElementById('main-content').scrollIntoView({behavior: 'smooth'})">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M7 13l5 5 5-5M7 6l5 5 5-5"/>
+            </svg>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="container" id="main-content">
+        <h1>REST API vs MCP Server</h1>
+        <p class="subtitle">Deep Dive into Communication Patterns</p>
+
+        <!-- Natural Language Comparison -->
+        <div class="card" style="margin-bottom: 2rem;">
+            <h2 style="text-align: center;">🗣️ Natural Language vs Structured Queries</h2>
+            
+            <div class="comparison-grid" style="margin-top: 2rem;">
+                <div>
+                    <h3 class="rest-title">REST API - Structured Only</h3>
+                    <div class="natural-language-demo">
+                        <div class="chat-bubble user-bubble">
+                            "Can you add 5 and 3 for me?"
+                        </div>
+                        <div class="chat-bubble error-bubble">
+                            ❌ ERROR: Cannot process natural language
+                        </div>
+                        <div style="margin-top: 1rem;">
+                            <strong>Correct approach:</strong>
+                            <div class="code-block">
+GET /add?a=5&b=3
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div>
+                    <h3 class="mcp-title">MCP - Natural Language Enabled</h3>
+                    <div class="natural-language-demo">
+                        <div class="chat-bubble user-bubble">
+                            "Can you add 5 and 3 for me?"
+                        </div>
+                        <div class="chat-bubble ai-bubble">
+                            ✅ I'll add those numbers for you.
+                            <br>Using tool: add(5, 3)
+                            <br>Result: 8
+                        </div>
+                        <div style="margin-top: 1rem;">
+                            <strong>AI understands intent and:</strong>
+                            <ul style="list-style: none; padding-left: 0;">
+                                <li>📍 Identifies the operation needed</li>
+                                <li>📍 Extracts parameters automatically</li>
+                                <li>📍 Calls the appropriate tool</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Stateless Behavior Comparison -->
+        <div class="card" style="margin-bottom: 2rem;">
+            <h2 style="text-align: center;">🔄 Stateless Behavior Comparison</h2>
+            
+            <div class="stateless-demo">
+                <div class="comparison-grid">
+                    <div>
+                        <h3 class="rest-title">REST API - Always Stateless</h3>
+                        <div class="state-box">
+                            <strong>Request 1:</strong> GET /add?a=10&b=5
+                            <br>Response: {"result": 15}
+                            <br><br>
+                            <strong>Request 2:</strong> GET /add?a=result&b=3
+                            <br><span style="color: #ff006e;">❌ ERROR: 'result' is not a number</span>
+                        </div>
+                        <p style="margin-top: 1rem;">
+                            Each request is independent. The server doesn't remember
+                            previous calculations or maintain any context.
+                        </p>
+                    </div>
+                    
+                    <div>
+                        <h3 class="mcp-title">MCP - Context Aware</h3>
+                        <div class="state-box">
+                            <strong>User:</strong> "Add 10 and 5"
+                            <br>AI: Uses add(10, 5) → 15
+                            <br><br>
+                            <strong>User:</strong> "Now add 3 to that"
+                            <br><span style="color: #00ff88;">✅ AI understands 'that' = 15</span>
+                            <br>AI: Uses add(15, 3) → 18
+                        </div>
+                        <p style="margin-top: 1rem;">
+                            While MCP servers are stateless, the AI client maintains
+                            conversation context and can reference previous results.
+                        </p>
+                    </div>
+                </div>
+                
+                <div style="margin-top: 2rem; text-align: center;">
+                    <button onclick="demonstrateStateless()">See Stateless Demo</button>
+                </div>
+                <div id="statelessResult" class="result-box" style="margin-top: 1rem;">
+                    Click to see how stateless behavior differs
+                </div>
+            </div>
+        </div>
+
+        <div class="comparison-grid">
+            <!-- REST API Card -->
+            <div class="card">
+                <h2 class="rest-title">
+                    <span>🌐</span> REST API
+                </h2>
+                
+                <div class="architecture-diagram">
+                    <div class="flow-diagram">
+                        <div class="client-box">
+                            <h3>Client</h3>
+                            <p>Web Browser<br>Mobile App<br>Any HTTP Client</p>
+                        </div>
+                        <div class="arrow" id="restArrow"></div>
+                        <div class="server-box">
+                            <h3>Server</h3>
+                            <p>FastAPI<br>Port: 9321</p>
+                        </div>
+                    </div>
+                    
+                    <div style="margin-top: 2rem;">
+                        <h4>Endpoints:</h4>
+                        <div class="endpoint" onclick="animateREST('/')">GET /</div>
+                        <div class="endpoint" onclick="animateREST('/add')">GET /add?a=5&b=3</div>
+                        <div class="endpoint" onclick="animateREST('/subtract')">GET /subtract?a=10&b=4</div>
+                    </div>
+                </div>
+
+                <h4>Key Features:</h4>
+                <ul class="feature-list">
+                    <li>HTTP-based communication</li>
+                    <li>Stateless request/response</li>
+                    <li>Multiple endpoints (URLs)</li>
+                    <li>Standard HTTP methods (GET, POST, etc.)</li>
+                    <li>JSON data format</li>
+                    <li>Works with any HTTP client</li>
+                    <li style="color: #ff006e;">❌ No natural language support</li>
+                </ul>
+
+                <div class="code-block">
+                    <pre>// Client Request - MUST be structured
+fetch('http://localhost:9321/add?a=5&b=3')
+  .then(res => res.json())
+  .then(data => console.log(data))
+
+// Natural language DOESN'T work:
+// ❌ "Please add five and three"
+// ❌ "What's 5 + 3?"</pre>
+                </div>
+            </div>
+
+            <!-- MCP Card -->
+            <div class="card">
+                <h2 class="mcp-title">
+                    <span>🤖</span> MCP Server
+                </h2>
+                
+                <div class="architecture-diagram">
+                    <div class="flow-diagram">
+                        <div class="client-box">
+                            <h3>Client</h3>
+                            <p>AI Assistant<br>Claude/ChatGPT<br>MCP Client</p>
+                        </div>
+                        <div class="arrow" id="mcpArrow"></div>
+                        <div class="server-box">
+                            <h3>Server</h3>
+                            <p>FastMCP<br>Transport: SSE/stdio</p>
+                        </div>
+                    </div>
+                    
+                    <div style="margin-top: 2rem;">
+                        <h4>Tools:</h4>
+                        <div class="tool-box" onclick="animateMCP('add')">
+                            <strong>add(a, b)</strong><br>
+                            <small>Add two numbers together</small>
+                        </div>
+                        <div class="tool-box" onclick="animateMCP('subtract')">
+                            <strong>subtract(a, b)</strong><br>
+                            <small>Subtract b from a</small>
+                        </div>
+                    </div>
+                </div>
+
+                <h4>Key Features:</h4>
+                <ul class="feature-list">
+                    <li>Protocol for AI assistants</li>
+                    <li>Tool-based architecture</li>
+                    <li>Multiple transport options</li>
+                    <li>Bidirectional communication</li>
+                    <li>Type-safe parameters</li>
+                    <li>Built for AI integration</li>
+                    <li style="color: #00ff88;">✅ Natural language understanding</li>
+                </ul>
+
+                <div class="code-block">
+                    <pre>// AI understands ALL of these:
+✅ "Please add 5 and 3"
+✅ "What's five plus three?"
+✅ "Can you sum up 5 and 3?"
+✅ "I need to add two numbers: 5 and 3"
+
+// AI extracts intent and parameters
+// Then calls: add(5, 3)</pre>
+                </div>
+            </div>
+        </div>
+
+        <!-- Interactive Demo Section -->
+        <div class="interactive-demo">
+            <h2 style="text-align: center; margin-bottom: 2rem;">🎮 Interactive Demo</h2>
+            
+            <div class="comparison-grid">
+                <div>
+                    <h3 class="rest-title">REST API Demo</h3>
+                    <div class="demo-controls">
+                        <input type="number" id="restA" placeholder="A" value="10">
+                        <input type="number" id="restB" placeholder="B" value="5">
+                        <button onclick="callREST('add')">Add</button>
+                        <button onclick="callREST('subtract')">Subtract</button>
+                    </div>
+                    <div class="result-box" id="restResult">
+                        Click a button to see REST API in action
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="mcp-title">MCP Server Demo</h3>
+                    <div class="demo-controls">
+                        <input type="number" id="mcpA" placeholder="A" value="10">
+                        <input type="number" id="mcpB" placeholder="B" value="5">
+                        <button onclick="callMCP('add')">Add Tool</button>
+                        <button onclick="callMCP('subtract')">Subtract Tool</button>
+                    </div>
+                    <div class="result-box" id="mcpResult">
+                        Click a button to see MCP in action
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Comparison Table -->
+        <div class="comparison-table">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Aspect</th>
+                        <th class="rest-title">REST API</th>
+                        <th class="mcp-title">MCP Server</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Protocol</strong></td>
+                        <td>HTTP/HTTPS</td>
+                        <td>MCP (over SSE, stdio, etc.)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Query Type</strong></td>
+                        <td>Structured URLs only</td>
+                        <td>Natural language + structured</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Primary Use</strong></td>
+                        <td>Web services, APIs</td>
+                        <td>AI assistant integration</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Communication</strong></td>
+                        <td>Request-Response</td>
+                        <td>Bidirectional</td>
+                    </tr>
+                    <tr>
+                        <td><strong>State Management</strong></td>
+                        <td>Always stateless</td>
+                        <td>Stateless server, stateful AI client</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Context Awareness</strong></td>
+                        <td>No context between requests</td>
+                        <td>AI maintains conversation context</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Discovery</strong></td>
+                        <td>API documentation</td>
+                        <td>Tool introspection</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Best For</strong></td>
+                        <td>Web/mobile apps</td>
+                        <td>AI assistants & agents</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- How It Works Section -->
+        <div class="card" style="margin-top: 2rem;">
+            <h2 style="text-align: center; color: #00ff88;">🔄 How Communication Works</h2>
+            
+            <div class="comparison-grid" style="margin-top: 2rem;">
+                <div>
+                    <h3 class="rest-title">REST API Flow</h3>
+                    <ol style="line-height: 2;">
+                        <li>Client creates HTTP request</li>
+                        <li>Adds parameters to URL or body</li>
+                        <li>Sends to specific endpoint</li>
+                        <li>Server processes request</li>
+                        <li>Returns JSON response</li>
+                        <li>Client parses response</li>
+                        <li style="color: #ff006e;">No memory of previous requests</li>
+                    </ol>
+                </div>
+                
+                <div>
+                    <h3 class="mcp-title">MCP Flow</h3>
+                    <ol style="line-height: 2;">
+                        <li>User asks in natural language</li>
+                        <li>AI understands intent</li>
+                        <li>AI discovers available tools</li>
+                        <li>Selects appropriate tool</li>
+                        <li>Calls tool with parameters</li>
+                        <li>Returns typed result</li>
+                        <li style="color: #00ff88;">AI remembers context for follow-ups</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Smooth scroll for intro
+        function smoothScroll(target) {
+            document.querySelector(target).scrollIntoView({
+                behavior: 'smooth'
+            });
+        }
+
+        // Animation functions
+        function animateREST(endpoint) {
+            const arrow = document.getElementById('restArrow');
+            arrow.classList.remove('animate');
+            void arrow.offsetWidth; // Trigger reflow
+            arrow.classList.add('animate');
+            
+            // Highlight the endpoint
+            document.querySelectorAll('.endpoint').forEach(e => e.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            // Show example in result
+            const examples = {
+                '/': '{"message": "Calculator API is running..."}',
+                '/add': '{"operation": "add", "a": 5, "b": 3, "result": 8}',
+                '/subtract': '{"operation": "subtract", "a": 10, "b": 4, "result": 6}'
+            };
+            
+            document.getElementById('restResult').textContent = examples[endpoint];
+            document.getElementById('restResult').classList.add('highlight');
+            setTimeout(() => {
+                document.getElementById('restResult').classList.remove('highlight');
+            }, 1000);
+        }
+
+        function animateMCP(tool) {
+            const arrow = document.getElementById('mcpArrow');
+            arrow.classList.remove('animate');
+            void arrow.offsetWidth; // Trigger reflow
+            arrow.classList.add('animate');
+            
+            // Pulse the tool box
+            event.target.classList.add('pulse');
+            setTimeout(() => {
+                event.target.classList.remove('pulse');
+            }, 2000);
+            
+            // Show example
+            const examples = {
+                'add': 'Tool: add(5, 3) → Result: 8',
+                'subtract': 'Tool: subtract(10, 4) → Result: 6'
+            };
+            
+            document.getElementById('mcpResult').textContent = examples[tool];
+            document.getElementById('mcpResult').classList.add('highlight');
+            setTimeout(() => {
+                document.getElementById('mcpResult').classList.remove('highlight');
+            }, 1000);
+        }
+
+        // Demo functions
+        function callREST(operation) {
+            const a = document.getElementById('restA').value;
+            const b = document.getElementById('restB').value;
+            const resultBox = document.getElementById('restResult');
+            
+            // Simulate API call
+            resultBox.innerHTML = `<span style="color: #ffff00;">Calling API...</span>`;
+            
+            setTimeout(() => {
+                const result = operation === 'add' ? 
+                    parseFloat(a) + parseFloat(b) : 
+                    parseFloat(a) - parseFloat(b);
+                
+                resultBox.innerHTML = `
+                    <div>
+                        <strong>HTTP GET</strong> /api/${operation}?a=${a}&b=${b}<br>
+                        <strong>Response:</strong> {"result": ${result}}
+                    </div>
+                `;
+                resultBox.classList.add('highlight');
+                setTimeout(() => resultBox.classList.remove('highlight'), 1000);
+            }, 800);
+        }
+
+        function callMCP(tool) {
+            const a = document.getElementById('mcpA').value;
+            const b = document.getElementById('mcpB').value;
+            const resultBox = document.getElementById('mcpResult');
+            
+            // Simulate MCP call
+            resultBox.innerHTML = `<span style="color: #ffff00;">AI understanding request...</span>`;
+            
+            setTimeout(() => {
+                const result = tool === 'add' ? 
+                    parseFloat(a) + parseFloat(b) : 
+                    parseFloat(a) - parseFloat(b);
+                
+                resultBox.innerHTML = `
+                    <div>
+                        <strong>Natural Language:</strong> "${tool} ${a} and ${b}"<br>
+                        <strong>AI calls:</strong> ${tool}(${a}, ${b})<br>
+                        <strong>Result:</strong> ${result}
+                    </div>
+                `;
+                resultBox.classList.add('highlight');
+                setTimeout(() => resultBox.classList.remove('highlight'), 1000);
+            }, 800);
+        }
+
+        function demonstrateStateless() {
+            const resultBox = document.getElementById('statelessResult');
+            let step = 0;
+            
+            const steps = [
+                {
+                    rest: 'GET /add?a=10&b=5 → Result: 15',
+                    mcp: 'User: "Add 10 and 5" → AI: 15'
+                },
+                {
+                    rest: 'GET /add?a=result&b=3 → ERROR!',
+                    mcp: 'User: "Add 3 to that" → AI: 18'
+                },
+                {
+                    rest: 'Server has no memory of "15"',
+                    mcp: 'AI remembers "that" means 15'
+                }
+            ];
+            
+            function showStep() {
+                if (step < steps.length) {
+                    resultBox.innerHTML = `
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; text-align: left;">
+                            <div>
+                                <strong class="rest-title">REST:</strong><br>
+                                ${steps[step].rest}
+                            </div>
+                            <div>
+                                <strong class="mcp-title">MCP:</strong><br>
+                                ${steps[step].mcp}
+                            </div>
+                        </div>
+                    `;
+                    resultBox.classList.add('highlight');
+                    setTimeout(() => resultBox.classList.remove('highlight'), 500);
+                    step++;
+                    if (step < steps.length) {
+                        setTimeout(showStep, 2000);
+                    }
+                } else {
+                    step = 0;
+                }
+            }
+            
+            showStep();
+        }
+
+        // Add some initial animations
+        window.addEventListener('load', () => {
+            // Fade in intro elements
+            const introElements = document.querySelectorAll('.intro-card, .intro-title, .intro-subtitle');
+            introElements.forEach((el, index) => {
+                el.style.opacity = '0';
+                el.style.transform = 'translateY(20px)';
+                setTimeout(() => {
+                    el.style.transition = 'all 0.5s ease';
+                    el.style.opacity = '1';
+                    el.style.transform = 'translateY(0)';
+                }, index * 200);
+            });
+            
+            // Fade in main content cards when scrolled
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            });
+            
+            document.querySelectorAll('.card').forEach((card) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                card.style.transition = 'all 0.5s ease';
+                observer.observe(card);
+            });
+        });
+    </script>
+</body>
+</html>

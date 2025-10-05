@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agent Protocol Visual Illustrations</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0a0a0a;
+            color: #ffffff;
+            padding: 20px;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 2.5em;
+            margin-bottom: 40px;
+            background: linear-gradient(45deg, #00f2fe, #4facfe);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .protocol-section {
+            margin-bottom: 80px;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 20px;
+            padding: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .protocol-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 30px;
+            gap: 20px;
+        }
+
+        .protocol-title {
+            font-size: 2em;
+            margin: 0;
+        }
+
+        .protocol-badge {
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .mcp-section .protocol-title { color: #ff6b6b; }
+        .mcp-section .protocol-badge { background: #ff6b6b; color: #000; }
+
+        .acp-section .protocol-title { color: #4ecdc4; }
+        .acp-section .protocol-badge { background: #4ecdc4; color: #000; }
+
+        .a2a-section .protocol-title { color: #ffe66d; }
+        .a2a-section .protocol-badge { background: #ffe66d; color: #000; }
+
+        .anp-section .protocol-title { color: #a8e6cf; }
+        .anp-section .protocol-badge { background: #a8e6cf; color: #000; }
+
+        .diagram-container {
+            position: relative;
+            width: 100%;
+            height: 500px;
+            margin: 30px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* MCP Diagram Styles */
+        .mcp-diagram {
+            display: grid;
+            grid-template-columns: 200px 300px 200px;
+            gap: 50px;
+            align-items: center;
+        }
+
+        .mcp-client, .mcp-server {
+            width: 200px;
+            height: 200px;
+            border-radius: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .mcp-client {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .mcp-server {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+
+        .mcp-connection {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .json-rpc-box {
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid #ff6b6b;
+            padding: 15px 25px;
+            border-radius: 10px;
+            font-family: monospace;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.05); opacity: 0.8; }
+        }
+
+        .mcp-capabilities {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .capability-box {
+            background: rgba(255, 107, 107, 0.2);
+            border: 1px solid #ff6b6b;
+            padding: 10px;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 0.9em;
+            transition: all 0.3s ease;
+        }
+
+        .capability-box:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(255, 107, 107, 0.4);
+        }
+
+        /* ACP Diagram Styles */
+        .acp-diagram {
+            display: grid;
+            grid-template-columns: 180px 180px 180px 180px;
+            gap: 40px;
+            align-items: center;
+        }
+
+        .acp-component {
+            width: 180px;
+            height: 180px;
+            border-radius: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .acp-client-box {
+            background: linear-gradient(135deg, #4ecdc4 0%, #44a08d 100%);
+        }
+
+        .acp-server-box {
+            background: linear-gradient(135deg, #36d1dc 0%, #5b86e5 100%);
+        }
+
+        .acp-agent-box {
+            background: linear-gradient(135deg, #5ee7df 0%, #b490ca 100%);
+        }
+
+        .acp-registry {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .acp-flow {
+            position: absolute;
+            top: 50%;
+            left: 100%;
+            width: 40px;
+            height: 2px;
+            background: #4ecdc4;
+            transform: translateY(-50%);
+        }
+
+        .acp-flow::after {
+            content: '▶';
+            position: absolute;
+            right: -10px;
+            top: -8px;
+            color: #4ecdc4;
+        }
+
+        /* A2A Diagram Styles */
+        .a2a-diagram {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            width: 100%;
+        }
+
+        .a2a-user, .a2a-client, .a2a-remote {
+            width: 160px;
+            height: 160px;
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .a2a-user {
+            background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+        }
+
+        .a2a-client {
+            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+        }
+
+        .a2a-remote {
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+        }
+
+        .agent-card {
+            position: absolute;
+            top: -40px;
+            right: -40px;
+            width: 120px;
+            height: 80px;
+            background: rgba(255, 230, 109, 0.9);
+            border-radius: 10px;
+            padding: 10px;
+            font-size: 0.8em;
+            color: #000;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .a2a-arrow {
+            position: absolute;
+            width: 150px;
+            height: 2px;
+            background: #ffe66d;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .a2a-arrow::after {
+            content: '→';
+            position: absolute;
+            right: -20px;
+            top: -12px;
+            font-size: 24px;
+            color: #ffe66d;
+        }
+
+        /* ANP Diagram Styles */
+        .anp-diagram {
+            position: relative;
+            width: 600px;
+            height: 400px;
+        }
+
+        .anp-node {
+            position: absolute;
+            width: 140px;
+            height: 140px;
+            border-radius: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #a8e6cf 0%, #dcedc1 100%);
+            color: #000;
+            font-weight: 600;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .anp-node:hover {
+            transform: scale(1.1);
+            z-index: 10;
+        }
+
+        .anp-node-1 { top: 0; left: 50%; transform: translateX(-50%); }
+        .anp-node-2 { top: 130px; left: 0; }
+        .anp-node-3 { top: 130px; right: 0; }
+        .anp-node-4 { bottom: 0; left: 50%; transform: translateX(-50%); }
+
+        .anp-connection {
+            position: absolute;
+            background: rgba(168, 230, 207, 0.3);
+            height: 2px;
+            transform-origin: left center;
+        }
+
+        .did-badge {
+            position: absolute;
+            top: -15px;
+            right: -15px;
+            background: #3498db;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.7em;
+            font-weight: 600;
+        }
+
+        /* Feature highlights */
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .feature-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover {
+            background: rgba(255, 255, 255, 0.08);
+            transform: translateY(-5px);
+        }
+
+        .feature-card h4 {
+            margin-bottom: 10px;
+            color: inherit;
+        }
+
+        .feature-card p {
+            font-size: 0.9em;
+            opacity: 0.8;
+            line-height: 1.5;
+        }
+
+        /* Animations */
+        .animate-data {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: #4facfe;
+            border-radius: 50%;
+            animation: dataFlow 3s linear infinite;
+        }
+
+        @keyframes dataFlow {
+            0% { left: 0; opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { left: calc(100% - 20px); opacity: 0; }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .diagram-container {
+                height: auto;
+                overflow-x: auto;
+            }
+            
+            .mcp-diagram, .acp-diagram {
+                transform: scale(0.8);
+            }
+            
+            .features {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .legend {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.9em;
+        }
+
+        .legend-color {
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Agent Communication Protocols - Visual Architecture</h1>
+
+        <!-- MCP Section -->
+        <div class="protocol-section mcp-section">
+            <div class="protocol-header">
+                <h2 class="protocol-title">Model Context Protocol (MCP)</h2>
+                <span class="protocol-badge">Client-Server</span>
+                <span class="protocol-badge">JSON-RPC 2.0</span>
+            </div>
+            
+            <div class="diagram-container">
+                <div class="mcp-diagram">
+                    <div class="mcp-client">
+                        <h3>MCP Client</h3>
+                        <p style="font-size: 0.9em; margin-top: 10px;">LLM Application</p>
+                        <div style="position: absolute; bottom: -30px; font-size: 0.8em; opacity: 0.7;">
+                            (Claude, ChatGPT)
+                        </div>
+                    </div>
+                    
+                    <div class="mcp-connection">
+                        <div class="json-rpc-box">JSON-RPC 2.0</div>
+                        <div style="position: relative; width: 100%; height: 2px;">
+                            <div class="animate-data"></div>
+                            <div style="background: #ff6b6b; height: 100%; width: 100%;"></div>
+                        </div>
+                        <div class="mcp-capabilities">
+                            <div class="capability-box">🛠️ Tools</div>
+                            <div class="capability-box">📦 Resources</div>
+                            <div class="capability-box">💬 Prompts</div>
+                            <div class="capability-box">🎲 Sampling</div>
+                        </div>
+                    </div>
+                    
+                    <div class="mcp-server">
+                        <h3>MCP Server</h3>
+                        <p style="font-size: 0.9em; margin-top: 10px;">Context Provider</p>
+                        <div style="position: absolute; bottom: -30px; font-size: 0.8em; opacity: 0.7;">
+                            (Tools, Data, APIs)
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="features">
+                <div class="feature-card">
+                    <h4>🔑 Key Innovation</h4>
+                    <p>Standardized interface for LLMs to access external tools and context, like "USB-C for AI"</p>
+                </div>
+                <div class="feature-card">
+                    <h4>🛡️ Security</h4>
+                    <p>Token-based auth, tool validation, sandbox isolation for safe execution</p>
+                </div>
+                <div class="feature-card">
+                    <h4>🚀 Transport</h4>
+                    <p>HTTP, Stdio, Server-Sent Events (SSE) for flexible deployment</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ACP Section -->
+        <div class="protocol-section acp-section">
+            <div class="protocol-header">
+                <h2 class="protocol-title">Agent Communication Protocol (ACP)</h2>
+                <span class="protocol-badge">RESTful</span>
+                <span class="protocol-badge">MIME Multipart</span>
+                <span class="protocol-badge">Registry-Based</span>
+            </div>
+            
+            <div class="diagram-container">
+                <div class="acp-diagram">
+                    <div class="acp-component acp-client-box">
+                        <h3>ACP Client</h3>
+                        <p style="font-size: 0.8em; margin-top: 5px;">Request Initiator</p>
+                        <div class="acp-flow"></div>
+                    </div>
+                    
+                    <div class="acp-component acp-registry">
+                        <h3>Registry</h3>
+                        <p style="font-size: 0.8em; margin-top: 5px;">Agent Discovery</p>
+                        <div class="acp-flow"></div>
+                    </div>
+                    
+                    <div class="acp-component acp-server-box">
+                        <h3>ACP Server</h3>
+                        <p style="font-size: 0.8em; margin-top: 5px;">Message Parser</p>
+                        <div class="acp-flow"></div>
+                    </div>
+                    
+                    <div class="acp-component acp-agent-box">
+                        <h3>ACP Agent</h3>
+                        <p style="font-size: 0.8em; margin-top: 5px;">Task Executor</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="features">
+                <div class="feature-card">
+                    <h4>📨 Multipart Messages</h4>
+                    <p>Ordered message parts with MIME types, supporting text, binary, and references</p>
+                </div>
+                <div class="feature-card">
+                    <h4>🔄 Session Management</h4>
+                    <p>Stateful interactions with session tracking and context persistence</p>
+                </div>
+                <div class="feature-card">
+                    <h4>🌐 SDK-Optional</h4>
+                    <p>Pure REST interface, no SDK required, works with any HTTP client</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- A2A Section -->
+        <div class="protocol-section a2a-section">
+            <div class="protocol-header">
+                <h2 class="protocol-title">Agent-to-Agent Protocol (A2A)</h2>
+                <span class="protocol-badge">Peer-to-Peer</span>
+                <span class="protocol-badge">Agent Cards</span>
+                <span class="protocol-badge">Enterprise</span>
+            </div>
+            
+            <div class="diagram-container">
+                <div class="a2a-diagram">
+                    <div class="a2a-user">
+                        <h3>User</h3>
+                        <p style="font-size: 0.8em;">Task Origin</p>
+                        <div class="a2a-arrow" style="left: 100%;"></div>
+                    </div>
+                    
+                    <div class="a2a-client">
+                        <h3>Client Agent</h3>
+                        <p style="font-size: 0.8em;">Coordinator</p>
+                        <div class="a2a-arrow" style="left: 100%;"></div>
+                    </div>
+                    
+                    <div class="a2a-remote">
+                        <h3>Remote Agent</h3>
+                        <p style="font-size: 0.8em;">Task Executor</p>
+                        <div class="agent-card">
+                            <strong>Agent Card</strong>
+                            <div style="font-size: 0.7em; margin-top: 5px;">
+                                • Skills<br>
+                                • Auth<br>
+                                • Endpoints
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="features">
+                <div class="feature-card">
+                    <h4>🎯 Agent Cards</h4>
+                    <p>Self-descriptive JSON at /.well-known/agent.json declaring capabilities</p>
+                </div>
+                <div class="feature-card">
+                    <h4>📦 Artifacts</h4>
+                    <p>Structured outputs from task execution, supporting chaining and workflows</p>
+                </div>
+                <div class="feature-card">
+                    <h4>🔐 DID Auth</h4>
+                    <p>Decentralized identity-based authentication for secure peer interactions</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ANP Section -->
+        <div class="protocol-section anp-section">
+            <div class="protocol-header">
+                <h2 class="protocol-title">Agent Network Protocol (ANP)</h2>
+                <span class="protocol-badge">Decentralized P2P</span>
+                <span class="protocol-badge">W3C DIDs</span>
+                <span class="protocol-badge">Open Internet</span>
+            </div>
+            
+            <div class="diagram-container">
+                <div class="anp-diagram">
+                    <div class="anp-node anp-node-1">
+                        <div class="did-badge">DID</div>
+                        <h3>Agent A</h3>
+                        <p style="font-size: 0.8em;">AI Service</p>
+                    </div>
+                    <div class="anp-node anp-node-2">
+                        <div class="did-badge">DID</div>
+                        <h3>Agent B</h3>
+                        <p style="font-size: 0.8em;">Data Provider</p>
+                    </div>
+                    <div class="anp-node anp-node-3">
+                        <div class="did-badge">DID</div>
+                        <h3>Agent C</h3>
+                        <p style="font-size: 0.8em;">Compute Node</p>
+                    </div>
+                    <div class="anp-node anp-node-4">
+                        <div class="did-badge">DID</div>
+                        <h3>Agent D</h3>
+                        <p style="font-size: 0.8em;">Orchestrator</p>
+                    </div>
+                    
+                    <!-- Connections -->
+                    <div class="anp-connection" style="width: 200px; top: 70px; left: 150px; transform: rotate(45deg);"></div>
+                    <div class="anp-connection" style="width: 200px; top: 70px; right: 150px; transform: rotate(-45deg);"></div>
+                    <div class="anp-connection" style="width: 200px; bottom: 70px; left: 150px; transform: rotate(-45deg);"></div>
+                    <div class="anp-connection" style="width: 200px; bottom: 70px; right: 150px; transform: rotate(45deg);"></div>
+                    <div class="anp-connection" style="width: 180px; top: 200px; left: 70px; transform: rotate(0deg);"></div>
+                    <div class="anp-connection" style="width: 180px; top: 200px; right: 70px; transform: rotate(0deg);"></div>
+                </div>
+            </div>
+
+            <div class="features">
+                <div class="feature-card">
+                    <h4>🆔 Decentralized Identity</h4>
+                    <p>W3C DIDs (did:wba) for trustless, verifiable agent identity</p>
+                </div>
+                <div class="feature-card">
+                    <h4>🌐 JSON-LD Semantics</h4>
+                    <p>Schema.org vocabularies for semantic interoperability</p>
+                </div>
+                <div class="feature-card">
+                    <h4>🤝 Meta-Protocol</h4>
+                    <p>Natural language protocol negotiation for adaptive communication</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Legend -->
+        <div class="legend">
+            <div class="legend-item">
+                <div class="legend-color" style="background: #ff6b6b;"></div>
+                <span>MCP - Tool Integration Focus</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background: #4ecdc4;"></div>
+                <span>ACP - General Messaging</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background: #ffe66d;"></div>
+                <span>A2A - Enterprise Collaboration</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background: #a8e6cf;"></div>
+                <span>ANP - Open Internet</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Add interactive hover effects
+        document.querySelectorAll('.anp-node').forEach((node, index) => {
+            node.addEventListener('mouseenter', () => {
+                // Highlight connected nodes
+                document.querySelectorAll('.anp-connection').forEach(conn => {
+                    conn.style.background = 'rgba(168, 230, 207, 0.6)';
+                    conn.style.boxShadow = '0 0 10px rgba(168, 230, 207, 0.8)';
+                });
+            });
+            
+            node.addEventListener('mouseleave', () => {
+                document.querySelectorAll('.anp-connection').forEach(conn => {
+                    conn.style.background = 'rgba(168, 230, 207, 0.3)';
+                    conn.style.boxShadow = 'none';
+                });
+            });
+        });
+
+        // Animate capabilities on hover
+        document.querySelectorAll('.capability-box').forEach(cap => {
+            cap.addEventListener('mouseenter', () => {
+                cap.style.background = 'rgba(255, 107, 107, 0.4)';
+            });
+            
+            cap.addEventListener('mouseleave', () => {
+                cap.style.background = 'rgba(255, 107, 107, 0.2)';
+            });
+        });
+
+        // Create pulsing effect for data flow
+        setInterval(() => {
+            const pulseElements = document.querySelectorAll('.json-rpc-box, .agent-card');
+            pulseElements.forEach(el => {
+                el.style.animation = 'none';
+                setTimeout(() => {
+                    el.style.animation = 'pulse 2s infinite';
+                }, 10);
+            });
+        }, 4000);
+    </script>
+</body>
+</html>
