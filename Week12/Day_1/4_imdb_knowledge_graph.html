@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IMDB Knowledge Graph</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 50%, #ff6b6b 100%);
+            min-height: 100vh;
+            color: white;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2.5rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .intro-section {
+            margin-bottom: 30px;
+        }
+
+        .intro-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+        }
+
+        .intro-card h2 {
+            font-size: 2rem;
+            margin-bottom: 20px;
+            text-align: center;
+            color: #ffd700;
+        }
+
+        .intro-card > p {
+            font-size: 1.2rem;
+            line-height: 1.6;
+            text-align: center;
+            margin-bottom: 30px;
+            color: #e0e0e0;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .feature {
+            background: rgba(0,0,0,0.2);
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .feature-icon {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .feature h3 {
+            color: #87ceeb;
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+        }
+
+        .feature p {
+            font-size: 0.9rem;
+            line-height: 1.4;
+            color: #d0d0d0;
+        }
+
+        .why-important {
+            background: rgba(255,215,0,0.1);
+            padding: 20px;
+            border-radius: 15px;
+            border-left: 4px solid #ffd700;
+        }
+
+        .why-important h3 {
+            color: #ffd700;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+        }
+
+        .why-important p {
+            line-height: 1.6;
+            color: #e0e0e0;
+        }
+
+        .graph-container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+        }
+
+        #knowledge-graph {
+            width: 100%;
+            height: 600px;
+            border-radius: 15px;
+            background: rgba(0,0,0,0.1);
+            border: 2px solid rgba(255,255,255,0.2);
+        }
+
+        .legend {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255,255,255,0.2);
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+        }
+
+        .legend-circle {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .queries-section {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+        }
+
+        .queries-section h2 {
+            font-size: 2rem;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+
+        .query-category {
+            margin-bottom: 30px;
+        }
+
+        .query-category h3 {
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+            color: #ffd700;
+        }
+
+        .query {
+            background: rgba(0,0,0,0.2);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            border-left: 4px solid #ffd700;
+        }
+
+        .query-title {
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #87ceeb;
+        }
+
+        .query-text {
+            font-size: 0.9rem;
+            color: #e0e0e0;
+            line-height: 1.4;
+        }
+
+        .node-info {
+            position: absolute;
+            background: rgba(0,0,0,0.8);
+            color: white;
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            pointer-events: none;
+            z-index: 1000;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎬 IMDB Movie Knowledge Graph</h1>
+        
+        <div class="intro-section">
+            <div class="intro-card">
+                <h2>🎭 What is a Movie Knowledge Graph?</h2>
+                <p>Think of IMDB as a massive interconnected web of movie magic! A knowledge graph for films connects actors, directors, movies, genres, studios, and awards in a smart network that reveals hidden patterns in cinema history.</p>
+                
+                <div class="features-grid">
+                    <div class="feature">
+                        <div class="feature-icon">🎬</div>
+                        <h3>Movie Connections</h3>
+                        <p>Links films through shared actors, directors, genres, and production companies to discover cinematic relationships</p>
+                    </div>
+                    <div class="feature">
+                        <div class="feature-icon">⭐</div>
+                        <h3>Smart Recommendations</h3>
+                        <p>Suggests movies based on complex relationships like "films with similar casts" or "directors with comparable styles"</p>
+                    </div>
+                    <div class="feature">
+                        <div class="feature-icon">📊</div>
+                        <h3>Career Analytics</h3>
+                        <p>Tracks actor collaborations, director evolution, genre trends, and box office patterns across decades</p>
+                    </div>
+                    <div class="feature">
+                        <div class="feature-icon">🔍</div>
+                        <h3>Deep Discovery</h3>
+                        <p>Uncovers hidden gems, forgotten collaborations, and surprising connections in film history</p>
+                    </div>
+                </div>
+                
+                <div class="why-important">
+                    <h3>🌟 Why IMDB Uses Knowledge Graphs</h3>
+                    <p>IMDB's knowledge graph powers everything from "People who liked this also liked..." recommendations to complex searches like "action movies from the 1980s with at least 7.5 rating starring actors who've worked with Steven Spielberg." It helps millions of users discover their next favorite film through the intricate web of cinema connections.</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="graph-container">
+            <svg id="knowledge-graph"></svg>
+            <div class="legend">
+                <div class="legend-item">
+                    <div class="legend-circle" style="background: #e74c3c;"></div>
+                    <span>Movies</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-circle" style="background: #3498db;"></div>
+                    <span>Actors</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-circle" style="background: #9b59b6;"></div>
+                    <span>Directors</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-circle" style="background: #f39c12;"></div>
+                    <span>Genres</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="queries-section">
+            <h2>🎭 Ask Your Movie Knowledge Graph Anything!</h2>
+            <p style="text-align: center; margin-bottom: 30px; font-size: 1.1rem; color: #e0e0e0;">Here are natural language questions you can ask an IMDB knowledge graph to discover amazing film insights:</p>
+            
+            <div class="query-category">
+                <h3>🔍 Movie Discovery</h3>
+                <div class="query">
+                    <div class="query-title">What are the best sci-fi movies from the 1980s?</div>
+                    <div class="query-text">Find highly-rated science fiction films released between 1980-1989, ranked by IMDB score and popularity</div>
+                </div>
+                <div class="query">
+                    <div class="query-title">Show me movies similar to Inception</div>
+                    <div class="query-text">Find films that share genres, themes, directors, or key actors with Christopher Nolan's mind-bending thriller</div>
+                </div>
+                <div class="query">
+                    <div class="query-title">What are the highest-grossing animated movies of all time?</div>
+                    <div class="query-text">Rank animated films by worldwide box office earnings and show their studios and release years</div>
+                </div>
+            </div>
+
+            <div class="query-category">
+                <h3>🎭 Actor & Director Insights</h3>
+                <div class="query">
+                    <div class="query-title">Which actors have worked with Christopher Nolan the most?</div>
+                    <div class="query-text">Find actors who appear in multiple Christopher Nolan films and analyze their collaboration patterns</div>
+                </div>
+                <div class="query">
+                    <div class="query-title">Who are Leonardo DiCaprio's most frequent co-stars?</div>
+                    <div class="query-text">Identify actors who have appeared alongside Leonardo DiCaprio in multiple films throughout his career</div>
+                </div>
+                <div class="query">
+                    <div class="query-title">What directors make the best horror movies?</div>
+                    <div class="query-text">Rank directors by the average rating of their horror films and identify masters of the genre</div>
+                </div>
+                <div class="query">
+                    <div class="query-title">How has Robert De Niro's movie choices evolved over the decades?</div>
+                    <div class="query-text">Track the genres, ratings, and types of films Robert De Niro has chosen from the 1970s to present</div>
+                </div>
+            </div>
+
+            <div class="query-category">
+                <h3>🏆 Awards & Recognition</h3>
+                <div class="query">
+                    <div class="query-title">Which movies won both Oscar and Golden Globe for Best Picture?</div>
+                    <div class="query-text">Find films that achieved the rare feat of winning top honors at both major award ceremonies</div>
+                </div>
+                <div class="query">
+                    <div class="query-title">Who are the most Oscar-nominated actors who never won?</div>
+                    <div class="query-text">Identify talented actors with multiple nominations but no wins, highlighting award season snubs</div>
+                </div>
+                <div class="query">
+                    <div class="query-title">What's the youngest Best Director Oscar winner and their winning film?</div>
+                    <div class="query-text">Find record-breaking young directors and analyze what made their winning films special</div>
+                </div>
+            </div>
+
+            <div class="query-category">
+                <h3>🎬 Genre & Trend Analysis</h3>
+                <div class="query">
+                    <div class="query-title">How have superhero movies evolved since 2000?</div>
+                    <div class="query-text">Track the growth, ratings, box office, and key players in the superhero genre over two decades</div>
+                </div>
+                <div class="query">
+                    <div class="query-title">What genres perform best internationally vs domestically?</div>
+                    <div class="query-text">Compare how different film genres succeed in global markets versus their home countries</div>
+                </div>
+                <div class="query">
+                    <div class="query-title">Which movie franchises have the most consistent quality?</div>
+                    <div class="query-text">Analyze film series to find which maintain high ratings across all installments</div>
+                </div>
+            </div>
+
+            <div class="query-category">
+                <h3>🏭 Studio & Production Insights</h3>
+                <div class="query">
+                    <div class="query-title">What studios produce the most profitable comedies?</div>
+                    <div class="query-text">Identify production companies with the highest return on investment for comedy films</div>
+                </div>
+                <div class="query">
+                    <div class="query-title">Which studio collaborations created the biggest blockbusters?</div>
+                    <div class="query-text">Find co-production partnerships that resulted in massive box office successes</div>
+                </div>
+                <div class="query">
+                    <div class="query-title">How do independent films compare to studio films in terms of ratings?</div>
+                    <div class="query-text">Analyze critical and audience scores between indie productions and major studio releases</div>
+                </div>
+            </div>
+
+            <div class="query-category">
+                <h3>📈 Box Office & Commercial Success</h3>
+                <div class="query">
+                    <div class="query-title">What movies had the biggest opening weekend surprises?</div>
+                    <div class="query-text">Find films that vastly exceeded or underperformed their opening weekend projections</div>
+                </div>
+                <div class="query">
+                    <div class="query-title">Which actors guarantee the highest box office returns?</div>
+                    <div class="query-text">Analyze which stars have the most consistent track record for commercial success</div>
+                </div>
+                <div class="query">
+                    <div class="query-title">How do movie budgets correlate with final box office success?</div>
+                    <div class="query-text">Examine the relationship between production costs and global earnings across different genres</div>
+                </div>
+            </div>
+
+            <div class="query-category">
+                <h3>🌍 Global Cinema Patterns</h3>
+                <div class="query">
+                    <div class="query-title">What are the most successful international films in Hollywood?</div>
+                    <div class="query-text">Identify foreign films that achieved significant success in the US market</div>
+                </div>
+                <div class="query">
+                    <div class="query-title">Which countries produce the highest-rated films?</div>
+                    <div class="query-text">Compare average film ratings across different countries and identify cinematic powerhouses</div>
+                </div>
+                <div class="query">
+                    <div class="query-title">How has streaming availability changed viewing patterns for classic films?</div>
+                    <div class="query-text">Analyze how digital platforms have affected the popularity and ratings of older movies</div>
+                </div>
+            </div>
+
+            <div class="query-category">
+                <h3>🎯 Recommendation Engine Queries</h3>
+                <div class="query">
+                    <div class="query-title">If I loved Pulp Fiction, what should I watch next?</div>
+                    <div class="query-text">Find films with similar narrative style, cast connections, or thematic elements to Tarantino's masterpiece</div>
+                </div>
+                <div class="query">
+                    <div class="query-title">What hidden gems feature actors from my favorite movies?</div>
+                    <div class="query-text">Discover lesser-known films starring actors from highly-rated movies in your watch history</div>
+                </div>
+                <div class="query">
+                    <div class="query-title">Show me critically acclaimed movies I probably haven't seen</div>
+                    <div class="query-text">Find high-rated films from different eras and countries that don't appear on typical "best of" lists</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="node-info" id="nodeInfo"></div>
+
+    <script>
+        // IMDB Knowledge graph data (based on CSV columns: movies, directors, actors, genres)
+        const nodes = [
+            // Movies
+            {id: 'inception', type: 'movie', name: 'Inception', x: 400, y: 200, color: '#e74c3c'},
+            {id: 'dark_knight', type: 'movie', name: 'The Dark Knight', x: 600, y: 150, color: '#e74c3c'},
+            {id: 'interstellar', type: 'movie', name: 'Interstellar', x: 500, y: 300, color: '#e74c3c'},
+            {id: 'titanic', type: 'movie', name: 'Titanic', x: 200, y: 250, color: '#e74c3c'},
+            {id: 'wolf_wall_street', type: 'movie', name: 'Wolf of Wall Street', x: 300, y: 400, color: '#e74c3c'},
+            {id: 'goodfellas', type: 'movie', name: 'Goodfellas', x: 150, y: 450, color: '#e74c3c'},
+            {id: 'shutter_island', type: 'movie', name: 'Shutter Island', x: 350, y: 150, color: '#e74c3c'},
+            {id: 'departed', type: 'movie', name: 'The Departed', x: 250, y: 500, color: '#e74c3c'},
+            
+            // Actors
+            {id: 'leonardo', type: 'actor', name: 'Leonardo DiCaprio', x: 250, y: 320, color: '#3498db'},
+            {id: 'christian_bale', type: 'actor', name: 'Christian Bale', x: 550, y: 200, color: '#3498db'},
+            {id: 'marion_cotillard', type: 'actor', name: 'Marion Cotillard', x: 450, y: 100, color: '#3498db'},
+            {id: 'matthew_mcconaughey', type: 'actor', name: 'Matthew McConaughey', x: 650, y: 300, color: '#3498db'},
+            {id: 'robert_deniro', type: 'actor', name: 'Robert De Niro', x: 100, y: 380, color: '#3498db'},
+            {id: 'mark_wahlberg', type: 'actor', name: 'Mark Wahlberg', x: 200, y: 150, color: '#3498db'},
+            {id: 'cillian_murphy', type: 'actor', name: 'Cillian Murphy', x: 450, y: 250, color: '#3498db'},
+            {id: 'tom_hardy', type: 'actor', name: 'Tom Hardy', x: 350, y: 50, color: '#3498db'},
+            
+            // Directors
+            {id: 'nolan', type: 'director', name: 'Christopher Nolan', x: 500, y: 150, color: '#9b59b6'},
+            {id: 'cameron', type: 'director', name: 'James Cameron', x: 150, y: 200, color: '#9b59b6'},
+            {id: 'scorsese', type: 'director', name: 'Martin Scorsese', x: 200, y: 450, color: '#9b59b6'},
+            
+            // Genres
+            {id: 'sci_fi', type: 'genre', name: 'Sci-Fi', x: 650, y: 150, color: '#f39c12'},
+            {id: 'thriller', type: 'genre', name: 'Thriller', x: 350, y: 100, color: '#f39c12'},
+            {id: 'drama', type: 'genre', name: 'Drama', x: 150, y: 350, color: '#f39c12'},
+            {id: 'action', type: 'genre', name: 'Action', x: 700, y: 250, color: '#f39c12'},
+            {id: 'romance', type: 'genre', name: 'Romance', x: 100, y: 300, color: '#f39c12'},
+            {id: 'crime', type: 'genre', name: 'Crime', x: 50, y: 500, color: '#f39c12'},
+            {id: 'mystery', type: 'genre', name: 'Mystery', x: 300, y: 50, color: '#f39c12'}
+        ];
+
+        const links = [
+            // Director-Movie relationships
+            {source: 'nolan', target: 'inception', type: 'directed'},
+            {source: 'nolan', target: 'dark_knight', type: 'directed'},
+            {source: 'nolan', target: 'interstellar', type: 'directed'},
+            {source: 'cameron', target: 'titanic', type: 'directed'},
+            {source: 'scorsese', target: 'wolf_wall_street', type: 'directed'},
+            {source: 'scorsese', target: 'goodfellas', type: 'directed'},
+            {source: 'scorsese', target: 'shutter_island', type: 'directed'},
+            {source: 'scorsese', target: 'departed', type: 'directed'},
+            
+            // Actor-Movie relationships
+            {source: 'leonardo', target: 'inception', type: 'starred_in'},
+            {source: 'leonardo', target: 'titanic', type: 'starred_in'},
+            {source: 'leonardo', target: 'wolf_wall_street', type: 'starred_in'},
+            {source: 'leonardo', target: 'shutter_island', type: 'starred_in'},
+            {source: 'leonardo', target: 'departed', type: 'starred_in'},
+            {source: 'christian_bale', target: 'dark_knight', type: 'starred_in'},
+            {source: 'marion_cotillard', target: 'inception', type: 'starred_in'},
+            {source: 'matthew_mcconaughey', target: 'interstellar', type: 'starred_in'},
+            {source: 'robert_deniro', target: 'goodfellas', type: 'starred_in'},
+            {source: 'mark_wahlberg', target: 'departed', type: 'starred_in'},
+            {source: 'cillian_murphy', target: 'inception', type: 'starred_in'},
+            {source: 'cillian_murphy', target: 'dark_knight', type: 'starred_in'},
+            {source: 'tom_hardy', target: 'inception', type: 'starred_in'},
+            {source: 'tom_hardy', target: 'dark_knight', type: 'starred_in'},
+            
+            // Movie-Genre relationships
+            {source: 'inception', target: 'sci_fi', type: 'belongs_to'},
+            {source: 'inception', target: 'thriller', type: 'belongs_to'},
+            {source: 'inception', target: 'mystery', type: 'belongs_to'},
+            {source: 'dark_knight', target: 'action', type: 'belongs_to'},
+            {source: 'dark_knight', target: 'thriller', type: 'belongs_to'},
+            {source: 'dark_knight', target: 'crime', type: 'belongs_to'},
+            {source: 'interstellar', target: 'sci_fi', type: 'belongs_to'},
+            {source: 'interstellar', target: 'drama', type: 'belongs_to'},
+            {source: 'titanic', target: 'romance', type: 'belongs_to'},
+            {source: 'titanic', target: 'drama', type: 'belongs_to'},
+            {source: 'wolf_wall_street', target: 'drama', type: 'belongs_to'},
+            {source: 'goodfellas', target: 'crime', type: 'belongs_to'},
+            {source: 'goodfellas', target: 'drama', type: 'belongs_to'},
+            {source: 'shutter_island', target: 'thriller', type: 'belongs_to'},
+            {source: 'shutter_island', target: 'mystery', type: 'belongs_to'},
+            {source: 'departed', target: 'crime', type: 'belongs_to'},
+            {source: 'departed', target: 'thriller', type: 'belongs_to'}
+        ];
+
+        // SVG setup
+        const svg = document.getElementById('knowledge-graph');
+        const svgRect = svg.getBoundingClientRect();
+        svg.setAttribute('viewBox', `0 0 800 600`);
+
+        // Create link elements
+        links.forEach(link => {
+            const sourceNode = nodes.find(n => n.id === link.source);
+            const targetNode = nodes.find(n => n.id === link.target);
+            
+            const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+            line.setAttribute('x1', sourceNode.x);
+            line.setAttribute('y1', sourceNode.y);
+            line.setAttribute('x2', targetNode.x);
+            line.setAttribute('y2', targetNode.y);
+            line.setAttribute('stroke', 'rgba(255,255,255,0.4)');
+            line.setAttribute('stroke-width', '2');
+            line.setAttribute('opacity', '0.7');
+            svg.appendChild(line);
+        });
+
+        // Create node elements
+        nodes.forEach(node => {
+            // Node circle
+            const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+            circle.setAttribute('cx', node.x);
+            circle.setAttribute('cy', node.y);
+            circle.setAttribute('r', node.type === 'movie' ? '25' : '20');
+            circle.setAttribute('fill', node.color);
+            circle.setAttribute('stroke', 'rgba(255,255,255,0.8)');
+            circle.setAttribute('stroke-width', '2');
+            circle.style.cursor = 'pointer';
+            circle.style.filter = 'drop-shadow(0 2px 4px rgba(0,0,0,0.3))';
+            
+            // Add hover effects
+            circle.addEventListener('mouseenter', (e) => {
+                circle.setAttribute('r', node.type === 'movie' ? '30' : '25');
+                circle.style.filter = 'drop-shadow(0 4px 8px rgba(0,0,0,0.5))';
+                showNodeInfo(e, node);
+            });
+            
+            circle.addEventListener('mouseleave', () => {
+                circle.setAttribute('r', node.type === 'movie' ? '25' : '20');
+                circle.style.filter = 'drop-shadow(0 2px 4px rgba(0,0,0,0.3))';
+                hideNodeInfo();
+            });
+            
+            svg.appendChild(circle);
+            
+            // Node label
+            const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+            text.setAttribute('x', node.x);
+            text.setAttribute('y', node.y + 40);
+            text.setAttribute('text-anchor', 'middle');
+            text.setAttribute('fill', 'white');
+            text.setAttribute('font-size', '11');
+            text.setAttribute('font-weight', 'bold');
+            text.style.textShadow = '1px 1px 2px rgba(0,0,0,0.7)';
+            text.textContent = node.name;
+            svg.appendChild(text);
+        });
+
+        // Node info tooltip
+        function showNodeInfo(event, node) {
+            const info = document.getElementById('nodeInfo');
+            const connections = links.filter(l => l.source === node.id || l.target === node.id).length;
+            
+            let extraInfo = '';
+            if (node.type === 'movie') {
+                extraInfo = '<br>Rating: 8.5/10<br>Year: 2010';
+            } else if (node.type === 'actor') {
+                extraInfo = '<br>Known for: Drama, Thriller<br>Career span: 1990-present';
+            } else if (node.type === 'director') {
+                extraInfo = '<br>Famous for: Mind-bending plots<br>Style: Sci-fi thriller';
+            }
+            
+            info.innerHTML = `
+                <strong>${node.name}</strong><br>
+                Type: ${node.type}${extraInfo}<br>
+                Connections: ${connections}
+            `;
+            
+            info.style.display = 'block';
+            info.style.left = event.pageX + 10 + 'px';
+            info.style.top = event.pageY - 10 + 'px';
+        }
+
+        function hideNodeInfo() {
+            document.getElementById('nodeInfo').style.display = 'none';
+        }
+
+        // Add animation to nodes
+        function animateNodes() {
+            const circles = svg.querySelectorAll('circle');
+            circles.forEach((circle, index) => {
+                setTimeout(() => {
+                    circle.style.transform = 'scale(1.1)';
+                    circle.style.transition = 'transform 0.3s ease';
+                    setTimeout(() => {
+                        circle.style.transform = 'scale(1)';
+                    }, 300);
+                }, index * 100);
+            });
+        }
+
+        // Start animation on load
+        setTimeout(animateNodes, 500);
+    </script>
+</body>
+</html>

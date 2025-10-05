@@ -1,1 +1,1 @@
-pip install crewai langchain langchain-community pandas faiss-cpu fastapi uvicorn
+pip install crewai langchain langchain-community pandas faiss-cpu fastapi uvicorn dotenv streamlit
