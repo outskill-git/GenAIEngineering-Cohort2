@@ -1,0 +1,870 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>REST API vs MCP: Visual Guide</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0a0a0a;
+            color: #ffffff;
+            overflow: hidden;
+            height: 100vh;
+        }
+
+        /* Slide Container */
+        .slide-container {
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .slide {
+            height: 100vh;
+            width: 100vw;
+            position: absolute;
+            top: 0;
+            left: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+            opacity: 0;
+            transform: translateX(100%);
+            transition: all 0.5s ease;
+            background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+        }
+
+        .slide.active {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .slide.prev {
+            transform: translateX(-100%);
+        }
+
+        /* Navigation */
+        .nav-controls {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 1rem;
+            z-index: 100;
+        }
+
+        .nav-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .nav-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(255, 255, 255, 0.2);
+        }
+
+        .slide-indicator {
+            position: fixed;
+            top: 2rem;
+            right: 2rem;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+        }
+
+        /* Slide Content Styles */
+        .slide-title {
+            font-size: 3.5rem;
+            margin-bottom: 2rem;
+            text-align: center;
+            background: linear-gradient(45deg, #00ff88, #00d4ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .slide-subtitle {
+            font-size: 1.5rem;
+            color: #a8a8a8;
+            text-align: center;
+            margin-bottom: 3rem;
+            max-width: 800px;
+        }
+
+        /* Visual Communication Diagram */
+        .comm-diagram {
+            width: 100%;
+            max-width: 1200px;
+            height: 400px;
+            position: relative;
+            margin: 2rem 0;
+        }
+
+        .comm-box {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 20px;
+            padding: 2rem;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .client-box {
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 250px;
+            background: linear-gradient(135deg, rgba(0, 255, 136, 0.2), rgba(0, 255, 136, 0.1));
+            border-color: #00ff88;
+        }
+
+        .server-box {
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 250px;
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.2), rgba(0, 212, 255, 0.1));
+            border-color: #00d4ff;
+        }
+
+        .comm-channel {
+            position: absolute;
+            left: 280px;
+            right: 280px;
+            top: 50%;
+            transform: translateY(-50%);
+            height: 100px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .data-flow {
+            width: 100%;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+            border-radius: 2px;
+        }
+
+        .data-packet {
+            position: absolute;
+            height: 100%;
+            width: 50px;
+            background: linear-gradient(90deg, transparent, #00ff88, transparent);
+            animation: none;
+        }
+
+        .data-packet.animate-request {
+            animation: flowRight 2s ease-in-out;
+        }
+
+        .data-packet.animate-response {
+            animation: flowLeft 2s ease-in-out;
+        }
+
+        @keyframes flowRight {
+            from { left: -50px; }
+            to { left: 100%; }
+        }
+
+        @keyframes flowLeft {
+            from { right: -50px; }
+            to { right: 100%; }
+        }
+
+        /* Message Bubbles */
+        .message {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 1rem 1.5rem;
+            border-radius: 15px;
+            margin: 0.5rem 0;
+            font-family: monospace;
+            font-size: 0.9rem;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.3s ease;
+        }
+
+        .message.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .request-msg {
+            background: linear-gradient(135deg, rgba(0, 255, 136, 0.2), rgba(0, 255, 136, 0.1));
+            border: 1px solid #00ff88;
+        }
+
+        .response-msg {
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.2), rgba(0, 212, 255, 0.1));
+            border: 1px solid #00d4ff;
+        }
+
+        /* Feature Cards */
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            width: 100%;
+            margin: 2rem 0;
+        }
+
+        .feature-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            padding: 2rem;
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Comparison Cards */
+        .comparison-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            max-width: 1200px;
+            width: 100%;
+            margin: 2rem 0;
+        }
+
+        .tech-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 2rem;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .rest-card {
+            border-color: #00ff88;
+            background: linear-gradient(135deg, rgba(0, 255, 136, 0.1), transparent);
+        }
+
+        .mcp-card {
+            border-color: #00d4ff;
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.1), transparent);
+        }
+
+        /* Icons */
+        .big-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            display: block;
+            text-align: center;
+        }
+
+        /* Code Examples */
+        .code-example {
+            background: #1a1a2e;
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            overflow-x: auto;
+        }
+
+        /* Animated Steps */
+        .step-container {
+            max-width: 800px;
+            width: 100%;
+            margin: 2rem 0;
+        }
+
+        .step {
+            background: rgba(255, 255, 255, 0.05);
+            border-left: 4px solid #00ff88;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            border-radius: 0 10px 10px 0;
+            opacity: 0;
+            transform: translateX(-20px);
+            transition: all 0.3s ease;
+        }
+
+        .step.show {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .step-number {
+            display: inline-block;
+            background: #00ff88;
+            color: #1a1a2e;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 30px;
+            font-weight: bold;
+            margin-right: 1rem;
+        }
+
+        /* Interactive Demo */
+        .demo-btn {
+            background: linear-gradient(45deg, #00ff88, #00d4ff);
+            border: none;
+            color: #1a1a2e;
+            padding: 1rem 2rem;
+            border-radius: 30px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 1rem;
+        }
+
+        .demo-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(0, 255, 136, 0.4);
+        }
+
+        /* Natural Language Demo */
+        .nl-demo {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 2rem;
+            max-width: 800px;
+            width: 100%;
+            margin: 2rem 0;
+        }
+
+        .chat-bubble {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 1rem 1.5rem;
+            margin: 1rem 0;
+            position: relative;
+            max-width: 70%;
+        }
+
+        .user-bubble {
+            background: linear-gradient(135deg, rgba(0, 255, 136, 0.3), rgba(0, 255, 136, 0.1));
+            margin-left: auto;
+            text-align: right;
+        }
+
+        .ai-bubble {
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.3), rgba(0, 212, 255, 0.1));
+            margin-right: auto;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .slide-title {
+                font-size: 2rem;
+            }
+            
+            .comparison-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .comm-diagram {
+                height: 600px;
+            }
+            
+            .client-box, .server-box {
+                width: 200px;
+                padding: 1rem;
+            }
+            
+            .comm-channel {
+                left: 220px;
+                right: 220px;
+            }
+        }
+
+        /* Pulse Animation */
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        /* Loading Animation */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: #00ff88;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="slide-container">
+        <!-- Slide 1: Title -->
+        <div class="slide active">
+            <h1 class="slide-title">Client-Server Communication</h1>
+            <p class="slide-subtitle">REST API vs MCP Server Architecture</p>
+            <div class="feature-grid" style="margin-top: 3rem;">
+                <div class="feature-card">
+                    <span class="big-icon">🌐</span>
+                    <h2 style="color: #00ff88; text-align: center;">REST API</h2>
+                    <p style="text-align: center; margin-top: 1rem;">Traditional HTTP-based architecture for web services</p>
+                </div>
+                <div class="feature-card">
+                    <span class="big-icon">🤖</span>
+                    <h2 style="color: #00d4ff; text-align: center;">MCP Server</h2>
+                    <p style="text-align: center; margin-top: 1rem;">Model Context Protocol for AI assistants</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 2: Client-Server Basics -->
+        <div class="slide">
+            <h2 class="slide-title">What is Client-Server Communication?</h2>
+            <div class="comm-diagram">
+                <div class="comm-box client-box">
+                    <h3>Client</h3>
+                    <p>Requests Services</p>
+                    <small>Browser, App, AI</small>
+                </div>
+                <div class="comm-channel">
+                    <div style="margin-bottom: 1rem;">Request →</div>
+                    <div class="data-flow">
+                        <div class="data-packet" id="basicPacket"></div>
+                    </div>
+                    <div style="margin-top: 1rem;">← Response</div>
+                </div>
+                <div class="comm-box server-box">
+                    <h3>Server</h3>
+                    <p>Provides Services</p>
+                    <small>API, Database, Tools</small>
+                </div>
+            </div>
+            <button class="demo-btn" onclick="animateBasicFlow()">See Communication Flow</button>
+        </div>
+
+        <!-- Slide 3: REST API Communication -->
+        <div class="slide">
+            <h2 class="slide-title">REST API Communication</h2>
+            <div class="comm-diagram">
+                <div class="comm-box client-box">
+                    <h3>HTTP Client</h3>
+                    <p>Web Browser</p>
+                    <p>Mobile App</p>
+                </div>
+                <div class="comm-channel">
+                    <div class="message request-msg" id="restReq">
+                        GET /add?a=5&b=3
+                    </div>
+                    <div class="data-flow">
+                        <div class="data-packet" id="restPacket"></div>
+                    </div>
+                    <div class="message response-msg" id="restRes">
+                        {"result": 8}
+                    </div>
+                </div>
+                <div class="comm-box server-box">
+                    <h3>REST Server</h3>
+                    <p>FastAPI</p>
+                    <p>Port: 9321</p>
+                </div>
+            </div>
+            <div class="step-container">
+                <div class="step" id="restStep1">
+                    <span class="step-number">1</span>
+                    Client creates HTTP request with specific URL and parameters
+                </div>
+                <div class="step" id="restStep2">
+                    <span class="step-number">2</span>
+                    Server receives request at endpoint (e.g., /add)
+                </div>
+                <div class="step" id="restStep3">
+                    <span class="step-number">3</span>
+                    Server processes request and returns JSON response
+                </div>
+                <div class="step" id="restStep4">
+                    <span class="step-number">4</span>
+                    Client receives response and extracts data
+                </div>
+            </div>
+            <button class="demo-btn" onclick="animateRESTFlow()">Animate REST Flow</button>
+        </div>
+
+        <!-- Slide 4: MCP Communication -->
+        <div class="slide">
+            <h2 class="slide-title">MCP Server Communication</h2>
+            <div class="comm-diagram">
+                <div class="comm-box client-box">
+                    <h3>AI Assistant</h3>
+                    <p>Claude/ChatGPT</p>
+                    <p>Natural Language</p>
+                </div>
+                <div class="comm-channel">
+                    <div class="message request-msg" id="mcpReq">
+                        "Add 5 and 3"
+                    </div>
+                    <div class="data-flow">
+                        <div class="data-packet" id="mcpPacket"></div>
+                    </div>
+                    <div class="message response-msg" id="mcpRes">
+                        add(5, 3) → 8
+                    </div>
+                </div>
+                <div class="comm-box server-box">
+                    <h3>MCP Server</h3>
+                    <p>FastMCP</p>
+                    <p>Tools Available</p>
+                </div>
+            </div>
+            <div class="step-container">
+                <div class="step" id="mcpStep1">
+                    <span class="step-number">1</span>
+                    User asks in natural language: "Can you add 5 and 3?"
+                </div>
+                <div class="step" id="mcpStep2">
+                    <span class="step-number">2</span>
+                    AI understands intent and discovers available tools
+                </div>
+                <div class="step" id="mcpStep3">
+                    <span class="step-number">3</span>
+                    AI calls the appropriate tool: add(5, 3)
+                </div>
+                <div class="step" id="mcpStep4">
+                    <span class="step-number">4</span>
+                    Server executes tool and returns result to AI
+                </div>
+            </div>
+            <button class="demo-btn" onclick="animateMCPFlow()">Animate MCP Flow</button>
+        </div>
+
+        <!-- Slide 5: Key Differences -->
+        <div class="slide">
+            <h2 class="slide-title">Key Differences</h2>
+            <div class="comparison-container">
+                <div class="tech-card rest-card">
+                    <h3 style="color: #00ff88; text-align: center; font-size: 1.5rem;">REST API</h3>
+                    <div class="code-example">
+                        <strong>Request Format:</strong><br>
+                        GET /add?a=5&b=3<br><br>
+                        <strong>Must know:</strong><br>
+                        • Exact endpoint URL<br>
+                        • Parameter names<br>
+                        • HTTP method
+                    </div>
+                    <p style="margin-top: 1rem;">❌ No natural language</p>
+                    <p>❌ No context between requests</p>
+                    <p>✅ Fast and predictable</p>
+                    <p>✅ Works everywhere</p>
+                </div>
+                <div class="tech-card mcp-card">
+                    <h3 style="color: #00d4ff; text-align: center; font-size: 1.5rem;">MCP Server</h3>
+                    <div class="code-example">
+                        <strong>Request Format:</strong><br>
+                        "Please add 5 and 3"<br>
+                        "What's 5 + 3?"<br>
+                        "Sum of five and three"
+                    </div>
+                    <p style="margin-top: 1rem;">✅ Natural language support</p>
+                    <p>✅ Context awareness</p>
+                    <p>✅ AI understands intent</p>
+                    <p>✅ Tool discovery</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 6: Natural Language Demo -->
+        <div class="slide">
+            <h2 class="slide-title">Natural Language vs Structured</h2>
+            <div class="comparison-container">
+                <div>
+                    <h3 style="color: #00ff88; text-align: center;">REST API</h3>
+                    <div class="nl-demo">
+                        <div class="chat-bubble user-bubble">
+                            "Can you add 5 and 3?"
+                        </div>
+                        <div class="chat-bubble" style="background: rgba(255, 0, 110, 0.2); border: 1px solid #ff006e;">
+                            ❌ Error: Invalid request format
+                        </div>
+                        <p style="margin-top: 2rem; text-align: center;">Must use:</p>
+                        <div class="code-example">
+                            GET http://localhost:9321/add?a=5&b=3
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <h3 style="color: #00d4ff; text-align: center;">MCP Server</h3>
+                    <div class="nl-demo">
+                        <div class="chat-bubble user-bubble">
+                            "Can you add 5 and 3?"
+                        </div>
+                        <div class="chat-bubble ai-bubble">
+                            I'll add those for you.<br>
+                            Using: add(5, 3)<br>
+                            Result: 8
+                        </div>
+                        <p style="margin-top: 2rem; text-align: center;">AI handles everything!</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 7: Stateless Comparison -->
+        <div class="slide">
+            <h2 class="slide-title">Stateless Behavior</h2>
+            <div class="comparison-container">
+                <div>
+                    <h3 style="color: #00ff88; text-align: center;">REST API - No Memory</h3>
+                    <div class="code-example">
+                        <strong>Request 1:</strong> GET /add?a=10&b=5<br>
+                        Response: {"result": 15}<br><br>
+                        <strong>Request 2:</strong> GET /add?a=result&b=3<br>
+                        <span style="color: #ff006e;">Error: 'result' is not a number</span>
+                    </div>
+                    <p style="text-align: center; margin-top: 1rem;">
+                        Each request is completely independent
+                    </p>
+                </div>
+                <div>
+                    <h3 style="color: #00d4ff; text-align: center;">MCP - Context Aware</h3>
+                    <div class="code-example">
+                        <strong>User:</strong> "Add 10 and 5"<br>
+                        AI: add(10, 5) → 15<br><br>
+                        <strong>User:</strong> "Now add 3 to that"<br>
+                        <span style="color: #00ff88;">AI: add(15, 3) → 18</span>
+                    </div>
+                    <p style="text-align: center; margin-top: 1rem;">
+                        AI maintains conversation context
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 8: Use Cases -->
+        <div class="slide">
+            <h2 class="slide-title">When to Use Each?</h2>
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h3 style="color: #00ff88;">Use REST API When:</h3>
+                    <ul style="list-style: none; padding: 0; line-height: 2;">
+                        <li>✓ Building web applications</li>
+                        <li>✓ Mobile app backends</li>
+                        <li>✓ System integrations</li>
+                        <li>✓ Public APIs</li>
+                        <li>✓ Need maximum compatibility</li>
+                    </ul>
+                </div>
+                <div class="feature-card">
+                    <h3 style="color: #00d4ff;">Use MCP When:</h3>
+                    <ul style="list-style: none; padding: 0; line-height: 2;">
+                        <li>✓ AI assistant integration</li>
+                        <li>✓ Natural language interfaces</li>
+                        <li>✓ Context-aware applications</li>
+                        <li>✓ Tool-based architectures</li>
+                        <li>✓ Conversational systems</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 9: Summary -->
+        <div class="slide">
+            <h2 class="slide-title">Summary</h2>
+            <div style="max-width: 1000px; text-align: center;">
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <span class="big-icon">🌐</span>
+                        <h3>REST API</h3>
+                        <p>Structured, stateless HTTP communication for traditional applications</p>
+                    </div>
+                    <div class="feature-card">
+                        <span class="big-icon">🤖</span>
+                        <h3>MCP Server</h3>
+                        <p>Natural language enabled protocol for AI-powered interactions</p>
+                    </div>
+                </div>
+                <div style="margin-top: 3rem;">
+                    <h3 style="color: #00ff88; margin-bottom: 1rem;">The Future is Hybrid!</h3>
+                    <p style="font-size: 1.2rem; color: #a8a8a8;">
+                        Many modern applications will use both:<br>
+                        REST APIs for system integration and MCP for user interaction
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <div class="nav-controls">
+        <button class="nav-btn" onclick="previousSlide()">← Previous</button>
+        <button class="nav-btn" onclick="nextSlide()">Next →</button>
+    </div>
+
+    <div class="slide-indicator">
+        <span id="currentSlide">1</span> / <span id="totalSlides">9</span>
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+
+        document.getElementById('totalSlides').textContent = totalSlides;
+
+        function showSlide(n) {
+            slides.forEach((slide, index) => {
+                slide.classList.remove('active', 'prev');
+                if (index < n) slide.classList.add('prev');
+                if (index === n) slide.classList.add('active');
+            });
+            currentSlide = n;
+            document.getElementById('currentSlide').textContent = n + 1;
+        }
+
+        function nextSlide() {
+            if (currentSlide < totalSlides - 1) {
+                showSlide(currentSlide + 1);
+            }
+        }
+
+        function previousSlide() {
+            if (currentSlide > 0) {
+                showSlide(currentSlide - 1);
+            }
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') nextSlide();
+            if (e.key === 'ArrowLeft') previousSlide();
+        });
+
+        // Animation functions
+        function animateBasicFlow() {
+            const packet = document.getElementById('basicPacket');
+            packet.classList.remove('animate-request', 'animate-response');
+            void packet.offsetWidth;
+            packet.classList.add('animate-request');
+            
+            setTimeout(() => {
+                packet.classList.remove('animate-request');
+                void packet.offsetWidth;
+                packet.classList.add('animate-response');
+            }, 2500);
+        }
+
+        function animateRESTFlow() {
+            const steps = ['restStep1', 'restStep2', 'restStep3', 'restStep4'];
+            const packet = document.getElementById('restPacket');
+            const req = document.getElementById('restReq');
+            const res = document.getElementById('restRes');
+            
+            // Reset
+            steps.forEach(id => document.getElementById(id).classList.remove('show'));
+            req.classList.remove('show');
+            res.classList.remove('show');
+            packet.classList.remove('animate-request', 'animate-response');
+            
+            // Animate steps
+            steps.forEach((id, index) => {
+                setTimeout(() => {
+                    document.getElementById(id).classList.add('show');
+                    if (index === 0) {
+                        req.classList.add('show');
+                        packet.classList.add('animate-request');
+                    }
+                    if (index === 2) {
+                        res.classList.add('show');
+                        packet.classList.remove('animate-request');
+                        packet.classList.add('animate-response');
+                    }
+                }, index * 800);
+            });
+        }
+
+        function animateMCPFlow() {
+            const steps = ['mcpStep1', 'mcpStep2', 'mcpStep3', 'mcpStep4'];
+            const packet = document.getElementById('mcpPacket');
+            const req = document.getElementById('mcpReq');
+            const res = document.getElementById('mcpRes');
+            
+            // Reset
+            steps.forEach(id => document.getElementById(id).classList.remove('show'));
+            req.classList.remove('show');
+            res.classList.remove('show');
+            packet.classList.remove('animate-request', 'animate-response');
+            
+            // Animate steps
+            steps.forEach((id, index) => {
+                setTimeout(() => {
+                    document.getElementById(id).classList.add('show');
+                    if (index === 0) {
+                        req.classList.add('show');
+                    }
+                    if (index === 2) {
+                        packet.classList.add('animate-request');
+                    }
+                    if (index === 3) {
+                        res.classList.add('show');
+                        packet.classList.remove('animate-request');
+                        packet.classList.add('animate-response');
+                    }
+                }, index * 800);
+            });
+        }
+
+        // Touch support for mobile
+        let touchStartX = 0;
+        let touchEndX = 0;
+
+        document.addEventListener('touchstart', (e) => {
+            touchStartX = e.changedTouches[0].screenX;
+        });
+
+        document.addEventListener('touchend', (e) => {
+            touchEndX = e.changedTouches[0].screenX;
+            handleSwipe();
+        });
+
+        function handleSwipe() {
+            if (touchEndX < touchStartX - 50) nextSlide();
+            if (touchEndX > touchStartX + 50) previousSlide();
+        }
+    </script>
+</body>
+</html>
