@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agent Interoperability Protocols Survey</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+            color: #ffffff;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .slides-container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .slide {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 40px;
+            opacity: 0;
+            transform: translateX(100%);
+            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .slide.active {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .slide.prev {
+            transform: translateX(-100%);
+        }
+
+        h1 {
+            font-size: 3.5em;
+            margin-bottom: 30px;
+            background: linear-gradient(45deg, #00f2fe, #4facfe);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-align: center;
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        h2 {
+            font-size: 2.5em;
+            margin-bottom: 25px;
+            color: #4facfe;
+            text-align: center;
+        }
+
+        h3 {
+            font-size: 1.8em;
+            margin-bottom: 20px;
+            color: #00f2fe;
+        }
+
+        @keyframes glow {
+            from { text-shadow: 0 0 10px #00f2fe; }
+            to { text-shadow: 0 0 20px #4facfe, 0 0 30px #00f2fe; }
+        }
+
+        .content {
+            max-width: 1000px;
+            width: 100%;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .bullet-list {
+            list-style: none;
+            padding: 20px 0;
+            text-align: left;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .bullet-list li {
+            padding: 12px 0;
+            padding-left: 30px;
+            position: relative;
+            font-size: 1.2em;
+            line-height: 1.6;
+            opacity: 0;
+            animation: fadeInUp 0.5s forwards;
+        }
+
+        .bullet-list li:nth-child(1) { animation-delay: 0.1s; }
+        .bullet-list li:nth-child(2) { animation-delay: 0.2s; }
+        .bullet-list li:nth-child(3) { animation-delay: 0.3s; }
+        .bullet-list li:nth-child(4) { animation-delay: 0.4s; }
+        .bullet-list li:nth-child(5) { animation-delay: 0.5s; }
+
+        .bullet-list li::before {
+            content: '▸';
+            position: absolute;
+            left: 0;
+            color: #4facfe;
+            font-size: 1.5em;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .protocol-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 30px;
+            margin: 30px 0;
+            max-width: 900px;
+        }
+
+        .protocol-card {
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid #4facfe;
+            border-radius: 15px;
+            padding: 30px;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+            opacity: 0;
+            animation: scaleIn 0.5s forwards;
+        }
+
+        .protocol-card:nth-child(1) { animation-delay: 0.1s; }
+        .protocol-card:nth-child(2) { animation-delay: 0.2s; }
+        .protocol-card:nth-child(3) { animation-delay: 0.3s; }
+        .protocol-card:nth-child(4) { animation-delay: 0.4s; }
+
+        @keyframes scaleIn {
+            from {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .protocol-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(79, 172, 254, 0.4);
+        }
+
+        .protocol-card h3 {
+            margin-bottom: 15px;
+        }
+
+        .protocol-card p {
+            font-size: 1.1em;
+            line-height: 1.5;
+            text-align: left;
+        }
+
+        .navigation {
+            position: fixed;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 20px;
+            z-index: 100;
+        }
+
+        .nav-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid #4facfe;
+            color: #ffffff;
+            padding: 12px 24px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: 1.1em;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .nav-btn:hover {
+            background: #4facfe;
+            transform: scale(1.05);
+        }
+
+        .slide-indicator {
+            position: fixed;
+            top: 40px;
+            right: 40px;
+            font-size: 1.2em;
+            color: #4facfe;
+        }
+
+        .comparison-table {
+            width: 100%;
+            max-width: 1000px;
+            margin: 20px auto;
+            border-collapse: collapse;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .comparison-table th {
+            background: #4facfe;
+            color: #ffffff;
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        .comparison-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .comparison-table tr:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .timeline {
+            position: relative;
+            max-width: 800px;
+            margin: 40px auto;
+        }
+
+        .timeline-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 30px;
+            opacity: 0;
+            animation: slideInLeft 0.6s forwards;
+        }
+
+        .timeline-item:nth-child(1) { animation-delay: 0.1s; }
+        .timeline-item:nth-child(2) { animation-delay: 0.2s; }
+        .timeline-item:nth-child(3) { animation-delay: 0.3s; }
+        .timeline-item:nth-child(4) { animation-delay: 0.4s; }
+
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .timeline-dot {
+            width: 20px;
+            height: 20px;
+            background: #4facfe;
+            border-radius: 50%;
+            margin-right: 20px;
+            box-shadow: 0 0 20px rgba(79, 172, 254, 0.6);
+        }
+
+        .timeline-content {
+            flex: 1;
+        }
+
+        .timeline-content h4 {
+            color: #00f2fe;
+            margin-bottom: 5px;
+        }
+
+        .challenge-solution {
+            display: flex;
+            gap: 30px;
+            margin: 30px 0;
+            max-width: 1000px;
+        }
+
+        .challenge-box, .solution-box {
+            flex: 1;
+            padding: 25px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+        }
+
+        .challenge-box {
+            background: rgba(255, 100, 100, 0.1);
+            border: 2px solid #ff6464;
+        }
+
+        .solution-box {
+            background: rgba(100, 255, 100, 0.1);
+            border: 2px solid #64ff64;
+        }
+
+        .challenge-box h4 {
+            color: #ff6464;
+            margin-bottom: 15px;
+        }
+
+        .solution-box h4 {
+            color: #64ff64;
+            margin-bottom: 15px;
+        }
+
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: #4facfe;
+            border-radius: 50%;
+            opacity: 0.3;
+            animation: float 10s infinite;
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0) translateX(0);
+            }
+            50% {
+                transform: translateY(-100px) translateX(50px);
+            }
+        }
+
+        @media (max-width: 768px) {
+            h1 { font-size: 2.5em; }
+            h2 { font-size: 2em; }
+            .protocol-grid { grid-template-columns: 1fr; }
+            .challenge-solution { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+    <div class="particles" id="particles"></div>
+    
+    <div class="slide-indicator" id="slideIndicator">1 / 9</div>
+    
+    <div class="slides-container">
+        <!-- Slide 1: Title -->
+        <div class="slide active">
+            <div class="content">
+                <h1>Agent Interoperability Protocols</h1>
+                <h2>A Comprehensive Survey</h2>
+                <p style="font-size: 1.3em; margin-top: 30px; color: #a0a0a0;">
+                    MCP, ACP, A2A, and ANP - Building the Future of AI Agent Communication
+                </p>
+            </div>
+        </div>
+
+        <!-- Slide 2: Introduction & Objectives -->
+        <div class="slide">
+            <div class="content">
+                <h2>Introduction & Objectives</h2>
+                <ul class="bullet-list">
+                    <li><strong>Challenge:</strong> LLM-powered agents need standardized protocols for tool integration, context sharing, and task coordination</li>
+                    <li><strong>Problem:</strong> Ad-hoc integrations are difficult to scale, secure, and generalize across domains</li>
+                    <li><strong>Solution:</strong> Four emerging protocols address different layers of interoperability</li>
+                    <li><strong>Goal:</strong> Enable secure, modular, and scalable multi-agent ecosystems</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Slide 3: Key Challenges -->
+        <div class="slide">
+            <div class="content">
+                <h2>Key Challenges in Agent Interoperability</h2>
+                <div class="challenge-solution">
+                    <div class="challenge-box">
+                        <h4>Challenges</h4>
+                        <ul style="list-style: none; padding: 0;">
+                            <li style="margin-bottom: 10px;">🔴 Lack of Context Standardization</li>
+                            <li style="margin-bottom: 10px;">🔴 Communication Barriers</li>
+                            <li style="margin-bottom: 10px;">🔴 No Collaboration Standards</li>
+                            <li>🔴 Internet-Agnostic Design</li>
+                        </ul>
+                    </div>
+                    <div class="solution-box">
+                        <h4>Protocol Solutions</h4>
+                        <ul style="list-style: none; padding: 0;">
+                            <li style="margin-bottom: 10px;">✅ MCP: Standardized context delivery</li>
+                            <li style="margin-bottom: 10px;">✅ ACP: RESTful SDK-optional interface</li>
+                            <li style="margin-bottom: 10px;">✅ A2A: Multimodal communication</li>
+                            <li>✅ ANP: Decentralized identity validation</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 4: Protocol Overview -->
+        <div class="slide">
+            <div class="content">
+                <h2>Four Agent Communication Protocols</h2>
+                <div class="protocol-grid">
+                    <div class="protocol-card">
+                        <h3>MCP</h3>
+                        <p><strong>Model Context Protocol</strong><br>
+                        JSON-RPC client-server interface for secure tool invocation and typed data exchange</p>
+                    </div>
+                    <div class="protocol-card">
+                        <h3>ACP</h3>
+                        <p><strong>Agent Communication Protocol</strong><br>
+                        RESTful HTTP protocol with MIME-typed messages and session management</p>
+                    </div>
+                    <div class="protocol-card">
+                        <h3>A2A</h3>
+                        <p><strong>Agent-to-Agent Protocol</strong><br>
+                        Peer-to-peer task delegation using capability-based Agent Cards</p>
+                    </div>
+                    <div class="protocol-card">
+                        <h3>ANP</h3>
+                        <p><strong>Agent Network Protocol</strong><br>
+                        Open-network discovery using W3C DIDs and JSON-LD graphs</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 5: MCP Details -->
+        <div class="slide">
+            <div class="content">
+                <h2>Model Context Protocol (MCP)</h2>
+                <h3>Standardizing LLM-Tool Integration</h3>
+                <ul class="bullet-list">
+                    <li><strong>Architecture:</strong> Client-Server model with JSON-RPC 2.0</li>
+                    <li><strong>Core Capabilities:</strong> Tools, Resources, Prompts, and Sampling</li>
+                    <li><strong>Transport:</strong> HTTP, Stdio, Server-Sent Events (SSE)</li>
+                    <li><strong>Use Case:</strong> Augmenting LLMs with external capabilities</li>
+                    <li><strong>Security:</strong> Token-based auth, tool validation, sandbox isolation</li>
+                </ul>
+                <p style="margin-top: 20px; color: #a0a0a0;">Launched by Anthropic in November 2024</p>
+            </div>
+        </div>
+
+        <!-- Slide 6: A2A & ACP Details -->
+        <div class="slide">
+            <div class="content">
+                <h2>A2A & ACP Protocols</h2>
+                <div style="display: flex; gap: 40px; justify-content: center;">
+                    <div style="flex: 1;">
+                        <h3>A2A Protocol</h3>
+                        <ul class="bullet-list" style="font-size: 1em;">
+                            <li><strong>Focus:</strong> Enterprise agent collaboration</li>
+                            <li><strong>Discovery:</strong> Agent Cards at /.well-known/agent.json</li>
+                            <li><strong>Communication:</strong> Tasks, Messages, Artifacts</li>
+                            <li><strong>Auth:</strong> DID-based handshake</li>
+                        </ul>
+                        <p style="color: #a0a0a0;">By Google (April 2025)</p>
+                    </div>
+                    <div style="flex: 1;">
+                        <h3>ACP Protocol</h3>
+                        <ul class="bullet-list" style="font-size: 1em;">
+                            <li><strong>Focus:</strong> General-purpose messaging</li>
+                            <li><strong>Discovery:</strong> Registry-based</li>
+                            <li><strong>Features:</strong> Multipart messages, sessions</li>
+                            <li><strong>Deployment:</strong> Stateless, scalable</li>
+                        </ul>
+                        <p style="color: #a0a0a0;">By IBM (March 2025)</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 7: ANP & Comparison -->
+        <div class="slide">
+            <div class="content">
+                <h2>ANP & Protocol Comparison</h2>
+                <h3 style="margin-bottom: 20px;">Agent Network Protocol - Decentralized P2P</h3>
+                <table class="comparison-table">
+                    <tr>
+                        <th>Aspect</th>
+                        <th>MCP</th>
+                        <th>ACP</th>
+                        <th>A2A</th>
+                        <th>ANP</th>
+                    </tr>
+                    <tr>
+                        <td>Architecture</td>
+                        <td>Client-Server</td>
+                        <td>Brokered</td>
+                        <td>Peer-like</td>
+                        <td>P2P</td>
+                    </tr>
+                    <tr>
+                        <td>Discovery</td>
+                        <td>Manual/Static</td>
+                        <td>Registry</td>
+                        <td>HTTP</td>
+                        <td>Search Engine</td>
+                    </tr>
+                    <tr>
+                        <td>Format</td>
+                        <td>JSON-RPC</td>
+                        <td>MIME Multipart</td>
+                        <td>Task/Artifact</td>
+                        <td>JSON-LD</td>
+                    </tr>
+                    <tr>
+                        <td>Best For</td>
+                        <td>Tool Access</td>
+                        <td>Messaging</td>
+                        <td>Enterprise</td>
+                        <td>Open Internet</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <!-- Slide 8: Adoption Roadmap -->
+        <div class="slide">
+            <div class="content">
+                <h2>Phased Adoption Roadmap</h2>
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-content">
+                            <h4>Stage 1: MCP</h4>
+                            <p>Begin with tool invocation and context enrichment for LLMs</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-content">
+                            <h4>Stage 2: ACP</h4>
+                            <p>Add structured multimodal messaging and session management</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-content">
+                            <h4>Stage 3: A2A</h4>
+                            <p>Enable collaborative task execution within organizations</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-content">
+                            <h4>Stage 4: ANP</h4>
+                            <p>Extend to decentralized agent marketplaces</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 9: Conclusions -->
+        <div class="slide">
+            <div class="content">
+                <h2>Key Takeaways</h2>
+                <ul class="bullet-list">
+                    <li><strong>No single protocol fits all:</strong> Each addresses specific interoperability needs</li>
+                    <li><strong>Complementary approach:</strong> Protocols can be adopted progressively</li>
+                    <li><strong>Security is paramount:</strong> All protocols include authentication and validation</li>
+                    <li><strong>Future directions:</strong> Protocol bridges, trust frameworks, evaluation benchmarks</li>
+                    <li><strong>Impact:</strong> Foundation for scalable, secure multi-agent AI systems</li>
+                </ul>
+                <p style="margin-top: 40px; font-size: 1.3em; color: #4facfe;">
+                    Together, these protocols transform fragmented AI ecosystems into robust, interoperable agent networks
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="navigation">
+        <button class="nav-btn" onclick="previousSlide()">Previous</button>
+        <button class="nav-btn" onclick="nextSlide()">Next</button>
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+
+        function updateSlideIndicator() {
+            document.getElementById('slideIndicator').textContent = `${currentSlide + 1} / ${totalSlides}`;
+        }
+
+        function showSlide(n) {
+            slides.forEach((slide, index) => {
+                slide.classList.remove('active', 'prev');
+                if (index === n) {
+                    slide.classList.add('active');
+                } else if (index < n) {
+                    slide.classList.add('prev');
+                }
+            });
+            updateSlideIndicator();
+        }
+
+        function nextSlide() {
+            currentSlide = (currentSlide + 1) % totalSlides;
+            showSlide(currentSlide);
+        }
+
+        function previousSlide() {
+            currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
+            showSlide(currentSlide);
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') nextSlide();
+            if (e.key === 'ArrowLeft') previousSlide();
+        });
+
+        // Create floating particles
+        const particlesContainer = document.getElementById('particles');
+        for (let i = 0; i < 50; i++) {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            particle.style.left = Math.random() * 100 + '%';
+            particle.style.top = Math.random() * 100 + '%';
+            particle.style.animationDelay = Math.random() * 10 + 's';
+            particle.style.animationDuration = (10 + Math.random() * 10) + 's';
+            particlesContainer.appendChild(particle);
+        }
+
+        // Touch support for mobile
+        let touchStartX = 0;
+        let touchEndX = 0;
+
+        document.addEventListener('touchstart', (e) => {
+            touchStartX = e.changedTouches[0].screenX;
+        });
+
+        document.addEventListener('touchend', (e) => {
+            touchEndX = e.changedTouches[0].screenX;
+            handleSwipe();
+        });
+
+        function handleSwipe() {
+            if (touchEndX < touchStartX - 50) nextSlide();
+            if (touchEndX > touchStartX + 50) previousSlide();
+        }
+    </script>
+</body>
+</html>

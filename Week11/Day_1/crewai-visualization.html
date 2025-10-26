@@ -1,0 +1,1551 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CrewAI Multi-Agent Workflow with Tasks & Callbacks</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0a0e1a;
+            color: #fff;
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            text-align: center;
+            padding: 15px;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            border-bottom: 2px solid #0f3460;
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            background: linear-gradient(135deg, #00d9ff 0%, #ee00ff 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 5px;
+        }
+
+        .subtitle {
+            color: #8892b0;
+            font-size: 0.9rem;
+        }
+
+        .main-container {
+            flex: 1;
+            display: flex;
+            gap: 15px;
+            padding: 15px;
+            overflow: hidden;
+        }
+
+        /* Left Panel - Agents & Callbacks */
+        .left-panel {
+            width: 320px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .agents-section {
+            background: rgba(22, 33, 62, 0.8);
+            border-radius: 10px;
+            padding: 15px;
+            border: 1px solid #0f3460;
+        }
+
+        .section-title {
+            font-size: 1.1rem;
+            margin-bottom: 12px;
+            color: #00d9ff;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .agent-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .agent-card {
+            background: rgba(15, 52, 96, 0.4);
+            border: 2px solid #0f3460;
+            border-radius: 8px;
+            padding: 12px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .agent-card.active {
+            border-color: #00d9ff;
+            background: rgba(0, 217, 255, 0.2);
+            box-shadow: 0 0 15px rgba(0, 217, 255, 0.4);
+            transform: translateX(5px);
+        }
+
+        .agent-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 8px;
+        }
+
+        .agent-icon {
+            font-size: 1.8rem;
+        }
+
+        .agent-info {
+            flex: 1;
+        }
+
+        .agent-name {
+            font-size: 0.95rem;
+            font-weight: bold;
+            margin-bottom: 2px;
+        }
+
+        .agent-role {
+            font-size: 0.75rem;
+            color: #8892b0;
+        }
+
+        .agent-status {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 0.7rem;
+            padding: 2px 8px;
+            border-radius: 12px;
+            background: rgba(0, 0, 0, 0.3);
+            color: #8892b0;
+        }
+
+        .agent-status.working {
+            background: rgba(0, 217, 255, 0.2);
+            color: #00d9ff;
+            animation: pulse 1s infinite;
+        }
+
+        .agent-details {
+            display: grid;
+            grid-template-columns: auto 1fr;
+            gap: 4px 8px;
+            font-size: 0.7rem;
+        }
+
+        .agent-detail-label {
+            color: #8892b0;
+        }
+
+        .agent-detail-value {
+            color: #00d9ff;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.6; }
+        }
+
+        /* Tools Section - moved to left panel */
+        .tools-section {
+            background: rgba(22, 33, 62, 0.8);
+            border-radius: 10px;
+            padding: 15px;
+            border: 1px solid #0f3460;
+            flex: 1;
+        }
+
+        .task-list-title {
+            font-size: 1.1rem;
+            color: #ee00ff;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .task-card {
+            background: rgba(15, 52, 96, 0.6);
+            border: 2px solid #0f3460;
+            border-radius: 12px;
+            padding: 18px;
+            margin-bottom: 12px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .task-card.active {
+            border-color: #ee00ff;
+            background: rgba(238, 0, 255, 0.1);
+            box-shadow: 0 0 25px rgba(238, 0, 255, 0.3);
+            transform: translateX(5px);
+        }
+
+        .task-card.completed {
+            border-color: #00ff88;
+            background: rgba(0, 255, 136, 0.05);
+        }
+
+        .task-card.completed::after {
+            content: '✓';
+            position: absolute;
+            right: 20px;
+            top: 20px;
+            font-size: 1.2rem;
+            color: #00ff88;
+        }
+
+        .task-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 10px;
+        }
+
+        .task-title {
+            font-size: 1rem;
+            font-weight: bold;
+            color: #fff;
+        }
+
+        .task-id {
+            font-size: 0.8rem;
+            color: #8892b0;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 2px 8px;
+            border-radius: 4px;
+        }
+
+        .task-description {
+            color: #8892b0;
+            margin-bottom: 12px;
+            line-height: 1.4;
+            font-size: 0.85rem;
+        }
+
+        .task-details {
+            display: grid;
+            gap: 8px;
+        }
+
+        .task-detail-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.85rem;
+        }
+
+        .task-detail-label {
+            color: #8892b0;
+            min-width: 70px;
+        }
+
+        .task-detail-value {
+            color: #00d9ff;
+        }
+
+        .task-expected-output {
+            margin-top: 10px;
+            padding: 8px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-style: italic;
+        }
+
+        /* Center Panel - Tasks & Workflow */
+        .center-panel {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            overflow: hidden;
+        }
+
+        .workflow-section {
+            background: rgba(22, 33, 62, 0.8);
+            border-radius: 10px;
+            padding: 15px;
+            border: 1px solid #0f3460;
+            height: 180px;
+        }
+
+        .workflow-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .process-selector {
+            display: flex;
+            gap: 8px;
+        }
+
+        .process-btn {
+            padding: 5px 12px;
+            border: 1px solid #0f3460;
+            background: transparent;
+            color: #8892b0;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: all 0.3s ease;
+        }
+
+        .process-btn.active {
+            background: #0f3460;
+            color: #00d9ff;
+            border-color: #00d9ff;
+        }
+
+        .workflow-track {
+            height: 100px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+        }
+
+        /* Tasks Section - in center panel */
+        .tasks-section {
+            background: rgba(22, 33, 62, 0.8);
+            border-radius: 10px;
+            padding: 15px;
+            border: 1px solid #0f3460;
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .task-list-title {
+            font-size: 1.1rem;
+            color: #ee00ff;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .task-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .task-card {
+            background: rgba(15, 52, 96, 0.6);
+            border: 2px solid #0f3460;
+            border-radius: 12px;
+            padding: 15px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .task-card.active {
+            border-color: #ee00ff;
+            background: rgba(238, 0, 255, 0.1);
+            box-shadow: 0 0 25px rgba(238, 0, 255, 0.3);
+            transform: scale(1.02);
+        }
+
+        .task-card.completed {
+            border-color: #00ff88;
+            background: rgba(0, 255, 136, 0.05);
+        }
+
+        .task-card.completed::after {
+            content: '✓';
+            position: absolute;
+            right: 15px;
+            top: 15px;
+            font-size: 1.2rem;
+            color: #00ff88;
+        }
+
+        .task-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 8px;
+        }
+
+        .task-title {
+            font-size: 0.95rem;
+            font-weight: bold;
+            color: #fff;
+        }
+
+        .task-id {
+            font-size: 0.75rem;
+            color: #8892b0;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+
+        .task-description {
+            color: #8892b0;
+            margin-bottom: 10px;
+            line-height: 1.3;
+            font-size: 0.8rem;
+        }
+
+        .task-details {
+            display: grid;
+            gap: 6px;
+        }
+
+        .task-detail-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.8rem;
+        }
+
+        .task-detail-label {
+            color: #8892b0;
+            min-width: 60px;
+        }
+
+        .task-detail-value {
+            color: #00d9ff;
+        }
+
+        .task-expected-output {
+            margin-top: 8px;
+            padding: 6px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-style: italic;
+            color: #8892b0;
+        }
+
+        /* Compact workflow nodes */
+        .flow-node {
+            width: 80px;
+            height: 80px;
+            background: rgba(15, 52, 96, 0.6);
+            border: 3px solid #0f3460;
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.4s ease;
+            cursor: pointer;
+            position: relative;
+            z-index: 10;
+        }
+
+        .flow-node.active {
+            border-color: #00d9ff;
+            background: rgba(0, 217, 255, 0.3);
+            box-shadow: 0 0 30px rgba(0, 217, 255, 0.6);
+            transform: scale(1.15);
+            z-index: 20;
+        }
+
+        .flow-node.completed {
+            border-color: #00ff88;
+            background: rgba(0, 255, 136, 0.1);
+        }
+
+        .flow-node-icon {
+            font-size: 1.6rem;
+            margin-bottom: 5px;
+        }
+
+        .flow-node-label {
+            font-size: 0.7rem;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .flow-progress {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: rgba(15, 52, 96, 0.4);
+            transform: translateY(-50%);
+            z-index: 1;
+        }
+
+        .flow-progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #00d9ff, #ee00ff);
+            width: 0%;
+            transition: width 2s ease;
+            box-shadow: 0 0 10px rgba(0, 217, 255, 0.5);
+        }
+
+        /* Data packets animation */
+        .data-packet {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: radial-gradient(circle, #00d9ff, transparent);
+            border-radius: 50%;
+            opacity: 0;
+            z-index: 15;
+        }
+
+        .data-packet.active {
+            animation: dataPacketFlow 1.5s ease-out;
+        }
+
+        @keyframes dataPacketFlow {
+            0% {
+                opacity: 0;
+                transform: scale(0.5);
+            }
+            20% {
+                opacity: 1;
+                transform: scale(1);
+            }
+            80% {
+                opacity: 1;
+            }
+            100% {
+                opacity: 0;
+                transform: scale(0.5);
+            }
+        }
+
+        .tool-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .tool-item {
+            background: rgba(15, 52, 96, 0.4);
+            border: 1px solid #0f3460;
+            border-radius: 6px;
+            padding: 10px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .tool-item.active {
+            border-color: #00d9ff;
+            background: rgba(0, 217, 255, 0.2);
+            transform: translateX(5px);
+            box-shadow: 0 0 15px rgba(0, 217, 255, 0.3);
+        }
+
+        .tool-icon {
+            font-size: 1.3rem;
+        }
+
+        .tool-info {
+            flex: 1;
+        }
+
+        .tool-name {
+            font-size: 0.85rem;
+            font-weight: bold;
+            margin-bottom: 2px;
+        }
+
+        .tool-description {
+            font-size: 0.7rem;
+            color: #8892b0;
+        }
+
+        .log-entry {
+            padding: 3px 0;
+            margin-bottom: 2px;
+            border-left: 3px solid transparent;
+            padding-left: 8px;
+        }
+
+        .log-entry.callback {
+            border-left-color: #ee00ff;
+        }
+
+        .log-entry.tool {
+            border-left-color: #00d9ff;
+        }
+
+        .log-entry.agent {
+            border-left-color: #00ff88;
+        }
+
+        .log-entry.task {
+            border-left-color: #ff6b6b;
+        }
+
+        /* Right Panel - Tools & Logs */
+        .right-panel {
+            width: 320px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .callbacks-section {
+            background: rgba(22, 33, 62, 0.8);
+            border-radius: 10px;
+            padding: 15px;
+            border: 1px solid #0f3460;
+        }
+
+        .callback-item {
+            background: rgba(15, 52, 96, 0.4);
+            border: 1px solid #0f3460;
+            border-radius: 6px;
+            padding: 8px;
+            margin-bottom: 6px;
+            transition: all 0.3s ease;
+            opacity: 0.6;
+        }
+
+        .callback-item.triggered {
+            opacity: 1;
+            border-color: #ee00ff;
+            background: rgba(238, 0, 255, 0.1);
+            animation: callbackPulse 0.5s ease;
+        }
+
+        @keyframes callbackPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .callback-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2px;
+        }
+
+        .callback-name {
+            font-weight: bold;
+            color: #ee00ff;
+            font-size: 0.8rem;
+        }
+
+        .callback-count {
+            font-size: 0.65rem;
+            color: #fff;
+            background: rgba(238, 0, 255, 0.3);
+            padding: 1px 5px;
+            border-radius: 10px;
+        }
+
+        .callback-description {
+            font-size: 0.65rem;
+            color: #8892b0;
+        }
+
+        /* Logs Section - in right panel */
+        .logs-section {
+            background: rgba(22, 33, 62, 0.8);
+            border-radius: 10px;
+            padding: 15px;
+            border: 1px solid #0f3460;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .logs-content {
+            flex: 1;
+            overflow-y: auto;
+            font-family: 'Monaco', 'Courier New', monospace;
+            font-size: 0.75rem;
+            line-height: 1.4;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 10px;
+            border-radius: 6px;
+            max-height: 250px;
+        }
+
+        /* Control Panel */
+        .control-panel {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(22, 33, 62, 0.95);
+            border: 1px solid #0f3460;
+            border-radius: 50px;
+            padding: 10px 20px;
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+        }
+
+        .control-btn {
+            padding: 8px 18px;
+            border: none;
+            border-radius: 20px;
+            background: linear-gradient(135deg, #00d9ff, #0088cc);
+            color: white;
+            font-weight: bold;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .control-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 217, 255, 0.4);
+        }
+
+        .control-btn:disabled {
+            background: #2a2a3e;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .speed-control {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #8892b0;
+            font-size: 0.8rem;
+        }
+
+        .speed-slider {
+            width: 70px;
+            height: 4px;
+            -webkit-appearance: none;
+            appearance: none;
+            background: #0f3460;
+            border-radius: 2px;
+            outline: none;
+        }
+
+        .speed-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 12px;
+            height: 12px;
+            background: #00d9ff;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        /* Floating status */
+        .status-popup {
+            position: absolute;
+            background: rgba(238, 0, 255, 0.9);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: bold;
+            white-space: nowrap;
+            opacity: 0;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
+            pointer-events: none;
+            z-index: 100;
+        }
+
+        .status-popup.show {
+            opacity: 1;
+            transform: translateY(-25px);
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>CrewAI Multi-Agent Workflow</h1>
+        <p class="subtitle">Visual demonstration of Tasks, Agents, Tools, and Callbacks working together</p>
+    </div>
+
+    <div class="main-container">
+        <!-- Left Panel - Agents & Callbacks -->
+        <div class="left-panel">
+            <div class="agents-section">
+                <h3 class="section-title">👥 AI Agents</h3>
+                <div class="agent-list">
+                    <div class="agent-card" id="agent-researcher">
+                        <div class="agent-status">Idle</div>
+                        <div class="agent-header">
+                            <span class="agent-icon">🔍</span>
+                            <div class="agent-info">
+                                <div class="agent-name">Research Specialist</div>
+                                <div class="agent-role">Information Gathering Expert</div>
+                            </div>
+                        </div>
+                        <div class="agent-details">
+                            <span class="agent-detail-label">Goal:</span>
+                            <span class="agent-detail-value">Find accurate market data</span>
+                            <span class="agent-detail-label">Tools:</span>
+                            <span class="agent-detail-value">Web Search, Web Scraper</span>
+                        </div>
+                    </div>
+                    
+                    <div class="agent-card" id="agent-analyst">
+                        <div class="agent-status">Idle</div>
+                        <div class="agent-header">
+                            <span class="agent-icon">📊</span>
+                            <div class="agent-info">
+                                <div class="agent-name">Data Analyst</div>
+                                <div class="agent-role">Statistical Analysis Expert</div>
+                            </div>
+                        </div>
+                        <div class="agent-details">
+                            <span class="agent-detail-label">Goal:</span>
+                            <span class="agent-detail-value">Extract actionable insights</span>
+                            <span class="agent-detail-label">Tools:</span>
+                            <span class="agent-detail-value">Calculator, Data Processor</span>
+                        </div>
+                    </div>
+                    
+                    <div class="agent-card" id="agent-writer">
+                        <div class="agent-status">Idle</div>
+                        <div class="agent-header">
+                            <span class="agent-icon">✍️</span>
+                            <div class="agent-info">
+                                <div class="agent-name">Content Writer</div>
+                                <div class="agent-role">Technical Writing Specialist</div>
+                            </div>
+                        </div>
+                        <div class="agent-details">
+                            <span class="agent-detail-label">Goal:</span>
+                            <span class="agent-detail-value">Create executive reports</span>
+                            <span class="agent-detail-label">Tools:</span>
+                            <span class="agent-detail-value">File Manager, Templates</span>
+                        </div>
+                    </div>
+                    
+                    <div class="agent-card" id="agent-reviewer">
+                        <div class="agent-status">Idle</div>
+                        <div class="agent-header">
+                            <span class="agent-icon">✅</span>
+                            <div class="agent-info">
+                                <div class="agent-name">Quality Reviewer</div>
+                                <div class="agent-role">Accuracy & Compliance Expert</div>
+                            </div>
+                        </div>
+                        <div class="agent-details">
+                            <span class="agent-detail-label">Goal:</span>
+                            <span class="agent-detail-value">Ensure quality standards</span>
+                            <span class="agent-detail-label">Tools:</span>
+                            <span class="agent-detail-value">Validator, Fact Checker</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="callbacks-section">
+                <h3 class="section-title">🔄 Callbacks Monitor</h3>
+                
+                <div class="callback-item" id="cb-crew-start">
+                    <div class="callback-header">
+                        <span class="callback-name">on_crew_start</span>
+                        <span class="callback-count">0</span>
+                    </div>
+                    <div class="callback-description">Workflow initialization</div>
+                </div>
+
+                <div class="callback-item" id="cb-task-start">
+                    <div class="callback-header">
+                        <span class="callback-name">on_task_start</span>
+                        <span class="callback-count">0</span>
+                    </div>
+                    <div class="callback-description">Task begins execution</div>
+                </div>
+
+                <div class="callback-item" id="cb-agent-action">
+                    <div class="callback-header">
+                        <span class="callback-name">on_agent_action</span>
+                        <span class="callback-count">0</span>
+                    </div>
+                    <div class="callback-description">Agent performs action</div>
+                </div>
+
+                <div class="callback-item" id="cb-tool-use">
+                    <div class="callback-header">
+                        <span class="callback-name">on_tool_use</span>
+                        <span class="callback-count">0</span>
+                    </div>
+                    <div class="callback-description">Tool is activated</div>
+                </div>
+
+                <div class="callback-item" id="cb-task-complete">
+                    <div class="callback-header">
+                        <span class="callback-name">on_task_complete</span>
+                        <span class="callback-count">0</span>
+                    </div>
+                    <div class="callback-description">Task execution finished</div>
+                </div>
+
+                <div class="callback-item" id="cb-agent-think">
+                    <div class="callback-header">
+                        <span class="callback-name">on_agent_think</span>
+                        <span class="callback-count">0</span>
+                    </div>
+                    <div class="callback-description">Agent reasoning process</div>
+                </div>
+
+                <div class="callback-item" id="cb-error">
+                    <div class="callback-header">
+                        <span class="callback-name">on_error</span>
+                        <span class="callback-count">0</span>
+                    </div>
+                    <div class="callback-description">Error handling triggered</div>
+                </div>
+
+                <div class="callback-item" id="cb-crew-complete">
+                    <div class="callback-header">
+                        <span class="callback-name">on_crew_complete</span>
+                        <span class="callback-count">0</span>
+                    </div>
+                    <div class="callback-description">All tasks completed</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Center Panel - Tasks & Workflow -->
+        <div class="center-panel">
+            <!-- Tasks Section -->
+            <div class="tasks-section">
+                <h3 class="task-list-title">📋 Task Queue</h3>
+                
+                <div class="task-grid">
+                    <div class="task-card" id="task-1">
+                        <div class="task-header">
+                            <div class="task-title">Market Research</div>
+                            <div class="task-id">TASK-001</div>
+                        </div>
+                        <div class="task-description">
+                            Gather comprehensive data on AI industry trends, competitor analysis, and market opportunities for 2024
+                        </div>
+                        <div class="task-details">
+                            <div class="task-detail-item">
+                                <span class="task-detail-label">Assigned:</span>
+                                <span class="task-detail-value">🔍 Research Agent</span>
+                            </div>
+                            <div class="task-detail-item">
+                                <span class="task-detail-label">Tools:</span>
+                                <span class="task-detail-value">Web Search, Web Scraper</span>
+                            </div>
+                            <div class="task-detail-item">
+                                <span class="task-detail-label">Context:</span>
+                                <span class="task-detail-value">Initial data gathering phase</span>
+                            </div>
+                        </div>
+                        <div class="task-expected-output">
+                            Expected: Structured JSON with market data, competitor list, and trend analysis
+                        </div>
+                    </div>
+
+                    <div class="task-card" id="task-2">
+                        <div class="task-header">
+                            <div class="task-title">Data Analysis</div>
+                            <div class="task-id">TASK-002</div>
+                        </div>
+                        <div class="task-description">
+                            Analyze gathered market data to identify key insights, growth patterns, and strategic opportunities
+                        </div>
+                        <div class="task-details">
+                            <div class="task-detail-item">
+                                <span class="task-detail-label">Assigned:</span>
+                                <span class="task-detail-value">📊 Analyst Agent</span>
+                            </div>
+                            <div class="task-detail-item">
+                                <span class="task-detail-label">Tools:</span>
+                                <span class="task-detail-value">Calculator, Data Processor</span>
+                            </div>
+                            <div class="task-detail-item">
+                                <span class="task-detail-label">Context:</span>
+                                <span class="task-detail-value">Uses output from TASK-001</span>
+                            </div>
+                        </div>
+                        <div class="task-expected-output">
+                            Expected: Statistical analysis with growth rates, market size, and opportunity matrix
+                        </div>
+                    </div>
+
+                    <div class="task-card" id="task-3">
+                        <div class="task-header">
+                            <div class="task-title">Report Creation</div>
+                            <div class="task-id">TASK-003</div>
+                        </div>
+                        <div class="task-description">
+                            Create a comprehensive executive report with visualizations and strategic recommendations
+                        </div>
+                        <div class="task-details">
+                            <div class="task-detail-item">
+                                <span class="task-detail-label">Assigned:</span>
+                                <span class="task-detail-value">✍️ Writer Agent</span>
+                            </div>
+                            <div class="task-detail-item">
+                                <span class="task-detail-label">Tools:</span>
+                                <span class="task-detail-value">File Manager, Template Engine</span>
+                            </div>
+                            <div class="task-detail-item">
+                                <span class="task-detail-label">Context:</span>
+                                <span class="task-detail-value">Uses outputs from TASK-001 & TASK-002</span>
+                            </div>
+                        </div>
+                        <div class="task-expected-output">
+                            Expected: 15-page executive report with charts and actionable recommendations
+                        </div>
+                    </div>
+
+                    <div class="task-card" id="task-4">
+                        <div class="task-header">
+                            <div class="task-title">Quality Review</div>
+                            <div class="task-id">TASK-004</div>
+                        </div>
+                        <div class="task-description">
+                            Review report for accuracy, completeness, and alignment with business objectives
+                        </div>
+                        <div class="task-details">
+                            <div class="task-detail-item">
+                                <span class="task-detail-label">Assigned:</span>
+                                <span class="task-detail-value">✅ QA Agent</span>
+                            </div>
+                            <div class="task-detail-item">
+                                <span class="task-detail-label">Tools:</span>
+                                <span class="task-detail-value">Validator, Fact Checker</span>
+                            </div>
+                            <div class="task-detail-item">
+                                <span class="task-detail-label">Context:</span>
+                                <span class="task-detail-value">Final validation of TASK-003 output</span>
+                            </div>
+                        </div>
+                        <div class="task-expected-output">
+                            Expected: Approved report with quality score and improvement suggestions
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Workflow Visualization -->
+            <div class="workflow-section">
+                <div class="workflow-header">
+                    <h3 class="section-title">🔄 Workflow Progress</h3>
+                    <div class="process-selector">
+                        <button class="process-btn active" onclick="setProcess('sequential')">Sequential</button>
+                        <button class="process-btn" onclick="setProcess('hierarchical')">Hierarchical</button>
+                    </div>
+                </div>
+                
+                <div class="workflow-track">
+                    <div class="flow-progress">
+                        <div class="flow-progress-bar" id="progress-bar"></div>
+                    </div>
+                    
+                    <div class="flow-node" id="flow-1">
+                        <div class="flow-node-icon">🔍</div>
+                        <div class="flow-node-label">Research</div>
+                        <div class="status-popup" id="status-1"></div>
+                    </div>
+                    
+                    <div class="flow-node" id="flow-2">
+                        <div class="flow-node-icon">📊</div>
+                        <div class="flow-node-label">Analysis</div>
+                        <div class="status-popup" id="status-2"></div>
+                    </div>
+                    
+                    <div class="flow-node" id="flow-3">
+                        <div class="flow-node-icon">✍️</div>
+                        <div class="flow-node-label">Writing</div>
+                        <div class="status-popup" id="status-3"></div>
+                    </div>
+                    
+                    <div class="flow-node" id="flow-4">
+                        <div class="flow-node-icon">✅</div>
+                        <div class="flow-node-label">Review</div>
+                        <div class="status-popup" id="status-4"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Panel - Tools & Logs -->
+        <div class="right-panel">
+            <div class="tools-section">
+                <h3 class="section-title">🔧 Tools</h3>
+                <div class="tool-list">
+                    <div class="tool-item" id="tool-search">
+                        <span class="tool-icon">🔎</span>
+                        <div class="tool-info">
+                            <div class="tool-name">Web Search</div>
+                            <div class="tool-description">Search internet for real-time data</div>
+                        </div>
+                    </div>
+                    <div class="tool-item" id="tool-scraper">
+                        <span class="tool-icon">🌐</span>
+                        <div class="tool-info">
+                            <div class="tool-name">Web Scraper</div>
+                            <div class="tool-description">Extract content from websites</div>
+                        </div>
+                    </div>
+                    <div class="tool-item" id="tool-calculator">
+                        <span class="tool-icon">🧮</span>
+                        <div class="tool-info">
+                            <div class="tool-name">Calculator</div>
+                            <div class="tool-description">Perform statistical computations</div>
+                        </div>
+                    </div>
+                    <div class="tool-item" id="tool-file">
+                        <span class="tool-icon">📄</span>
+                        <div class="tool-info">
+                            <div class="tool-name">File Manager</div>
+                            <div class="tool-description">Read/write documents and data</div>
+                        </div>
+                    </div>
+                    <div class="tool-item" id="tool-validator">
+                        <span class="tool-icon">✓</span>
+                        <div class="tool-info">
+                            <div class="tool-name">Validator</div>
+                            <div class="tool-description">Check accuracy and compliance</div>
+                        </div>
+                    </div>
+                    <div class="tool-item" id="tool-template">
+                        <span class="tool-icon">📝</span>
+                        <div class="tool-info">
+                            <div class="tool-name">Template Engine</div>
+                            <div class="tool-description">Generate formatted reports</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="logs-section">
+                <h3 class="section-title">📜 Execution Log</h3>
+                <div class="logs-content" id="logs-content">
+                    <div class="log-entry">System initialized. Ready to start workflow...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Control Panel -->
+    <div class="control-panel">
+        <button class="control-btn" id="start-btn" onclick="startWorkflow()">▶️ Start</button>
+        <button class="control-btn" id="pause-btn" onclick="pauseWorkflow()" disabled>⏸️ Pause</button>
+        <button class="control-btn" id="reset-btn" onclick="resetWorkflow()">🔄 Reset</button>
+        <div class="speed-control">
+            <span>Speed:</span>
+            <input type="range" class="speed-slider" id="speed-slider" min="1" max="5" value="3">
+            <span id="speed-value">3x</span>
+        </div>
+    </div>
+
+    <script>
+        let isRunning = false;
+        let isPaused = false;
+        let currentProcess = 'sequential';
+        let animationSpeed = 3;
+        let currentStep = 0;
+        let callbackCounts = {};
+
+        // Initialize
+        document.getElementById('speed-slider').addEventListener('input', (e) => {
+            animationSpeed = e.target.value;
+            document.getElementById('speed-value').textContent = `${animationSpeed}x`;
+        });
+
+        // Initialize callback counts
+        ['crew-start', 'task-start', 'agent-action', 'tool-use', 'task-complete', 'agent-think', 'error', 'crew-complete'].forEach(cb => {
+            callbackCounts[cb] = 0;
+        });
+
+        // Workflow steps with detailed callbacks
+        const workflowSteps = [
+            {
+                type: 'start',
+                callback: 'crew-start',
+                log: '🚀 CrewAI workflow initiated - Multi-agent system starting'
+            },
+            {
+                type: 'task',
+                taskId: 1,
+                agent: 'researcher',
+                callbacks: ['task-start', 'agent-action'],
+                log: '📋 TASK-001: Market Research started by Research Agent',
+                status: 'Gathering data...'
+            },
+            {
+                type: 'tool',
+                taskId: 1,
+                tools: ['search'],
+                callback: 'tool-use',
+                log: '🔎 Web Search activated: Querying "AI market trends 2024"',
+                dataFlow: true
+            },
+            {
+                type: 'agent',
+                taskId: 1,
+                agent: 'researcher',
+                callback: 'agent-think',
+                log: '🤔 Research Agent: Analyzing search results for relevance'
+            },
+            {
+                type: 'tool',
+                taskId: 1,
+                tools: ['scraper'],
+                callback: 'tool-use',
+                log: '🌐 Web Scraper activated: Extracting data from 5 sources',
+                dataFlow: true
+            },
+            {
+                type: 'complete',
+                taskId: 1,
+                callback: 'task-complete',
+                log: '✅ TASK-001 completed: 15MB market data collected',
+                status: 'Data ready',
+                progress: 25
+            },
+            {
+                type: 'task',
+                taskId: 2,
+                agent: 'analyst',
+                callbacks: ['task-start', 'agent-action'],
+                log: '📋 TASK-002: Data Analysis started by Analyst Agent',
+                status: 'Processing...'
+            },
+            {
+                type: 'agent',
+                taskId: 2,
+                agent: 'analyst',
+                callback: 'agent-think',
+                log: '🤔 Analyst Agent: Identifying patterns in market data'
+            },
+            {
+                type: 'tool',
+                taskId: 2,
+                tools: ['calculator'],
+                callback: 'tool-use',
+                log: '🧮 Calculator activated: Computing growth rates and projections',
+                dataFlow: true
+            },
+            {
+                type: 'complete',
+                taskId: 2,
+                callback: 'task-complete',
+                log: '✅ TASK-002 completed: 23 key insights identified',
+                status: '47% CAGR',
+                progress: 50
+            },
+            {
+                type: 'task',
+                taskId: 3,
+                agent: 'writer',
+                callbacks: ['task-start', 'agent-action'],
+                log: '📋 TASK-003: Report Creation started by Writer Agent',
+                status: 'Writing...'
+            },
+            {
+                type: 'agent',
+                taskId: 3,
+                agent: 'writer',
+                callback: 'agent-think',
+                log: '🤔 Writer Agent: Structuring report with executive summary'
+            },
+            {
+                type: 'tool',
+                taskId: 3,
+                tools: ['template', 'file'],
+                callback: 'tool-use',
+                log: '📝 Template Engine & File Manager: Generating report.pdf',
+                dataFlow: true
+            },
+            {
+                type: 'complete',
+                taskId: 3,
+                callback: 'task-complete',
+                log: '✅ TASK-003 completed: 15-page executive report created',
+                status: 'Report done',
+                progress: 75
+            },
+            {
+                type: 'task',
+                taskId: 4,
+                agent: 'reviewer',
+                callbacks: ['task-start', 'agent-action'],
+                log: '📋 TASK-004: Quality Review started by QA Agent',
+                status: 'Reviewing...'
+            },
+            {
+                type: 'tool',
+                taskId: 4,
+                tools: ['validator'],
+                callback: 'tool-use',
+                log: '✓ Validator activated: Checking accuracy and completeness'
+            },
+            {
+                type: 'agent',
+                taskId: 4,
+                agent: 'reviewer',
+                callback: 'agent-think',
+                log: '🤔 QA Agent: Verifying strategic recommendations'
+            },
+            {
+                type: 'complete',
+                taskId: 4,
+                callback: 'task-complete',
+                log: '✅ TASK-004 completed: Report approved with 98% quality score',
+                status: 'Approved!',
+                progress: 100
+            },
+            {
+                type: 'end',
+                callback: 'crew-complete',
+                log: '🎉 Workflow completed successfully! All tasks executed.'
+            }
+        ];
+
+        function setProcess(process) {
+            currentProcess = process;
+            document.querySelectorAll('.process-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.textContent.toLowerCase() === process);
+            });
+            
+            addLog(`⚙️ Process changed to: ${process.toUpperCase()}`, 'callback');
+        }
+
+        function addLog(message, type = 'agent') {
+            const logsContent = document.getElementById('logs-content');
+            const entry = document.createElement('div');
+            entry.className = `log-entry ${type}`;
+            entry.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+            logsContent.appendChild(entry);
+            logsContent.scrollTop = logsContent.scrollHeight;
+        }
+
+        function triggerCallback(callbackId) {
+            const callback = document.getElementById(`cb-${callbackId}`);
+            callback.classList.add('triggered');
+            
+            callbackCounts[callbackId]++;
+            callback.querySelector('.callback-count').textContent = callbackCounts[callbackId];
+            
+            setTimeout(() => callback.classList.remove('triggered'), 800);
+        }
+
+        function activateAgent(agentId) {
+            document.querySelectorAll('.agent-card').forEach(card => {
+                card.classList.remove('active');
+                const status = card.querySelector('.agent-status');
+                status.textContent = 'Idle';
+                status.classList.remove('working');
+            });
+            
+            if (agentId) {
+                const agent = document.getElementById(`agent-${agentId}`);
+                agent.classList.add('active');
+                const status = agent.querySelector('.agent-status');
+                status.textContent = 'Working';
+                status.classList.add('working');
+            }
+        }
+
+        function activateTask(taskId) {
+            document.querySelectorAll('.task-card').forEach(task => {
+                task.classList.remove('active');
+            });
+            document.getElementById(`task-${taskId}`).classList.add('active');
+            
+            document.querySelectorAll('.flow-node').forEach(node => {
+                node.classList.remove('active');
+            });
+            document.getElementById(`flow-${taskId}`).classList.add('active');
+        }
+
+        function completeTask(taskId) {
+            document.getElementById(`task-${taskId}`).classList.remove('active');
+            document.getElementById(`task-${taskId}`).classList.add('completed');
+            
+            document.getElementById(`flow-${taskId}`).classList.remove('active');
+            document.getElementById(`flow-${taskId}`).classList.add('completed');
+        }
+
+        function activateTool(toolId) {
+            const tool = document.getElementById(`tool-${toolId}`);
+            tool.classList.add('active');
+            setTimeout(() => tool.classList.remove('active'), 800);
+        }
+
+        function showStatus(taskId, status) {
+            const popup = document.getElementById(`status-${taskId}`);
+            popup.textContent = status;
+            popup.classList.add('show');
+            setTimeout(() => popup.classList.remove('show'), 2500);
+        }
+
+        function updateProgress(percent) {
+            document.getElementById('progress-bar').style.width = `${percent}%`;
+        }
+
+        function animateDataFlow(fromTask, toTask) {
+            if (!toTask || fromTask >= 4) return;
+            
+            const from = document.getElementById(`flow-${fromTask}`);
+            const to = document.getElementById(`flow-${toTask}`);
+            const track = document.querySelector('.workflow-track');
+            
+            const fromRect = from.getBoundingClientRect();
+            const toRect = to.getBoundingClientRect();
+            const trackRect = track.getBoundingClientRect();
+            
+            const packet = document.createElement('div');
+            packet.className = 'data-packet';
+            packet.style.left = `${fromRect.left - trackRect.left + fromRect.width/2 - 10}px`;
+            packet.style.top = `${fromRect.top - trackRect.top + fromRect.height/2 - 10}px`;
+            
+            track.appendChild(packet);
+            
+            setTimeout(() => {
+                packet.classList.add('active');
+                packet.style.transition = 'all 1.5s ease-out';
+                packet.style.left = `${toRect.left - trackRect.left + toRect.width/2 - 10}px`;
+                packet.style.top = `${toRect.top - trackRect.top + toRect.height/2 - 10}px`;
+            }, 50);
+            
+            setTimeout(() => packet.remove(), 1600);
+        }
+
+        async function runStep(step) {
+            switch(step.type) {
+                case 'start':
+                    triggerCallback(step.callback);
+                    addLog(step.log, 'callback');
+                    break;
+                    
+                case 'task':
+                    activateTask(step.taskId);
+                    activateAgent(step.agent);
+                    if (step.callbacks) {
+                        step.callbacks.forEach((cb, i) => {
+                            setTimeout(() => triggerCallback(cb), i * 300);
+                        });
+                    }
+                    addLog(step.log, 'task');
+                    if (step.status) showStatus(step.taskId, step.status);
+                    break;
+                    
+                case 'agent':
+                    if (step.callback) triggerCallback(step.callback);
+                    addLog(step.log, 'agent');
+                    break;
+                    
+                case 'tool':
+                    if (step.tools) {
+                        step.tools.forEach((tool, i) => {
+                            setTimeout(() => activateTool(tool), i * 200);
+                        });
+                    }
+                    if (step.callback) triggerCallback(step.callback);
+                    addLog(step.log, 'tool');
+                    if (step.dataFlow && step.taskId < 4) {
+                        setTimeout(() => animateDataFlow(step.taskId, step.taskId + 1), 500);
+                    }
+                    break;
+                    
+                case 'complete':
+                    completeTask(step.taskId);
+                    if (step.callback) triggerCallback(step.callback);
+                    addLog(step.log, 'task');
+                    if (step.status) showStatus(step.taskId, step.status);
+                    if (step.progress) updateProgress(step.progress);
+                    break;
+                    
+                case 'end':
+                    triggerCallback(step.callback);
+                    addLog(step.log, 'callback');
+                    activateAgent(null);
+                    break;
+            }
+            
+            await new Promise(resolve => setTimeout(resolve, 2000 / animationSpeed));
+        }
+
+        async function startWorkflow() {
+            if (isRunning) return;
+            
+            isRunning = true;
+            isPaused = false;
+            document.getElementById('start-btn').disabled = true;
+            document.getElementById('pause-btn').disabled = false;
+            
+            for (currentStep = 0; currentStep < workflowSteps.length; currentStep++) {
+                if (!isRunning) break;
+                
+                while (isPaused) {
+                    await new Promise(resolve => setTimeout(resolve, 100));
+                }
+                
+                await runStep(workflowSteps[currentStep]);
+            }
+            
+            isRunning = false;
+            document.getElementById('start-btn').disabled = false;
+            document.getElementById('pause-btn').disabled = true;
+        }
+
+        function pauseWorkflow() {
+            isPaused = !isPaused;
+            document.getElementById('pause-btn').textContent = isPaused ? '▶️ Resume' : '⏸️ Pause';
+            addLog(isPaused ? '⏸️ Workflow paused' : '▶️ Workflow resumed', 'callback');
+        }
+
+        function resetWorkflow() {
+            isRunning = false;
+            isPaused = false;
+            currentStep = 0;
+            
+            // Reset all UI elements
+            document.querySelectorAll('.agent-card, .task-card, .flow-node').forEach(el => {
+                el.classList.remove('active', 'completed');
+            });
+            
+            document.querySelectorAll('.agent-status').forEach(el => {
+                el.textContent = 'Idle';
+                el.classList.remove('working');
+            });
+            
+            document.querySelectorAll('.status-popup').forEach(el => {
+                el.classList.remove('show');
+            });
+            
+            document.getElementById('progress-bar').style.width = '0%';
+            
+            // Reset callback counts
+            Object.keys(callbackCounts).forEach(key => {
+                callbackCounts[key] = 0;
+                document.querySelector(`#cb-${key} .callback-count`).textContent = '0';
+            });
+            
+            document.getElementById('logs-content').innerHTML = '<div class="log-entry">System initialized. Ready to start workflow...</div>';
+            
+            document.getElementById('start-btn').disabled = false;
+            document.getElementById('pause-btn').disabled = true;
+            document.getElementById('pause-btn').textContent = '⏸️ Pause';
+        }
+    </script>
+</body>
+</html>

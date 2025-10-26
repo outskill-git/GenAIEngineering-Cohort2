@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MCP Security Best Practices</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: #0a0e27;
+            color: #ffffff;
+            overflow: hidden;
+            height: 100vh;
+        }
+
+        .presentation-container {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .slide {
+            display: none;
+            width: 90%;
+            max-width: 1200px;
+            padding: 60px;
+            animation: fadeIn 0.5s ease-in-out;
+            overflow-y: auto;
+            max-height: 90vh;
+        }
+
+        .slide.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h1 {
+            font-size: 3.5em;
+            margin-bottom: 30px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-align: center;
+        }
+
+        h2 {
+            font-size: 2.5em;
+            margin-bottom: 25px;
+            color: #667eea;
+        }
+
+        h3 {
+            font-size: 1.8em;
+            margin-bottom: 20px;
+            color: #9ca3af;
+        }
+
+        p, li {
+            font-size: 1.2em;
+            line-height: 1.8;
+            margin-bottom: 15px;
+            color: #e5e7eb;
+        }
+
+        ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        li {
+            padding-left: 30px;
+            position: relative;
+            margin-bottom: 12px;
+        }
+
+        li:before {
+            content: "▸";
+            position: absolute;
+            left: 0;
+            color: #667eea;
+            font-weight: bold;
+        }
+
+        .attack-card {
+            background: rgba(102, 126, 234, 0.1);
+            border: 1px solid rgba(102, 126, 234, 0.3);
+            border-radius: 12px;
+            padding: 25px;
+            margin: 20px 0;
+            backdrop-filter: blur(10px);
+        }
+
+        .mitigation-box {
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            border-radius: 12px;
+            padding: 25px;
+            margin: 20px 0;
+            backdrop-filter: blur(10px);
+        }
+
+        .warning-box {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            border-radius: 12px;
+            padding: 25px;
+            margin: 20px 0;
+            backdrop-filter: blur(10px);
+        }
+
+        .example-box {
+            background: rgba(251, 191, 36, 0.1);
+            border: 1px solid rgba(251, 191, 36, 0.3);
+            border-radius: 12px;
+            padding: 25px;
+            margin: 20px 0;
+            backdrop-filter: blur(10px);
+        }
+
+        .analogy-box {
+            background: rgba(168, 85, 247, 0.1);
+            border: 1px solid rgba(168, 85, 247, 0.3);
+            border-radius: 12px;
+            padding: 25px;
+            margin: 20px 0;
+            backdrop-filter: blur(10px);
+            font-style: italic;
+        }
+
+        .navigation {
+            position: fixed;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 20px;
+            z-index: 1000;
+        }
+
+        button {
+            background: rgba(102, 126, 234, 0.2);
+            border: 1px solid rgba(102, 126, 234, 0.5);
+            color: #ffffff;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        button:hover {
+            background: rgba(102, 126, 234, 0.3);
+            transform: translateY(-2px);
+        }
+
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .slide-indicator {
+            position: fixed;
+            top: 40px;
+            right: 40px;
+            font-size: 1.2em;
+            color: #9ca3af;
+        }
+
+        .code-block {
+            background: #1a1f36;
+            border: 1px solid #2d3748;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+        }
+
+        .subtitle {
+            text-align: center;
+            font-size: 1.5em;
+            color: #9ca3af;
+            margin-top: 20px;
+        }
+
+        .two-column {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            margin-top: 30px;
+        }
+
+        .emoji-icon {
+            font-size: 2em;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .step-by-step {
+            counter-reset: step-counter;
+            margin: 20px 0;
+        }
+
+        .step {
+            counter-increment: step-counter;
+            margin-bottom: 20px;
+            padding-left: 50px;
+            position: relative;
+        }
+
+        .step:before {
+            content: counter(step-counter);
+            position: absolute;
+            left: 0;
+            top: 0;
+            background: #667eea;
+            color: white;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        a {
+            color: #667eea;
+            text-decoration: underline;
+            transition: all 0.3s ease;
+        }
+
+        a:hover {
+            color: #764ba2;
+            text-decoration: none;
+        }
+
+        @media (max-width: 768px) {
+            .slide {
+                padding: 30px;
+            }
+            h1 { font-size: 2.5em; }
+            h2 { font-size: 2em; }
+            h3 { font-size: 1.5em; }
+            p, li { font-size: 1em; }
+            .two-column {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="presentation-container">
+        <div class="slide-indicator">
+            <span id="current-slide">1</span> / <span id="total-slides">16</span>
+        </div>
+
+        <!-- Slide 1: Title -->
+        <div class="slide active">
+            <h1>MCP Security Best Practices</h1>
+            <p class="subtitle">Model Context Protocol Security Explained Simply</p>
+            <p class="subtitle" style="margin-top: 60px; font-size: 1.2em;">Learn how to protect your AI integrations from common security threats</p>
+        </div>
+
+        <!-- Slide 2: What is MCP? -->
+        <div class="slide">
+            <h2>What is MCP? 🤖</h2>
+            
+            <div class="analogy-box">
+                <span class="emoji-icon">🏢</span>
+                <p><strong>Think of MCP like an office building's front desk:</strong> It manages who can enter (authentication), what they can access (authorization), and keeps track of visitors (sessions).</p>
+            </div>
+            
+            <div class="attack-card">
+                <h3>MCP (Model Context Protocol) is:</h3>
+                <ul>
+                    <li>A way for AI systems to safely connect to external tools and data</li>
+                    <li>Like a secure "translator" between AI models and other services</li>
+                    <li>A protocol that needs proper security to prevent misuse</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Slide 3: Why Security Matters -->
+        <div class="slide">
+            <h2>Why MCP Security Matters</h2>
+            
+            <div class="example-box">
+                <span class="emoji-icon">🏦</span>
+                <h3>Real-World Example</h3>
+                <p>Imagine your AI assistant can access your company's database. Without proper security:</p>
+                <ul>
+                    <li>A hacker could trick it into revealing sensitive data</li>
+                    <li>Someone could impersonate you and make unauthorized changes</li>
+                    <li>Your AI could accidentally give access to the wrong person</li>
+                </ul>
+            </div>
+            
+            <div class="warning-box">
+                <p><strong>Without security:</strong> It's like leaving your house keys under the doormat - convenient but dangerous!</p>
+            </div>
+        </div>
+
+        <!-- Slide 4: Overview of Attacks -->
+        <div class="slide">
+            <h2>Three Main Security Threats</h2>
+            
+            <div class="two-column">
+                <div class="attack-card">
+                    <span class="emoji-icon">🎭</span>
+                    <h3>Confused Deputy</h3>
+                    <p>When your trusted assistant gets tricked into doing something bad</p>
+                </div>
+                <div class="attack-card">
+                    <span class="emoji-icon">🎫</span>
+                    <h3>Token Passthrough</h3>
+                    <p>Like using someone else's ID card without checking if it's real</p>
+                </div>
+            </div>
+            
+            <div class="attack-card" style="margin-top: 20px;">
+                <span class="emoji-icon">🏴‍☠️</span>
+                <h3>Session Hijacking</h3>
+                <p>When someone steals your "logged in" status and pretends to be you</p>
+            </div>
+        </div>
+
+        <!-- Slide 5: Confused Deputy - Analogy -->
+        <div class="slide">
+            <h2>Confused Deputy Problem 🎭</h2>
+            
+            <div class="analogy-box">
+                <h3>The Parking Valet Analogy</h3>
+                <p>Imagine a parking valet (MCP server) who has keys to many cars (APIs). A thief tricks the valet into giving them your car keys by pretending to be you!</p>
+            </div>
+            
+            <div class="example-box">
+                <h3>How It Works in MCP:</h3>
+                <div class="step-by-step">
+                    <div class="step">You give the MCP server permission to access your Google Drive</div>
+                    <div class="step">Google remembers "this MCP server is trusted by this user"</div>
+                    <div class="step">A hacker sends you a malicious link</div>
+                    <div class="step">When you click it, Google thinks "I already trust this server" and skips asking permission</div>
+                    <div class="step">The hacker now has access to your Google Drive through the MCP server!</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 6: Confused Deputy - Technical Details -->
+        <div class="slide">
+            <h2>Confused Deputy: Technical View</h2>
+            
+            <div class="attack-card">
+                <h3>The Attack Step-by-Step</h3>
+                <ul>
+                    <li><strong>Normal use:</strong> You → MCP Server → Google API ✅</li>
+                    <li><strong>Attack:</strong> Hacker tricks: You → MCP Server → Hacker's server 🚨</li>
+                </ul>
+            </div>
+            
+            <div class="code-block">
+                <p>// What the hacker's malicious link might look like:</p>
+                <p>https://mcp-server.com/authorize?</p>
+                <p>  client_id=HACKER_CLIENT&</p>
+                <p>  redirect_uri=https://evil-site.com/steal-token</p>
+            </div>
+        </div>
+
+        <!-- Slide 7: Confused Deputy - Protection -->
+        <div class="slide">
+            <h2>Protecting Against Confused Deputy</h2>
+            
+            <div class="mitigation-box">
+                <span class="emoji-icon">🛡️</span>
+                <h3>The Solution: Always Double-Check!</h3>
+                <p><strong>Rule:</strong> The MCP server must ALWAYS ask for your permission, even if Google already trusts it.</p>
+            </div>
+            
+            <div class="analogy-box">
+                <p>Like a good parking valet who always checks your ID, even if they've seen you before!</p>
+            </div>
+            
+            <div class="example-box">
+                <h3>In Practice:</h3>
+                <ul>
+                    <li>You'll see a consent screen every time</li>
+                    <li>It clearly shows what's being accessed</li>
+                    <li>You can verify it's the right service</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Slide 8: Token Passthrough - Explained -->
+        <div class="slide">
+            <h2>Token Passthrough Problem 🎫</h2>
+            
+            <div class="analogy-box">
+                <h3>The Concert Ticket Analogy</h3>
+                <p>Imagine someone gives you their concert ticket. Instead of checking if it's valid for THIS concert, you just let them in. They might be using a ticket for a different show!</p>
+            </div>
+            
+            <div class="warning-box">
+                <h3>Why It's Dangerous:</h3>
+                <ul>
+                    <li>Bypasses security checks (like bag inspection at the venue)</li>
+                    <li>Can't track who's actually attending</li>
+                    <li>Someone with a stolen ticket gets full access</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Slide 9: Token Passthrough - Example -->
+        <div class="slide">
+            <h2>Token Passthrough: Real Example</h2>
+            
+            <div class="example-box">
+                <h3>The Problem Scenario:</h3>
+                <div class="step-by-step">
+                    <div class="step">User gets a token from Spotify API</div>
+                    <div class="step">User sends this Spotify token to your MCP server</div>
+                    <div class="step">Your server doesn't check the token properly</div>
+                    <div class="step">Server just forwards it to Spotify</div>
+                    <div class="step">Security controls are bypassed!</div>
+                </div>
+            </div>
+            
+            <div class="attack-card">
+                <h3>What Goes Wrong:</h3>
+                <ul>
+                    <li>Can't enforce rate limits (user makes unlimited requests)</li>
+                    <li>Can't log who's doing what</li>
+                    <li>Stolen tokens can be used freely</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Slide 10: Token Passthrough - Solution -->
+        <div class="slide">
+            <h2>Fixing Token Passthrough</h2>
+            
+            <div class="mitigation-box">
+                <span class="emoji-icon">✅</span>
+                <h3>The Golden Rule</h3>
+                <p><strong>Only accept tokens that were made specifically for YOUR server!</strong></p>
+            </div>
+            
+            <div class="code-block">
+                <p>// Good practice - Check the token is for you:</p>
+                <p>if (token.audience !== "your-mcp-server.com") {</p>
+                <p>    throw new Error("This token isn't for me!");</p>
+                <p>}</p>
+            </div>
+            
+            <div class="analogy-box">
+                <p>Like a concert that only accepts tickets with YOUR venue's name printed on them!</p>
+            </div>
+        </div>
+
+        <!-- Slide 11: Session Hijacking - Explained -->
+        <div class="slide">
+            <h2>Session Hijacking 🏴‍☠️</h2>
+            
+            <div class="analogy-box">
+                <h3>The Hotel Room Key Analogy</h3>
+                <p>You check into a hotel and get a room key card. If someone copies your key card, they can enter your room and access all your belongings!</p>
+            </div>
+            
+            <div class="two-column">
+                <div class="attack-card">
+                    <h3>Type 1: Prompt Injection</h3>
+                    <p>Hacker slips a "note under your door" (malicious command) that you unknowingly follow</p>
+                </div>
+                <div class="attack-card">
+                    <h3>Type 2: Impersonation</h3>
+                    <p>Hacker uses your copied key card to pretend they're you</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 12: Session Hijacking - Example -->
+        <div class="slide">
+            <h2>Session Hijacking: How It Happens</h2>
+            
+            <div class="example-box">
+                <h3>Prompt Injection Attack:</h3>
+                <div class="step-by-step">
+                    <div class="step">You connect to MCP server, get session ID: "ABC123"</div>
+                    <div class="step">Hacker discovers your session ID</div>
+                    <div class="step">Hacker sends: "Delete all files" with your session ID</div>
+                    <div class="step">Server queues this command for your session</div>
+                    <div class="step">You receive and execute the malicious command!</div>
+                </div>
+            </div>
+            
+            <div class="warning-box">
+                <p><strong>Result:</strong> Your AI assistant performs actions you never intended!</p>
+            </div>
+        </div>
+
+        <!-- Slide 13: Session Hijacking - Protection -->
+        <div class="slide">
+            <h2>Protecting Against Session Hijacking</h2>
+            
+            <div class="mitigation-box">
+                <h3>Security Measures:</h3>
+                <ul>
+                    <li><strong>Use complex session IDs:</strong> Like "a7B9-x2M4-9pQ1" not "12345"</li>
+                    <li><strong>Tie sessions to users:</strong> Session + User ID = Unique key</li>
+                    <li><strong>Never trust sessions alone:</strong> Always verify the user too</li>
+                    <li><strong>Expire sessions:</strong> Like hotel keys that stop working after checkout</li>
+                </ul>
+            </div>
+            
+            <div class="code-block">
+                <p>// Good practice - Combine user and session:</p>
+                <p>const secureKey = `user_${userId}:session_${randomUUID()}`;</p>
+                <p>// Now even if someone steals the session ID,</p>
+                <p>// they can't use it without the user ID!</p>
+            </div>
+        </div>
+
+        <!-- Slide 14: Best Practices Summary -->
+        <div class="slide">
+            <h2>Security Best Practices Checklist ✅</h2>
+            
+            <div class="mitigation-box">
+                <h3>For Developers:</h3>
+                <ul>
+                    <li>✅ Always verify user consent (no shortcuts!)</li>
+                    <li>✅ Only accept tokens meant for your server</li>
+                    <li>✅ Use random, complex session IDs</li>
+                    <li>✅ Bind sessions to user identity</li>
+                    <li>✅ Log everything for security audits</li>
+                    <li>✅ Expire sessions regularly</li>
+                </ul>
+            </div>
+            
+            <div class="example-box">
+                <h3>For Users:</h3>
+                <ul>
+                    <li>🔍 Always check consent screens carefully</li>
+                    <li>🔗 Verify URLs before clicking links</li>
+                    <li>🚪 Log out when you're done</li>
+                    <li>🚨 Report suspicious activity immediately</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Slide 15: Remember -->
+        <div class="slide">
+            <h2>Remember: Security is Everyone's Job! 🛡️</h2>
+            
+            <div class="analogy-box">
+                <p style="font-size: 1.4em; text-align: center;">
+                    "Security is like locking your doors - it's a simple habit that prevents big problems!"
+                </p>
+            </div>
+            
+            <div class="mitigation-box" style="margin-top: 40px;">
+                <h3>Key Takeaways:</h3>
+                <ul>
+                    <li>MCP security protects your AI integrations from misuse</li>
+                    <li>Three main threats: Confused Deputy, Token Passthrough, Session Hijacking</li>
+                    <li>Simple practices can prevent most attacks</li>
+                    <li>When in doubt, verify and double-check!</li>
+                </ul>
+            </div>
+            
+            <p style="text-align: center; margin-top: 40px; font-size: 1.3em; color: #9ca3af;">
+                Stay safe, stay secure! 🚀
+            </p>
+        </div>
+
+        <!-- Slide 16: Source -->
+        <div class="slide">
+            <h2>Learn More 📚</h2>
+            
+            <div class="attack-card">
+                <h3>Source Documentation</h3>
+                <p>This presentation is based on the official MCP Security Best Practices documentation:</p>
+                <p style="margin-top: 20px;">
+                    <a href="https://modelcontextprotocol.io/specification/2025-06-18/basic/security_best_practices" 
+                       target="_blank" 
+                       style="color: #667eea; text-decoration: none; font-size: 1.1em; word-break: break-all;">
+                        https://modelcontextprotocol.io/specification/2025-06-18/basic/security_best_practices
+                    </a>
+                </p>
+            </div>
+            
+            <div class="mitigation-box">
+                <h3>Additional Resources</h3>
+                <ul>
+                    <li>Full MCP Specification: <a href="https://modelcontextprotocol.io" target="_blank" style="color: #10b981;">modelcontextprotocol.io</a></li>
+                    <li>MCP Authorization Specification (referenced in the security docs)</li>
+                    <li>OAuth 2.0 Security Best Practices (RFC 9700)</li>
+                </ul>
+            </div>
+            
+            <div class="example-box">
+                <p style="text-align: center;">
+                    <strong>Thank you for learning about MCP security!</strong><br>
+                    Remember to always consult the official documentation for the most up-to-date information.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="navigation">
+        <button id="prev-btn" onclick="changeSlide(-1)">← Previous</button>
+        <button id="next-btn" onclick="changeSlide(1)">Next →</button>
+    </div>
+
+    <script>
+        let currentSlide = 1;
+        const totalSlides = document.querySelectorAll('.slide').length;
+        
+        document.getElementById('total-slides').textContent = totalSlides;
+
+        function showSlide(n) {
+            const slides = document.querySelectorAll('.slide');
+            
+            if (n > totalSlides) currentSlide = totalSlides;
+            if (n < 1) currentSlide = 1;
+            
+            slides.forEach(slide => slide.classList.remove('active'));
+            slides[currentSlide - 1].classList.add('active');
+            
+            document.getElementById('current-slide').textContent = currentSlide;
+            
+            // Update navigation buttons
+            document.getElementById('prev-btn').disabled = currentSlide === 1;
+            document.getElementById('next-btn').disabled = currentSlide === totalSlides;
+        }
+
+        function changeSlide(n) {
+            currentSlide += n;
+            showSlide(currentSlide);
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft') changeSlide(-1);
+            if (e.key === 'ArrowRight') changeSlide(1);
+        });
+
+        // Initialize
+        showSlide(currentSlide);
+    </script>
+</body>
+</html>
