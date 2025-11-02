@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Statistical Data Types</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+            font-weight: 300;
+        }
+
+        .intro {
+            text-align: center;
+            margin-bottom: 50px;
+            color: #555;
+            font-size: 1.1em;
+        }
+
+        .data-types {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .data-category {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .data-category:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .category-title {
+            font-size: 1.8em;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .category-icon {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: white;
+        }
+
+        .qualitative .category-icon {
+            background: #e74c3c;
+        }
+
+        .quantitative .category-icon {
+            background: #3498db;
+        }
+
+        .subcategory {
+            margin: 20px 0;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            border-left: 4px solid #ddd;
+            transition: border-color 0.3s ease;
+        }
+
+        .subcategory:hover {
+            border-color: #3498db;
+        }
+
+        .subcategory h3 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-size: 1.3em;
+        }
+
+        .subcategory p {
+            color: #666;
+            margin-bottom: 15px;
+        }
+
+        .examples {
+            background: #f1f2f6;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 10px;
+        }
+
+        .examples h4 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-size: 1em;
+        }
+
+        .example-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .example-item {
+            background: #3498db;
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .example-item:hover {
+            background: #2980b9;
+            transform: scale(1.05);
+        }
+
+        .qualitative .example-item {
+            background: #e74c3c;
+        }
+
+        .qualitative .example-item:hover {
+            background: #c0392b;
+        }
+
+
+
+        .comparison-table {
+            margin-top: 40px;
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            background: #2c3e50;
+            color: white;
+            padding: 20px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        td {
+            padding: 15px 20px;
+            border-bottom: 1px solid #eee;
+        }
+
+        tr:hover {
+            background: #f8f9fa;
+        }
+
+        .highlight {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+
+        @media (max-width: 768px) {
+            .data-types {
+                grid-template-columns: 1fr;
+            }
+            
+            .container {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Statistical Data Types</h1>
+        <div class="intro">
+            Understanding data types is fundamental to statistical analysis. Data can be classified into different categories based on their nature and characteristics.
+        </div>
+
+        <div class="data-types">
+            <div class="data-category qualitative">
+                <div class="category-title">
+                    <div class="category-icon">Q</div>
+                    Qualitative Data (Categorical)
+                </div>
+                <p>Data that describes qualities or characteristics that cannot be measured numerically.</p>
+
+                <div class="subcategory">
+                    <h3>Nominal Data</h3>
+                    <p>Categories with no inherent order or ranking. Each category is simply different from the others.</p>
+                    <div class="examples">
+                        <h4>Examples:</h4>
+                        <div class="example-list">
+                            <span class="example-item">Colors</span>
+                            <span class="example-item">Gender</span>
+                            <span class="example-item">Blood Type</span>
+                            <span class="example-item">Country</span>
+                            <span class="example-item">Eye Color</span>
+                            <span class="example-item">Marital Status</span>
+                        </div>
+                    </div>
+                    <div class="highlight">
+                        <strong>Key Feature:</strong> No mathematical operations can be performed. Only counting and percentages make sense.
+                    </div>
+                </div>
+
+                <div class="subcategory">
+                    <h3>Ordinal Data</h3>
+                    <p>Categories that have a natural order or ranking, but the intervals between categories are not necessarily equal.</p>
+                    <div class="examples">
+                        <h4>Examples:</h4>
+                        <div class="example-list">
+                            <span class="example-item">Education Level</span>
+                            <span class="example-item">Star Ratings</span>
+                            <span class="example-item">Pain Scale</span>
+                            <span class="example-item">Economic Status</span>
+                            <span class="example-item">Survey Responses</span>
+                            <span class="example-item">Military Rank</span>
+                        </div>
+                    </div>
+                    <div class="highlight">
+                        <strong>Key Feature:</strong> Order matters, but differences between ranks may not be equal.
+                    </div>
+                </div>
+            </div>
+
+            <div class="data-category quantitative">
+                <div class="category-title">
+                    <div class="category-icon">Q</div>
+                    Quantitative Data (Numerical)
+                </div>
+                <p>Data that can be measured and expressed numerically. Mathematical operations are meaningful.</p>
+
+                <div class="subcategory">
+                    <h3>Discrete Data</h3>
+                    <p>Countable data with distinct, separate values. Usually whole numbers with gaps between possible values.</p>
+                    <div class="examples">
+                        <h4>Examples:</h4>
+                        <div class="example-list">
+                            <span class="example-item">Number of Children</span>
+                            <span class="example-item">Cars Sold</span>
+                            <span class="example-item">Test Scores</span>
+                            <span class="example-item">Population Count</span>
+                            <span class="example-item">Books Read</span>
+                            <span class="example-item">Website Clicks</span>
+                        </div>
+                    </div>
+                    <div class="highlight">
+                        <strong>Key Feature:</strong> Can be counted but not measured infinitely precisely.
+                    </div>
+                </div>
+
+                <div class="subcategory">
+                    <h3>Continuous Data</h3>
+                    <p>Measurable data that can take any value within a range. Can be measured to any degree of precision.</p>
+                    <div class="examples">
+                        <h4>Examples:</h4>
+                        <div class="example-list">
+                            <span class="example-item">Height</span>
+                            <span class="example-item">Weight</span>
+                            <span class="example-item">Temperature</span>
+                            <span class="example-item">Time</span>
+                            <span class="example-item">Distance</span>
+                            <span class="example-item">Income</span>
+                        </div>
+                    </div>
+                    <div class="highlight">
+                        <strong>Key Feature:</strong> Can be measured infinitely precisely (limited only by measuring instruments).
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+        <div class="comparison-table">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Data Type</th>
+                        <th>Description</th>
+                        <th>Mathematical Operations</th>
+                        <th>Statistical Measures</th>
+                        <th>Example Analysis</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Nominal</strong></td>
+                        <td>Categories with no order</td>
+                        <td>None (counting only)</td>
+                        <td>Mode, Frequency</td>
+                        <td>Most common blood type</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Ordinal</strong></td>
+                        <td>Ordered categories</td>
+                        <td>Ranking, comparison</td>
+                        <td>Mode, Median, Percentiles</td>
+                        <td>Median satisfaction rating</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Discrete</strong></td>
+                        <td>Countable numbers</td>
+                        <td>All operations</td>
+                        <td>Mean, Median, Mode, Standard Deviation</td>
+                        <td>Average number of pets per household</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Continuous</strong></td>
+                        <td>Measurable values</td>
+                        <td>All operations</td>
+                        <td>Mean, Median, Mode, Standard Deviation</td>
+                        <td>Average height of students</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
+</body>
+</html>

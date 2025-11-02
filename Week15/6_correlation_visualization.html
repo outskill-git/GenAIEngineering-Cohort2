@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Understanding Correlation: Linear vs Nonlinear</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .explanation {
+            background: linear-gradient(135deg, #74b9ff, #0984e3);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            font-size: 1.1em;
+            line-height: 1.6;
+        }
+
+        .chart-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .chart-container {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            border: 3px solid transparent;
+            background-clip: padding-box;
+            position: relative;
+        }
+
+        .chart-container::before {
+            content: '';
+            position: absolute;
+            top: -3px;
+            left: -3px;
+            right: -3px;
+            bottom: -3px;
+            background: linear-gradient(45deg, #ff6b6b, #feca57, #48dbfb, #ff9ff3);
+            border-radius: 15px;
+            z-index: -1;
+        }
+
+        .chart-title {
+            font-size: 1.3em;
+            font-weight: bold;
+            margin-bottom: 10px;
+            text-align: center;
+            color: #2c3e50;
+        }
+
+        .chart-description {
+            font-size: 0.9em;
+            color: #7f8c8d;
+            margin-bottom: 15px;
+            text-align: center;
+            line-height: 1.4;
+        }
+
+        .chart {
+            width: 100%;
+            height: 250px;
+            border: 2px solid #ecf0f1;
+            border-radius: 10px;
+            position: relative;
+            background: #fafafa;
+            overflow: hidden;
+        }
+
+        .axis {
+            position: absolute;
+            background: #34495e;
+        }
+
+        .x-axis {
+            bottom: 40px;
+            left: 40px;
+            right: 20px;
+            height: 2px;
+        }
+
+        .y-axis {
+            left: 40px;
+            top: 20px;
+            bottom: 40px;
+            width: 2px;
+        }
+
+        .axis-label {
+            position: absolute;
+            font-size: 12px;
+            color: #7f8c8d;
+            font-weight: bold;
+        }
+
+        .x-label {
+            bottom: 15px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .y-label {
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%) rotate(-90deg);
+        }
+
+        .point {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: all 0.3s ease;
+        }
+
+        .point:hover {
+            transform: translate(-50%, -50%) scale(1.5);
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .linear-positive .point { background: #e74c3c; }
+        .linear-negative .point { background: #3498db; }
+        .nonlinear-quadratic .point { background: #2ecc71; }
+        .nonlinear-exponential .point { background: #f39c12; }
+        .no-correlation .point { background: #9b59b6; }
+
+        .correlation-strength {
+            text-align: center;
+            margin-top: 10px;
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+
+        .strong-positive { color: #e74c3c; }
+        .strong-negative { color: #3498db; }
+        .nonlinear { color: #2ecc71; }
+        .none { color: #9b59b6; }
+
+        .interactive-section {
+            background: linear-gradient(135deg, #a8edea, #fed6e3);
+            border-radius: 15px;
+            padding: 25px;
+            margin-top: 30px;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .interactive-chart {
+            height: 300px;
+            background: white;
+            border-radius: 10px;
+            border: 3px solid #667eea;
+            position: relative;
+            overflow: hidden;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .point.animate {
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .definition-box {
+            background: rgba(255, 255, 255, 0.9);
+            border-left: 5px solid #3498db;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📊 Understanding Correlation</h1>
+        
+        <div class="explanation">
+            <strong>Correlation</strong> measures the strength and direction of the relationship between two variables. 
+            It ranges from -1 to +1, where +1 indicates perfect positive correlation, -1 indicates perfect negative correlation, 
+            and 0 indicates no correlation. Correlation can be <strong>linear</strong> (following a straight line pattern) 
+            or <strong>nonlinear</strong> (following a curved or complex pattern).
+        </div>
+
+        <div class="chart-grid">
+            <div class="chart-container linear-positive">
+                <div class="chart-title">Strong Positive Linear Correlation</div>
+                <div class="chart-description">As X increases, Y increases in a straight line pattern</div>
+                <div class="chart" id="chart1">
+                    <div class="axis x-axis"></div>
+                    <div class="axis y-axis"></div>
+                    <div class="axis-label x-label">X Variable</div>
+                    <div class="axis-label y-label">Y Variable</div>
+                </div>
+                <div class="correlation-strength strong-positive">r ≈ +0.95</div>
+            </div>
+
+            <div class="chart-container linear-negative">
+                <div class="chart-title">Strong Negative Linear Correlation</div>
+                <div class="chart-description">As X increases, Y decreases in a straight line pattern</div>
+                <div class="chart" id="chart2">
+                    <div class="axis x-axis"></div>
+                    <div class="axis y-axis"></div>
+                    <div class="axis-label x-label">X Variable</div>
+                    <div class="axis-label y-label">Y Variable</div>
+                </div>
+                <div class="correlation-strength strong-negative">r ≈ -0.92</div>
+            </div>
+
+            <div class="chart-container nonlinear-quadratic">
+                <div class="chart-title">Nonlinear Correlation (Quadratic)</div>
+                <div class="chart-description">Strong relationship but curved pattern (r ≈ 0 despite clear pattern!)</div>
+                <div class="chart" id="chart3">
+                    <div class="axis x-axis"></div>
+                    <div class="axis y-axis"></div>
+                    <div class="axis-label x-label">X Variable</div>
+                    <div class="axis-label y-label">Y Variable</div>
+                </div>
+                <div class="correlation-strength nonlinear">Linear r ≈ 0.1 (misleading!)</div>
+            </div>
+
+            <div class="chart-container nonlinear-exponential">
+                <div class="chart-title">Nonlinear Correlation (Exponential)</div>
+                <div class="chart-description">Exponential growth pattern - strong but nonlinear relationship</div>
+                <div class="chart" id="chart4">
+                    <div class="axis x-axis"></div>
+                    <div class="axis y-axis"></div>
+                    <div class="axis-label x-label">X Variable</div>
+                    <div class="axis-label y-label">Y Variable</div>
+                </div>
+                <div class="correlation-strength nonlinear">Linear r ≈ 0.7 (underestimates!)</div>
+            </div>
+
+            <div class="chart-container no-correlation">
+                <div class="chart-title">No Correlation</div>
+                <div class="chart-description">Random scatter with no discernible pattern</div>
+                <div class="chart" id="chart5">
+                    <div class="axis x-axis"></div>
+                    <div class="axis y-axis"></div>
+                    <div class="axis-label x-label">X Variable</div>
+                    <div class="axis-label y-label">Y Variable</div>
+                </div>
+                <div class="correlation-strength none">r ≈ 0.05</div>
+            </div>
+        </div>
+
+        <div class="definition-box">
+            <strong>Key Insight:</strong> Linear correlation coefficients (like Pearson's r) only measure <em>linear</em> relationships. 
+            A correlation of 0 doesn't mean there's no relationship - there could be a strong nonlinear relationship!
+        </div>
+
+        <div class="interactive-section">
+            <h2 style="text-align: center; margin-bottom: 20px; color: #2c3e50;">🎮 Interactive Correlation Generator</h2>
+            
+            <div class="controls">
+                <button class="btn" onclick="generateLinear(1)">Positive Linear</button>
+                <button class="btn" onclick="generateLinear(-1)">Negative Linear</button>
+                <button class="btn" onclick="generateQuadratic()">Quadratic</button>
+                <button class="btn" onclick="generateSin()">Sinusoidal</button>
+                <button class="btn" onclick="generateRandom()">Random</button>
+                <button class="btn" onclick="clearChart()">Clear</button>
+            </div>
+            
+            <div class="chart interactive-chart" id="interactiveChart">
+                <div class="axis x-axis"></div>
+                <div class="axis y-axis"></div>
+                <div class="axis-label x-label">X Variable</div>
+                <div class="axis-label y-label">Y Variable</div>
+            </div>
+            
+            <div id="correlation-info" style="text-align: center; margin-top: 15px; font-size: 1.2em; font-weight: bold;"></div>
+        </div>
+    </div>
+
+    <script>
+        // Generate points for different correlation types
+        function generatePoints(type, chartId) {
+            const chart = document.getElementById(chartId);
+            const chartRect = chart.getBoundingClientRect();
+            const width = 200; // Available width for points
+            const height = 180; // Available height for points
+            const offsetX = 60; // Offset from left edge
+            const offsetY = 40; // Offset from top edge
+
+            for (let i = 0; i < 25; i++) {
+                const point = document.createElement('div');
+                point.className = 'point';
+                
+                let x, y;
+                
+                switch(type) {
+                    case 'linear-positive':
+                        x = (i / 24) * width;
+                        y = height - (i / 24) * height + (Math.random() - 0.5) * 20;
+                        break;
+                    case 'linear-negative':
+                        x = (i / 24) * width;
+                        y = (i / 24) * height + (Math.random() - 0.5) * 20;
+                        break;
+                    case 'quadratic':
+                        x = (i / 24) * width;
+                        const normalizedX = (i / 24 - 0.5) * 2; // -1 to 1
+                        y = height - (normalizedX * normalizedX) * height * 0.8 + (Math.random() - 0.5) * 10;
+                        break;
+                    case 'exponential':
+                        x = (i / 24) * width;
+                        y = height - Math.pow(i / 24, 2.5) * height + (Math.random() - 0.5) * 15;
+                        break;
+                    case 'random':
+                        x = (i / 24) * width;
+                        y = Math.random() * height;
+                        break;
+                }
+                
+                point.style.left = (offsetX + x) + 'px';
+                point.style.top = (offsetY + y) + 'px';
+                chart.appendChild(point);
+            }
+        }
+
+        // Interactive chart functions
+        function generateLinear(direction) {
+            clearChart();
+            const chart = document.getElementById('interactiveChart');
+            const width = 200;
+            const height = 180;
+            const offsetX = 60;
+            const offsetY = 40;
+
+            for (let i = 0; i < 30; i++) {
+                setTimeout(() => {
+                    const point = document.createElement('div');
+                    point.className = 'point animate';
+                    point.style.background = direction > 0 ? '#e74c3c' : '#3498db';
+                    
+                    const x = (i / 29) * width;
+                    const y = direction > 0 ? 
+                        height - (i / 29) * height + (Math.random() - 0.5) * 25 :
+                        (i / 29) * height + (Math.random() - 0.5) * 25;
+                    
+                    point.style.left = (offsetX + x) + 'px';
+                    point.style.top = (offsetY + y) + 'px';
+                    chart.appendChild(point);
+                }, i * 50);
+            }
+            
+            const r = direction > 0 ? 0.95 : -0.92;
+            updateCorrelationInfo(`Strong ${direction > 0 ? 'Positive' : 'Negative'} Linear Correlation (r ≈ ${r})`);
+        }
+
+        function generateQuadratic() {
+            clearChart();
+            const chart = document.getElementById('interactiveChart');
+            const width = 200;
+            const height = 180;
+            const offsetX = 60;
+            const offsetY = 40;
+
+            for (let i = 0; i < 30; i++) {
+                setTimeout(() => {
+                    const point = document.createElement('div');
+                    point.className = 'point animate';
+                    point.style.background = '#2ecc71';
+                    
+                    const x = (i / 29) * width;
+                    const normalizedX = (i / 29 - 0.5) * 2;
+                    const y = height - (normalizedX * normalizedX) * height * 0.9 + (Math.random() - 0.5) * 15;
+                    
+                    point.style.left = (offsetX + x) + 'px';
+                    point.style.top = (offsetY + y) + 'px';
+                    chart.appendChild(point);
+                }, i * 50);
+            }
+            
+            updateCorrelationInfo('Nonlinear Correlation (Quadratic) - Linear r ≈ 0.1 but strong relationship exists!');
+        }
+
+        function generateSin() {
+            clearChart();
+            const chart = document.getElementById('interactiveChart');
+            const width = 200;
+            const height = 180;
+            const offsetX = 60;
+            const offsetY = 40;
+
+            for (let i = 0; i < 30; i++) {
+                setTimeout(() => {
+                    const point = document.createElement('div');
+                    point.className = 'point animate';
+                    point.style.background = '#f39c12';
+                    
+                    const x = (i / 29) * width;
+                    const normalizedX = (i / 29) * Math.PI * 2;
+                    const y = height/2 - Math.sin(normalizedX) * height * 0.3 + (Math.random() - 0.5) * 10;
+                    
+                    point.style.left = (offsetX + x) + 'px';
+                    point.style.top = (offsetY + y) + 'px';
+                    chart.appendChild(point);
+                }, i * 50);
+            }
+            
+            updateCorrelationInfo('Nonlinear Correlation (Sinusoidal) - Linear r ≈ 0 but periodic relationship!');
+        }
+
+        function generateRandom() {
+            clearChart();
+            const chart = document.getElementById('interactiveChart');
+            const width = 200;
+            const height = 180;
+            const offsetX = 60;
+            const offsetY = 40;
+
+            for (let i = 0; i < 30; i++) {
+                setTimeout(() => {
+                    const point = document.createElement('div');
+                    point.className = 'point animate';
+                    point.style.background = '#9b59b6';
+                    
+                    const x = Math.random() * width;
+                    const y = Math.random() * height;
+                    
+                    point.style.left = (offsetX + x) + 'px';
+                    point.style.top = (offsetY + y) + 'px';
+                    chart.appendChild(point);
+                }, i * 30);
+            }
+            
+            updateCorrelationInfo('No Correlation - Random scatter (r ≈ 0)');
+        }
+
+        function clearChart() {
+            const chart = document.getElementById('interactiveChart');
+            const points = chart.querySelectorAll('.point');
+            points.forEach(point => point.remove());
+            updateCorrelationInfo('Click a button above to generate correlation patterns!');
+        }
+
+        function updateCorrelationInfo(text) {
+            document.getElementById('correlation-info').textContent = text;
+        }
+
+        // Initialize all charts on page load
+        window.onload = function() {
+            generatePoints('linear-positive', 'chart1');
+            generatePoints('linear-negative', 'chart2');
+            generatePoints('quadratic', 'chart3');
+            generatePoints('exponential', 'chart4');
+            generatePoints('random', 'chart5');
+            updateCorrelationInfo('Click a button above to generate correlation patterns!');
+        };
+    </script>
+</body>
+</html>

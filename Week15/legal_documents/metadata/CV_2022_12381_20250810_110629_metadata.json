@@ -1,0 +1,18 @@
+{
+  "case_number": "CV-2022-12381",
+  "case_type": "Personal Injury",
+  "plaintiff": "Kelly Hernandez",
+  "defendant": "Christina Phillips",
+  "plaintiff_attorney": "Patrick Randall",
+  "defendant_attorney": "Kevin Armstrong",
+  "court": "Sandersfurt County Superior Court",
+  "judge": "Hon. Brittany Terrell",
+  "filing_date": "2025-07-22",
+  "amount_in_controversy": 5111756,
+  "law_firm_plaintiff": "Cherry, Lloyd & Associates LLP",
+  "law_firm_defendant": "Curtis Law Group PC",
+  "address_plaintiff": "378 Oconnell Lock\nNorth Annaview, AS 33531",
+  "address_defendant": "Unit 0697 Box 7109\nDPO AE 76031",
+  "jurisdiction": "Montana",
+  "cause_of_action": "Unjust Enrichment"
+}

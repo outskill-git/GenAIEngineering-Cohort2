@@ -1,0 +1,18 @@
+{
+  "case_number": "CV-2020-34555",
+  "case_type": "Business Tort",
+  "plaintiff": "Eric Hurley",
+  "defendant": "Potts Ltd",
+  "plaintiff_attorney": "Janice Leon",
+  "defendant_attorney": "James Terry",
+  "court": "Port Donnamouth Municipal Court",
+  "judge": "Hon. Cassandra Coleman",
+  "filing_date": "2025-01-27",
+  "amount_in_controversy": 4291020,
+  "law_firm_plaintiff": "Haas, Hernandez & Associates LLP",
+  "law_firm_defendant": "Schneider Law Group PC",
+  "address_plaintiff": "70300 James Squares Suite 190\nNelsonfort, KY 04523",
+  "address_defendant": "51844 Walker Courts Suite 771\nWest Nicholasburgh, NE 09325",
+  "jurisdiction": "Vermont",
+  "cause_of_action": "Intentional Infliction of Emotional Distress"
+}

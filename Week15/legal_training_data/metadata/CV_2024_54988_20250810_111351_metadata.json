@@ -1,0 +1,18 @@
+{
+  "case_number": "CV-2024-54988",
+  "case_type": "Contract Dispute",
+  "plaintiff": "Campos Ltd",
+  "defendant": "Mueller-Russell",
+  "plaintiff_attorney": "Vanessa Reyes",
+  "defendant_attorney": "Lawrence Harding",
+  "court": "Lake Pamela County Superior Court",
+  "judge": "Hon. Krista Hawkins",
+  "filing_date": "2024-11-09",
+  "amount_in_controversy": 6776103,
+  "law_firm_plaintiff": "Li, Austin & Associates LLP",
+  "law_firm_defendant": "Jones Law Group PC",
+  "address_plaintiff": "59841 Jason Station\nNew Sonia, NJ 86930",
+  "address_defendant": "0821 James Springs\nPort Williambury, KS 83761",
+  "jurisdiction": "Maryland",
+  "cause_of_action": "Conversion"
+}
